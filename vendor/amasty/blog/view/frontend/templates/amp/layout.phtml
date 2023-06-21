@@ -1,0 +1,14 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var \Amasty\Blog\Block\Layout $block */
+?>
+
+<div class="amblog-blog-wrap mobile <?= /* @noEscape */ $block->getMobileLayoutCode(); ?>">
+    <?php foreach ($block->getMobileBlocks('content') as $alias) : ?>
+        <?= /* @noEscape */ $block->getContentBlockHtml($alias); ?>
+    <?php endforeach; ?>
+</div>

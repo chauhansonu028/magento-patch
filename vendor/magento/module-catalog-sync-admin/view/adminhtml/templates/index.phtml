@@ -1,0 +1,16 @@
+<?php
+/** @var \Magento\CatalogSyncAdmin\Block\Adminhtml\Index $block */
+
+$resyncUrl = $block->getUrl('catalog_sync_admin/index/forceresync');
+?>
+
+<div
+    id="root"
+    data-environment-id="<?= $block->escapeHtmlAttr($block->getEnvironmentId()); ?>"
+    data-website-code="<?= $block->escapeHtmlAttr($block->getWebsiteCode()); ?>"
+    data-store-view-code="<?= $block->escapeHtmlAttr($block->getStoreViewCode()); ?>"
+    data-store-view-product-count="<?= $block->escapeHtmlAttr($block->getStoreViewProductCount()); ?>"
+    data-resync-url="<?= $block->escapeUrl($resyncUrl); ?>"
+></div>
+
+<script src="<?= $block->escapeUrl($block->getFrontendUrl()) ?>"></script>

@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var \Amasty\Blog\Block\Adminhtml\Posts\Edit\PreviewJsInit $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+
+<script type="text/x-magento-init">
+    {
+        "#preview": {
+            "amBlogPreviewButton": {
+                "url": "<?= $escaper->escapeUrl($block->getPreviewActionUrl()) ?>",
+                "isBlogCacheEnabled": "<?= $escaper->escapeJs($block->isBlogCacheEnabled()) ?>",
+                "isNewPost": "<?= $escaper->escapeJs($block->isNewPost()) ?>",
+                "cacheStatusUrl": "<?= $escaper->escapeUrl($block->getCacheStatusActionUrl()) ?>"
+            }
+        }
+    }
+</script>

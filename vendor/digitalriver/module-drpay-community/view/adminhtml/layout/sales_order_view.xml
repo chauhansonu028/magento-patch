@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="order_info">
+            <action method="setTemplate">
+                <argument name="template" translate="true" xsi:type="string">Digitalriver_DrPay::order/view/info.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_tab_info">
+            <block class="Digitalriver\DrPay\Block\Adminhtml\Order\InvoiceAndRefunds" name="dr_invoice_and_refund_links" template="Digitalriver_DrPay::order/invoice_cm.phtml"/>
+            <action method="setTemplate">
+                <argument name="template" translate="true" xsi:type="string">Digitalriver_DrPay::order/view/tab/info.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_totals">
+            <block class="Magento\Sales\Block\Adminhtml\Order\Totals\Item" name="duty_fee_ior_tax" template="Digitalriver_DrPay::order/totals/duty_fee_ior_tax.phtml">
+                <action method="setAfterCondition">
+                    <argument name="param" xsi:type="string">tax</argument>
+                </action>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="order_history">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Digitalriver_DrPay::order/view/history.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

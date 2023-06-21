@@ -1,0 +1,19 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var \Amasty\ShopbyBrand\Block\BrandsPopup $block
+ */
+?>
+
+<section class="catalog-item level-top">
+    <h2 class="amblog-amp-title">
+        <a class="amblog-amp-item" href="<?= $block->escapeUrl($block->getAllBrandsUrl()) ?>">
+            <?= $block->escapeHtml($block->getLabel()) ?>
+        </a>
+    </h2>
+    <span></span>
+</section>

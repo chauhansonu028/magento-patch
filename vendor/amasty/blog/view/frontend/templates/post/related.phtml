@@ -1,0 +1,108 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Content\Post\Related
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$collection = $block->getCollection();
+?>
+
+<?php if ($collection && $collection->getSize()): ?>
+<?php $postsCount = $collection->getSize() ?>
+<div class="widget amblog-post-list amblog-element-block">
+    <div class="amblog-title">
+        <?= $escaper->escapeHtml(__('Related posts'));?>
+    </div>
+    <div class="amblog-list">
+        <div class="post-items amblog-slick-slider"
+             data-mage-init='{"amBlogSlider": {
+            "dots": false,
+            "centerMode": false,
+            "infinite": true,
+            "rows": 0,
+            "slidesToShow": <?= $escaper->escapeHtml($postsCount > 3 ? 3 : $postsCount) ?>,
+            "slidesToScroll": 1,
+            "responsive": [
+                {
+                    "breakpoint": 1224,
+                    "settings": {
+                        "slidesToShow": <?= $escaper->escapeHtml($postsCount > 2 ? 2 : $postsCount) ?>,
+                        "slidesToScroll": 1
+                    }
+                },
+                {
+                    "breakpoint": 768,
+                    "settings": {
+                        "slidesToShow": 2,
+                        "slidesToScroll": 1
+                    }
+                },
+                {
+                    "breakpoint": 425,
+                    "settings": {
+                        "slidesToShow": 1,
+                        "slidesToScroll": 1
+                    }
+                },
+                {
+                    "breakpoint": 320,
+                    "settings": {
+                        "slidesToShow": 1,
+                        "arrows": false,
+                        "dots": true
+                    }
+                }
+            ]
+        }}'>
+            <?php foreach ($collection as $post): ?>
+                <div class="post-item <?= $post->getListThumbnailSrc() ? '': ' -post-no-image'?>">
+                    <?php if ($post->getListThumbnailSrc()): ?>
+                        <a href="<?= $escaper->escapeUrl($post->getUrl()) ?>"
+                           title="<?= $escaper->escapeHtmlAttr($post->getTitle()) ?>"
+                           aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()) ?>"
+                           class="post-image">
+                            <img src="<?= /* @noEscape */ $post->getListThumbnailSrc(); ?>"
+                                 alt="<?= $escaper->escapeHtmlAttr($post->getThumbnailAlt()); ?>">
+                        </a>
+                    <?php endif; ?>
+                    <div class="post-item-details">
+                        <a class="post-title amblog-headline"
+                           href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                           title="<?= $escaper->escapeHtmlAttr($post->getTitle()) ?>"
+                           aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()) ?>">
+                            <?= $escaper->escapeHtml($post->getTitle()); ?>
+                        </a>
+                        <div class="amblog-dates">
+                            <div class="amblog-date"
+                                <?php if ($block->isHumanized()): ?>
+                                    data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($post->getPublishedAt()) ?>"}'
+                                <?php endif; ?>>
+                                <?= $escaper->escapeHtml($block->isHumanized()
+                                    ? __('Loading...')
+                                    : $block->renderDate($post->getPublishedAt())) ?>
+                            </div>
+                            <?php if ($post->getEditedAt() && $block->isShowEditedAt()): ?>
+                                <span class="amblog-date">
+                                    <?= $escaper->escapeHtml(__('Edited ')) ?>
+                                    <span <?php if ($block->isHumanizedEditedAt()): ?>
+                                        data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($post->getEditedAt()) ?>"}'
+                                    <?php endif; ?>>
+                                        <?= $escaper->escapeHtml($block->isHumanizedEditedAt()
+                                            ? __('Loading...')
+                                            : $block->renderDate($post->getEditedAt(), true)) ?>
+                                    </span>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

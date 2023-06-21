@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amblog_index_font" />
+    <body>
+        <referenceContainer name="content">
+            <referenceContainer name="amasty_blog.content.container.list">
+                <block class="Amasty\Blog\Block\Content\Tag"
+                       name="amblog.content.list"
+                       as="list"
+                       template="Amasty_Blog::list.phtml" />
+            </referenceContainer>
+            <referenceContainer name="amasty_blog.content.container.grid">
+                <block class="Amasty\Blog\Block\Content\Tag"
+                       name="amblog.content.grid"
+                       as="list"
+                       template="Amasty_Blog::grid.phtml" />
+            </referenceContainer>
+            <block class="Amasty\Blog\Block\Featured" name="amblog.content.featured" before="-" />
+        </referenceContainer>
+    </body>
+</page>

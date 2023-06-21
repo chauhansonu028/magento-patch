@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Product Attachments Base for Magento 2
+ */-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="amasty_file" resource="default" engine="innodb" comment="Amasty Product Attachment File Table">
+    <column xsi:type="int" name="file_id" padding="10" unsigned="true" nullable="false" identity="true" comment="File Id"/>
+    <column xsi:type="smallint" name="attachment_type" padding="5" unsigned="true" nullable="false" identity="false" default="0" comment="Attachment Type"/>
+    <column xsi:type="varchar" name="filepath" nullable="false" length="255" default="" comment="File Path"/>
+    <column xsi:type="text" name="link" nullable="false" comment="File Link"/>
+    <column xsi:type="varchar" name="extension" nullable="false" length="10" default="" comment="File Extension"/>
+    <column xsi:type="int" name="size" padding="10" unsigned="true" nullable="false" identity="false" comment="File Size"/>
+    <column xsi:type="varchar" name="mime_type" nullable="false" length="255" default="" comment="File Mime Type"/>
+    <column xsi:type="varchar" name="url_hash" nullable="false" length="32" default="" comment="md5 random hash for url creation"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="file_id"/>
+    </constraint>
+    <index referenceId="AMASTY_FILE_URL_HASH" indexType="btree">
+      <column name="url_hash"/>
+    </index>
+  </table>
+  <table name="amasty_file_icon" resource="default" engine="innodb" comment="Amasty Product Attachment Icon Table">
+    <column xsi:type="int" name="icon_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Icon Id"/>
+    <column xsi:type="varchar" name="filetype" nullable="false" length="255" default="" comment="Type of File"/>
+    <column xsi:type="varchar" name="image" nullable="false" length="255" default="" comment="Image name"/>
+    <column xsi:type="boolean" name="is_active" nullable="false" default="true" comment="Is Active"/>
+    <column xsi:type="smallint" name="attachment_type" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Attachment Type"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="icon_id"/>
+    </constraint>
+  </table>
+  <table name="amasty_file_icon_extension" resource="default" engine="innodb" comment="Amasty Product Attachment Icon Extensions Table">
+      <column xsi:type="int" name="extension_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Icon Id"/>
+      <column xsi:type="int" name="icon_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Icon Id"/>
+    <column xsi:type="varchar" name="extension" nullable="false" length="255" default="" comment="Extension"/>
+      <constraint xsi:type="primary" referenceId="PRIMARY">
+          <column name="extension_id"/>
+      </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_FILE_ICON_EXTENSION_ICON_ID_AMASTY_FILE_ICON_ICON_ID" table="amasty_file_icon_extension" column="icon_id" referenceTable="amasty_file_icon" referenceColumn="icon_id" onDelete="CASCADE"/>
+    <index referenceId="AMASTY_FILE_ICON_EXTENSION_EXTENSION" indexType="btree">
+      <column name="extension"/>
+    </index>
+  </table>
+  <table name="amasty_file_store" resource="default" engine="innodb" comment="Amasty Product Attachment File Store Relation Table">
+    <column xsi:type="int" name="file_store_id" padding="10" unsigned="true" nullable="false" identity="true" comment="File Store ID"/>
+    <column xsi:type="int" name="file_id" padding="10" unsigned="true" nullable="false" identity="false" comment="File Id"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+    <column xsi:type="varchar" name="filename" nullable="true" length="255" comment="File Name"/>
+    <column xsi:type="varchar" name="label" nullable="true" length="255" comment="Label"/>
+    <column xsi:type="boolean" name="is_visible" nullable="true" comment="Is File Visible"/>
+    <column xsi:type="varchar" name="customer_groups" nullable="true" length="255" comment="Is File Visible"/>
+    <column xsi:type="boolean" name="include_in_order" nullable="true" comment="Include in Order"/>
+    <column xsi:type="int" name="position" padding="11" unsigned="false" nullable="true" identity="false" comment="Position"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="file_store_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_FILE_STORE_FILE_ID_AMASTY_FILE_FILE_ID" table="amasty_file_store" column="file_id" referenceTable="amasty_file" referenceColumn="file_id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_file_store_category" resource="default" engine="innodb" comment="Amasty Product Attachment File Store Category Relation Table">
+    <column xsi:type="int" name="file_store_category_id" padding="10" unsigned="true" nullable="false" identity="true" comment="File Store Category ID"/>
+    <column xsi:type="int" name="category_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Category Entity ID"/>
+    <column xsi:type="int" name="file_store_id" padding="10" unsigned="true" nullable="true" identity="false" comment="File Store ID"/>
+    <column xsi:type="int" name="file_id" padding="10" unsigned="true" nullable="false" identity="false" comment="File Id"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+    <column xsi:type="varchar" name="filename" nullable="true" length="255" comment="File Name"/>
+    <column xsi:type="varchar" name="label" nullable="true" length="255" comment="Label"/>
+    <column xsi:type="boolean" name="is_visible" nullable="true" comment="Is File Visible"/>
+    <column xsi:type="varchar" name="customer_groups" nullable="true" length="255" comment="Is File Visible"/>
+    <column xsi:type="boolean" name="include_in_order" nullable="true" comment="Include in Order"/>
+    <column xsi:type="int" name="position" padding="11" unsigned="false" nullable="true" identity="false" comment="Position"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="file_store_category_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_FILE_STORE_CATEGORY_FILE_ID_AMASTY_FILE_FILE_ID" table="amasty_file_store_category" column="file_id" referenceTable="amasty_file" referenceColumn="file_id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_file_store_product" resource="default" engine="innodb" comment="Amasty Product Attachment File Store Product Relation Table">
+    <column xsi:type="int" name="file_store_product_id" padding="10" unsigned="true" nullable="false" identity="true" comment="File Store Product ID"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Product Entity ID"/>
+    <column xsi:type="int" name="file_store_id" padding="10" unsigned="true" nullable="true" identity="false" comment="File Store ID"/>
+    <column xsi:type="int" name="file_id" padding="10" unsigned="true" nullable="false" identity="false" comment="File Id"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+    <column xsi:type="varchar" name="filename" nullable="true" length="255" comment="File Name"/>
+    <column xsi:type="varchar" name="label" nullable="true" length="255" comment="Label"/>
+    <column xsi:type="boolean" name="is_visible" nullable="true" comment="Is File Visible"/>
+    <column xsi:type="varchar" name="customer_groups" nullable="true" length="255" comment="Is File Visible"/>
+    <column xsi:type="boolean" name="include_in_order" nullable="true" comment="Include in Order"/>
+    <column xsi:type="int" name="position" padding="11" unsigned="false" nullable="true" identity="false" comment="Position"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="file_store_product_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_FILE_STORE_PRODUCT_FILE_ID_AMASTY_FILE_FILE_ID" table="amasty_file_store_product" column="file_id" referenceTable="amasty_file" referenceColumn="file_id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_file_store_category_product" resource="default" engine="innodb" comment="Amasty Product Attachment File Store Product Relation Table">
+    <column xsi:type="int" name="file_store_category_product_id" padding="10" unsigned="true" nullable="false" identity="true" comment="File Store Category Product ID"/>
+    <column xsi:type="int" name="category_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Category Entity ID"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Product Entity ID"/>
+    <column xsi:type="int" name="file_store_id" padding="10" unsigned="true" nullable="true" identity="false" comment="File Store ID"/>
+    <column xsi:type="int" name="file_id" padding="10" unsigned="true" nullable="false" identity="false" comment="File Id"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+    <column xsi:type="varchar" name="filename" nullable="true" length="255" comment="File Name"/>
+    <column xsi:type="varchar" name="label" nullable="true" length="255" comment="Label"/>
+    <column xsi:type="boolean" name="is_visible" nullable="true" comment="Is File Visible"/>
+    <column xsi:type="varchar" name="customer_groups" nullable="true" length="255" comment="Is File Visible"/>
+    <column xsi:type="boolean" name="include_in_order" nullable="true" comment="Include in Order"/>
+    <column xsi:type="int" name="position" padding="11" unsigned="false" nullable="true" identity="false" comment="Position"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="file_store_category_product_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="AMASTY_FILE_STORE_CATEGORY_PRODUCT_FILE_ID_AMASTY_FILE_FILE_ID" table="amasty_file_store_category_product" column="file_id" referenceTable="amasty_file" referenceColumn="file_id" onDelete="CASCADE"/>
+  </table>
+  <table name="amasty_file_report" resource="default" engine="innodb" comment="Amasty Product Attachment Report Table">
+    <column xsi:type="int" name="item_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Item Id"/>
+    <column xsi:type="int" name="file_id" padding="10" unsigned="true" nullable="false" identity="false" comment="File Id"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="true" identity="false" comment="Store ID"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Customer ID"/>
+    <column xsi:type="smallint" name="download_source" padding="5" unsigned="true" nullable="true" identity="false" comment="Download Source"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Product Id"/>
+    <column xsi:type="int" name="category_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Category Id"/>
+    <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Order Id"/>
+    <column xsi:type="timestamp" name="downloaded_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Downloaded at"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="item_id"/>
+    </constraint>
+  </table>
+  <table name="amasty_file_import" resource="default" engine="innodb" comment="Amasty Product Attachment Import Table">
+    <column xsi:type="int" name="import_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Import_id"/>
+    <column xsi:type="text" name="store_ids" nullable="false" comment="Store_ids"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created_at"/>
+    <column xsi:type="text" name="import_file" nullable="true" comment="Import File Information"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="import_id"/>
+    </constraint>
+  </table>
+</schema>

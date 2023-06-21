@@ -1,0 +1,80 @@
+<?php
+/**
+ * Sync Process Templates
+ *
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+?>
+<div class="progress-container">
+    <?= /* @noEscape */
+    __('Loading... Please wait, it may take some time to finish process.'); ?>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'mage/translate',
+        'jquery/ui'
+    ], function ($, $t) {
+        $( document ).ready(function() {
+            var processContainer = '.progress-container';
+            var totalRecords = <?= /* @noEscape */ $block->getTotalRecordsCount(); ?>;
+            console.log(totalRecords);
+            if (totalRecords > 0) {
+                processRecords(processContainer);
+            } else {
+                $(processContainer).html('<div class="message success">' + $t('All products are synced.') + '</div>');
+                let redirectUrl = '<?= /* @noEscape */ $block->getSyncRedirectUrl() ?>';
+                setTimeout(function () {
+                    window.location.href = redirectUrl;
+                }, 3000);
+            }
+        });
+
+        function processRecords(container) {
+            $('body').trigger('processStart');
+            $.ajax({
+                url: '<?= /* @noEscape */ $block->getProgressUrl() ?>',
+                method: 'POST',
+                data: {form_key: window.FORM_KEY},
+                showLoader: true,
+                dataType: 'json',
+                beforeSend: function () {
+                    $('body').trigger('processStart');
+                },
+            }).done(function (response) {
+                $('body').trigger('processStop');
+                if (response.status === 'success') {
+                    var resultMessage = '<div class="message success">' + response.message + '</div>';
+                } else {
+                    var resultMessage = '<div class="message message-error error">' + response.message + '</div>';
+                }
+                $(container).html(resultMessage);
+                $(container).animate({scrollTop: $(container).prop("scrollHeight")}, 500);
+                let redirectUrl = '<?= /* @noEscape */ $block->getSyncRedirectUrl() ?>';
+                setTimeout(function () {
+                    window.open(redirectUrl, '_self');
+                }, 3000);
+            }).error(function (error) {
+                var errorMessage = '<div class="message message-error error">' + error.message + '</div>';
+                $(container).html(errorMessage);
+                $('body').trigger('processStop');
+                let redirectUrl = '<?= /* @noEscape */ $block->getSyncRedirectUrl() ?>';
+                setTimeout(function () {
+                    window.open(redirectUrl, '_self');
+                }, 3000);
+            }).always(function () {
+                $('body').trigger('processStop');
+            });
+        }
+    });
+</script>
+<style>
+    .progress-container {
+        padding: 20px;
+        max-height: 482px;
+        overflow-y: auto;
+        border: solid 1px #CCC;
+    }
+</style>

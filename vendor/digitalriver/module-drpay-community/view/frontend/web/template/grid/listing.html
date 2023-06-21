@@ -1,0 +1,21 @@
+<!--
+/**
+ * Copyright (c) Gorilla, Inc. (http://www.gorillagroup.com)
+ */
+-->
+<div class="table-wrapper">
+    <table class="data table stored-methods__table">
+        <thead>
+        <tr each="data: getVisible(), as: '$col'" render="getHeader()"></tr>
+        </thead>
+        <tbody>
+        <tr repeat="foreach: rows, item: '$row'" css="'_odd-row': $index % 2">
+            <td outerfasteach="data: getVisible(), as: '$col'"
+                css="getFieldClass($row())" click="getFieldHandler($row())" template="getBody()" data-bind="attr:{'data-th': label}"></td>
+        </tr>
+        <tr ifnot="hasData()">
+            <td attr="colspan: countVisible()" translate="'We couldn\'t find any records.'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

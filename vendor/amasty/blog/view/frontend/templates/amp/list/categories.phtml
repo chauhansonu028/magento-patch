@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var \Amasty\Blog\Block\Content\Post\Details $block */
+?>
+
+<?php if (count($block->getCategories())) : ?>
+    <?= $block->escapeHtml(__("Posted in: ")); ?>
+    <?php $isFirst = true; ?>
+    <?php foreach ($block->getCategories() as $category) : ?>
+        <?php if (!$isFirst) : ?>
+            ,&nbsp;
+        <?php endif ?>
+        <a href="<?= $block->escapeUrl($category->getUrl()); ?>" class="category">
+            <?= $block->escapeHtml($category->getName()); ?>
+        </a>
+        <?php $isFirst = false; ?>
+    <?php endforeach; ?>
+<?php endif; ?>

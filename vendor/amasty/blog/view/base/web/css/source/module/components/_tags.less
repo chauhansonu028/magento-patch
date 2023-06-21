@@ -1,0 +1,61 @@
+//
+//  Tags Styles
+//  ____________________________________________
+
+//
+//  Common
+//  --------------------------------------------
+
+& when (@media-common = true) {
+    .amblog-tag {
+        & {
+            .lib-css(background, @amblog-tag__color);
+            .amblog-word-break();
+
+            border-radius: 80px;
+            display: inline-block;
+            font-size: @amblog-font-size__s;
+            font-weight: @font-weight__regular;
+            margin: 0 @amblog__indent @amblog__indent 0;
+            padding: 8px 15px;
+            transition: none;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &,
+        &:hover,
+        &:active,
+        &:visited {
+            text-decoration: none;
+        }
+
+        &,
+        &:visited {
+            .lib-css(color, @amblog-default-text__color);
+        }
+
+        &:hover,
+        &:active {
+            .lib-css(color, contrast(@amblog-blue__color));
+        }
+
+        &:hover {
+            .lib-css(background, @amblog-blue__color);
+        }
+
+        &:active {
+            .lib-css(background, darken(@amblog-blue__color, 10%));
+        }
+    }
+
+    .amblog-tags.amblog-widget-container {
+        &:extend(.amblog-element-block.widget all);
+    }
+
+    .amblog-content .tags {
+        margin-bottom: @amblog__indent;
+    }
+}

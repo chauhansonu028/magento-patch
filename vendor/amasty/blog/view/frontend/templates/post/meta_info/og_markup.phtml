@@ -1,0 +1,29 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Amasty\Blog\ViewModel\Posts\Meta\OgMarkup $viewModel
+ */
+
+$viewModel = $block->getViewModel();
+$post = $viewModel->getPost();
+$image = $post->getPostThumbnailSrc();
+?>
+
+<?php if ($post->isOpenGraphEnabled()): ?>
+    <meta property="og:title" content="<?= $escaper->escapeHtml($post->getOpenGraphTitle()); ?>"/>
+    <?php if ($post->getOpenGraphType()): ?>
+        <meta property="og:type" content="<?= $escaper->escapeHtml($post->getOpenGraphType()); ?>"/>
+    <?php endif; ?>
+    <meta property="og:url" content="<?= $escaper->escapeUrl($post->getUrl()); ?>"/>
+    <?php if ($image): ?>
+        <meta property="og:image" content="<?= $escaper->escapeUrl($image); ?>"/>
+    <?php endif; ?>
+    <meta property="og:site_name" content="<?= $escaper->escapeHtml($viewModel->getStoreName()); ?>"/>
+    <meta property="og:description" content="<?= $escaper->escapeHtml($post->getOpenGraphDescription()); ?>"/>
+<?php endif; ?>

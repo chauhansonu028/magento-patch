@@ -1,0 +1,12 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$middlewareUrl = $block->getUrl('product_recommendations_sync_admin/index/middleware');
+?>
+
+<script>
+    let rootDataset = document.getElementById('root').dataset;
+    rootDataset.recommendationsSyncEnabled = "true";
+    rootDataset.configPageUrl = "<?= $block->escapeUrl($block->getUrl('adminhtml/system_config/edit/section/services_connector')); ?>"
+    rootDataset.recommendationsSyncMiddlewareUrl = "<?= $block->escapeUrl($middlewareUrl); ?>";
+</script>

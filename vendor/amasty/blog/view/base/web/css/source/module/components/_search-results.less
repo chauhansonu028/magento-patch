@@ -1,0 +1,115 @@
+//
+//  Search Results Styles
+//  ____________________________________________
+
+//
+//  Common
+//  --------------------------------------------
+
+& when (@media-common = true) {
+    .amblog-search-titles {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .amblog-search-titles:not([role='tablist']) ~ .amblog-search-content {
+        display: none;
+    }
+
+    .amblog-search-title {
+        font-size: @amblog-font-size__s;
+        text-align: center;
+        text-transform: capitalize;
+    }
+
+    .amblog-search-items {
+        margin-bottom: 40px;
+    }
+
+    .amblog-search-title.open {
+        font-weight: @font-weight__bold;
+    }
+
+    .amblog-search-switch {
+        display: block;
+        padding: 12px 35px;
+    }
+
+    .amblog-search-switch,
+    .amblog-search-switch:active,
+    .amblog-search-switch:visited,
+    .amblog-search-switch:hover,
+    .amblog-search-switch:focus {
+        color: @amblog-default-text__color;
+        text-decoration: none;
+    }
+}
+
+//
+//  Desktop
+//  ---------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .amblog-search-titles {
+        border-bottom: 1px solid @amblog-input__border-color;
+    }
+
+    .amblog-search-title {
+        & {
+            position: relative;
+            width: auto;
+        }
+
+        &:after {
+            background: transparent;
+            content: '';
+            height: 1px;
+            left: 0;
+            position: absolute;
+            top: 100%;
+            width: 100%;
+        }
+
+        &.open:after {
+            background: @amblog-blue__color;
+        }
+    }
+
+    .amblog-search-content {
+        margin-top: 40px;
+        width: 100%;
+    }
+}
+
+//
+//  Mobile
+//  ---------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .amblog-search-switch {
+        padding: 8px 15px;
+    }
+
+    .amblog-search-titles {
+        padding-top: 10px;
+    }
+
+    .amblog-search-title {
+        & {
+            background: @amblog-tag__color;
+            border: 1px solid @amblog-input__border-color;
+            border-radius: 80px;
+            margin: 0 10px 10px 0;
+            width: auto;
+        }
+
+        &.open {
+            border-color: @amblog-blue__color;
+        }
+    }
+
+    .amblog-search-content {
+        margin-top: 20px;
+    }
+}

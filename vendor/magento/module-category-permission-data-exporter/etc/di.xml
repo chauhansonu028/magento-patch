@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Indexer & metadata declaration -->
+    <virtualType name="Magento\CategoryPermissionDataExporter\Model\Indexer\CategoryPermissionFeedIndexMetadata"
+                 type="Magento\DataExporter\Model\Indexer\FeedIndexMetadata">
+        <arguments>
+            <argument name="feedName" xsi:type="string">categoryPermissions</argument>
+            <argument name="feedIdentity" xsi:type="string">permission_id</argument>
+            <argument name="sourceTableName" xsi:type="string">magento_catalogpermissions</argument>
+            <argument name="sourceTableField" xsi:type="string">permission_id</argument>
+            <argument name="feedTableName" xsi:type="string">catalog_data_exporter_category_permissions</argument>
+            <argument name="feedTableField" xsi:type="string">permission_id</argument>
+            <argument name="feedTableMutableColumns" xsi:type="array">
+                <item name="feed_data" xsi:type="string">feed_data</item>
+                <item name="is_deleted" xsi:type="string">is_deleted</item>
+                <item name="permission_id" xsi:type="string">permission_id</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\CategoryPermissionDataExporter\Model\Indexer\CategoryPermissionDataSerializer"
+                 type="Magento\DataExporter\Model\Indexer\DataSerializer">
+        <arguments>
+            <argument name="mapping" xsi:type="array">
+                <item name="is_deleted" xsi:type="string">deleted</item>
+                <item name="permission_id" xsi:type="string">_permission_id</item>
+                <item name="website_id" xsi:type="string">_website_id</item>
+                <item name="customer_group_id" xsi:type="string">_customer_group_id</item>
+                <item name="category_id" xsi:type="array">
+                    <item name="id" xsi:type="string">id</item>
+                    <item name="categoryId" xsi:type="string">categoryId</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\CategoryPermissionDataExporter\Model\Indexer\CategoryPermissionFeedIndexer"
+                 type="Magento\DataExporter\Model\Indexer\FeedIndexer">
+        <arguments>
+            <argument name="feedIndexMetadata" xsi:type="object">Magento\CategoryPermissionDataExporter\Model\Indexer\CategoryPermissionFeedIndexMetadata</argument>
+            <argument name="serializer" xsi:type="object">Magento\CategoryPermissionDataExporter\Model\Indexer\CategoryPermissionDataSerializer</argument>
+            <argument name="processor" xsi:type="object">Magento\CategoryPermissionDataExporter\Model\Indexer\FeedIndexProcessorCreateUpdateDelete</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\CategoryPermissionDataExporter\Model\CategoryPermissionFeed"
+                 type="Magento\DataExporter\Model\Feed">
+        <arguments>
+            <argument name="feedIndexMetadata" xsi:type="object">
+                Magento\CategoryPermissionDataExporter\Model\Indexer\CategoryPermissionFeedIndexMetadata
+            </argument>
+            <argument name="dateTimeFormat" xsi:type="const">\DateTimeInterface::RFC3339</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\DataExporter\Model\FeedPool">
+        <arguments>
+            <argument name="classMap" xsi:type="array">
+                <item name="categoryPermissions" xsi:type="string">
+                    Magento\CategoryPermissionDataExporter\Model\CategoryPermissionFeed
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\DataExporter\Model\Indexer\FeedIndexProcessorCreateUpdate">
+        <plugin name="category-permissions-export-global-config" type="Magento\CategoryPermissionDataExporter\Plugin\GlobalConfigurationReindex"/>
+    </type>
+
+    <type name="Magento\Config\Model\Config">
+        <plugin name="category-permissions-export-invalidate-on-config-change" type="Magento\CategoryPermissionDataExporter\Plugin\InvalidateOnConfigChange" />
+    </type>
+
+    <virtualType name="Magento\CategoryPermissionDataExporter\Model\Indexer\FeedIndexProcessorCreateUpdateDelete" type="Magento\DataExporter\Model\Indexer\FeedIndexProcessorCreateUpdateDelete">
+        <arguments>
+            <argument name="markRemovedEntities" xsi:type="object">Magento\CategoryPermissionDataExporter\Model\MarkRemovedEntities</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- TODO: make generic class -->
+    <type name="Magento\CategoryPermissionDataExporter\Plugin\InvalidateOnConfigChange">
+        <arguments>
+            <argument name="indexers" xsi:type="array">
+                <item name="catalog_data_exporter_category_permissions" xsi:type="array">
+                    <item name="catalog/magento_catalogpermissions/enabled" xsi:type="string">catalog/magento_catalogpermissions/enabled</item>
+                    <item name="catalog/magento_catalogpermissions/grant_catalog_category_view" xsi:type="string">catalog/magento_catalogpermissions/grant_catalog_category_view</item>
+                    <item name="catalog/magento_catalogpermissions/grant_catalog_category_view_groups" xsi:type="string">catalog/magento_catalogpermissions/grant_catalog_category_view_groups</item>
+                    <item name="catalog/magento_catalogpermissions/grant_catalog_product_price" xsi:type="string">catalog/magento_catalogpermissions/grant_catalog_product_price</item>
+                    <item name="catalog/magento_catalogpermissions/grant_catalog_product_price_groups" xsi:type="string">catalog/magento_catalogpermissions/grant_catalog_product_price_groups</item>
+                    <item name="catalog/magento_catalogpermissions/grant_checkout_items" xsi:type="string">catalog/magento_catalogpermissions/grant_checkout_items</item>
+                    <item name="catalog/magento_catalogpermissions/grant_checkout_items_groups" xsi:type="string">catalog/magento_catalogpermissions/grant_checkout_items_groups</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Category">
+        <plugin name="delete-category-permission-on-category-delete"
+                type="Magento\CategoryPermissionDataExporter\Plugin\MarkEntityAsDeletedOnCategoryRemove"/>
+    </type>
+</config>

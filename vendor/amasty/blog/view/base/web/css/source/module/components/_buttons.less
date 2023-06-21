@@ -1,0 +1,116 @@
+//
+//  Buttons styles
+//  ____________________________________________
+
+//
+//  Variables
+//  --------------------------------------------
+
+@amblog-button__color: @amblog-blue__color;
+@amblog-button__background-color: #e4effb;
+@amblog-button-comment-icon__size: 15px;
+@amblog-button_hover__color: darken(@amblog-button__color, 10%);
+
+//
+//  Common
+//  --------------------------------------------
+
+& when (@media-common = true) {
+    .amblog-button {
+        & {
+            .amblog-word-break;
+
+            align-items: center;
+            box-shadow: none;
+            box-sizing: border-box;
+            color: @amblog-button__color;
+            display: inline-flex;
+            font-weight: @font-weight__bold;
+            justify-content: center;
+            outline: none;
+        }
+
+        &:hover,
+        &:focus {
+            color: @amblog-button_hover__color;
+        }
+
+        &:focus > .amblog-icon,
+        &:hover > .amblog-icon {
+            fill: @amblog-button_hover__color;
+        }
+
+        &:not(.primary),
+        &:not(.primary):active {
+            box-shadow: none;
+        }
+
+        &.-clear {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+    }
+
+    .amblog-button > .amblog-icon {
+        fill: @amblog-button__color;
+        margin-right: 10px;
+    }
+
+    .amblog-button:not(.-toggle) > .amblog-icon {
+        margin-right: 15px;
+    }
+
+    .amblog-button.-toggle {
+        & {
+            line-height: 1.1;
+        }
+
+        .amblog-icon {
+            fill: @amblog-light-blue__color;
+            height: @amblog-button-comment-icon__size;
+            position: relative;
+            width: @amblog-button-comment-icon__size;
+        }
+    }
+
+    .amblog-button.-toggle.-empty {
+        & {
+            color: @amblog-dark-gray__color;
+            pointer-events: none;
+        }
+
+        .amblog-icon {
+            fill: @amblog-light-gray__color;
+        }
+    }
+
+    .amblog-button > .amblog-count:not(:empty) {
+        padding-right: 5px;
+    }
+
+    .amblog-link-btn {
+        background: none;
+        border: none;
+        color: @amblog-button__color;
+        font-size: @amblog-font-size__base;
+        font-weight: @font-weight__bold;
+        margin: 20px 0 0 25px;
+        padding: 0;
+    }
+
+    button.amblog-link-btn:hover,
+    button.amblog-link-btn:focus,
+    .amblog-link-btn:active,
+    .amblog-link-btn:focus,
+    .amblog-link-btn:hover {
+        background: none;
+        border: none;
+        color: @amblog-button_hover__color;
+    }
+
+    button.amblog-link-btn,
+    .amblog-link-btn {
+        box-shadow: none;
+    }
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Banners Lite for Magento 2 (System)
+ */-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="amasty_banners_lite_banner_data" resource="default" engine="innodb" comment="Amasty Promo Banners Lite Banner Data Table">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="int" name="salesrule_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Salesrule Entity Id"/>
+    <column xsi:type="int" name="banner_type" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Banner Type"/>
+    <column xsi:type="text" name="banner_image" nullable="true" comment="Banner Image"/>
+    <column xsi:type="varchar" name="banner_alt" nullable="true" length="255" comment="Banner Alt"/>
+    <column xsi:type="varchar" name="banner_hover_text" nullable="true" length="255" comment="Banner Hover Text"/>
+    <column xsi:type="varchar" name="banner_link" nullable="true" length="255" comment="Banner Link"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+    <index referenceId="AMASTY_BANNERS_LITE_BANNER_DATA_SALESRULE_ID" indexType="btree">
+      <column name="salesrule_id"/>
+    </index>
+  </table>
+  <table name="amasty_banners_lite_rule" resource="default" engine="innodb" comment="Amasty Promo Banners Lite Rule">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="int" name="salesrule_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Salesrule Entity Id"/>
+    <column xsi:type="text" name="banner_product_sku" nullable="true" comment="Banner Type"/>
+    <column xsi:type="text" name="banner_product_categories" nullable="true" comment="Banner Image"/>
+    <column xsi:type="int" name="show_banner_for" padding="11" unsigned="false" nullable="true" identity="false" comment="Banner Alt"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+    <index referenceId="AMASTY_BANNERS_LITE_RULE_SALESRULE_ID" indexType="btree">
+      <column name="salesrule_id"/>
+    </index>
+  </table>
+</schema>

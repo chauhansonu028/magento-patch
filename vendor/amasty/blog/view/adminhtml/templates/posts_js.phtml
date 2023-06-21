@@ -1,0 +1,23 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+?>
+<script>
+    require([
+        'jquery',
+    ], function($) {
+        require([
+            'Amasty_Blog/js/tag-it-custom'
+        ], function() {
+            $( document ).ready(function() {
+                $("#posts_tags").tagit({
+                    availableTags: <?= /** @noEscape */ json_encode($block->getTagsNamesArray())?>
+                });
+                $("#posts_tags").data("ui-tagit").tagInput.addClass("fancy");
+            });
+        });
+    });
+</script>

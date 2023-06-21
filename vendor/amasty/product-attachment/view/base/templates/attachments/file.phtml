@@ -1,0 +1,23 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Product Attachments Base for Magento 2
+ */
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Amasty\ProductAttachment\Api\Data\FileInterface $file */
+$file = $block->getFile();
+?>
+<div class="am-fileline">
+    <?php if ($block->getIsShowIcon() && $file->getIconUrl()): ?>
+        <img src="<?= $block->escapeUrl($file->getIconUrl()) ?>" class="am-fileicon" />
+    <?php endif; ?>
+
+    <a href="<?= $block->escapeUrl($file->getFrontendUrl()) ?>" class="am-filelink" target="_blank">
+        <?= $block->escapeHtml($file->getLabel()); ?>
+    </a>
+
+    <?php if ($block->getIsShowFilesize() && $file->getFileSize()): ?>
+        <span class="am-filesize">(<?= $block->escapeHtml($file->getReadableFileSize()) ?>)</span>
+    <?php endif ?>
+</div>

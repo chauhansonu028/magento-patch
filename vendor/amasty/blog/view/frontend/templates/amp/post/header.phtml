@@ -1,0 +1,57 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Content\Post\Details
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$post = $block->getPost();
+$commentsClass = $block->getCommentsCount() < 1 ? 'amblog-no-comments' : '';
+?>
+
+<?php if ($block->isShowAuthorInfo() && $post->getPostedBy()): ?>
+    <span class="posted-by item">
+        <i class="fas fa-user amblog-details-icon"></i>
+        <?= $escaper->escapeHtml(__('By ')); ?>
+        <a rel="author"
+           href="<?= $escaper->escapeUrl($post->getAuthor()->getUrl()); ?>"
+           aria-label="<?= $escaper->escapeHtml($post->getPostedBy()); ?>"
+           title="<?= $escaper->escapeHtml($post->getPostedBy()); ?>">
+            <?= $escaper->escapeHtml($post->getPostedBy()); ?>
+        </a>
+    </span>
+<?php endif; ?>
+
+<?php if ($post->getCreatedAt()): ?>
+    <span class="date item">
+        <i class="fas fa-calendar-alt amblog-details-icon"></i>
+        <span>
+            <?= $escaper->escapeHtml($block->renderDate($post->getPublishedAt())) ?>
+        </span>
+        <?php if ($post->getEditedAt() && $block->isShowEditedAt()): ?>
+            <span class="amblog-date">
+                ,<?= $escaper->escapeHtml(__(' Edited ')) ?>
+                <?= /* @noEscape */ $block->renderDate($post->getEditedAt(), true) ?>
+            </span>
+        <?php endif; ?>
+    </span>
+<?php endif; ?>
+
+<?php if ($post->getCommentsEnabled()): ?>
+    <span class="comments item <?= $escaper->escapeHtmlAttr($commentsClass); ?>">
+    <?php $commentCount = $block->getCommentsCount();
+    if ($commentCount == 1): ?>
+        <i class="fas fa-comment amblog-details-icon"></i>
+        <?= /* @noEscape */ __('%1 comment', $commentCount); ?>
+    <?php elseif ($commentCount > 1): ?>
+        <i class="fas fa-comment amblog-details-icon"></i>
+        <?= /* @noEscape */ __('%1 comments', $commentCount); ?>
+    <?php else: ?>
+        <?= $escaper->escapeHtml(__('0 comments')); ?>
+    <?php endif; ?>
+    </span>
+<?php endif; ?>

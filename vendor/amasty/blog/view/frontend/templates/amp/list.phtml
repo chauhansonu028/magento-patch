@@ -1,0 +1,71 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var \Amasty\Blog\Block\Content\Lists $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$collection = $block->getCollection();
+?>
+
+<div class="amblog-list-wrap amblog-post-wrap">
+    <?php if ($collection && $collection->getSize()): ?>
+        <div class="amblog-list">
+            <?php foreach ($collection as $post): ?>
+                <div class="amblog-post">
+                    <h2>
+                        <a class="amblog-title" href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                           title="<?= $escaper->escapeHtml($post->getTitle()); ?>">
+                            <?= $escaper->escapeHtml($post->getTitle()); ?>
+                        </a>
+                    </h2>
+
+                    <?php if ($post->getListThumbnailSrc()): ?>
+                        <div class="amp-img-container">
+                            <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                               title="<?= $escaper->escapeHtml($post->getTitle()); ?>">
+                                <amp-img alt="<?= $escaper->escapeHtml($post->getThumbnailAlt()); ?>"
+                                         src="<?= $escaper->escapeUrl($post->getListThumbnailSrc()); ?>"
+                                         layout="fill">
+                                </amp-img>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="post-header">
+                        <?= $block->getAmpHeaderHtml($post); ?>
+                    </div>
+
+                    <div class="am-content">
+                        <?= /* @noEscape */ $post->getShortContent(); ?>
+                    </div>
+
+                    <div class="amblog-post-tags">
+                        <div class="amblog-categories">
+                            <?= $block->getCategoriesHtml($post, true); ?>
+                        </div>
+                        <div class="amblog-tags">
+                            <?= $block->getTagsHtml($post, true); ?>
+                        </div>
+                    </div>
+
+                    <div class="am-details">
+                        <a class="button am-readmore" href="<?= $escaper->escapeUrl($block->getReadMoreUrl($post)); ?>"
+                           title="<?= $escaper->escapeHtml(__("Read More...")); ?>">
+                            <?= $escaper->escapeHtml(__("Read More...")); ?>
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="amblog-toolbar">
+            <?= $block->getToolbarHtml(true); ?>
+        </div>
+    <?php else: ?>
+        <p class="notice">
+            <?= $escaper->escapeHtml(__("Your search returned no results")); ?>
+        </p>
+    <?php endif; ?>
+</div>

@@ -1,0 +1,33 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var SaaSContext $block */
+
+// API key for unauthenticated endpoints
+use Magento\LiveSearch\Block\Adminhtml\SaaSContext;
+
+$searchApiKey = "search_gql";
+?>
+
+<div
+    data-is-api-key-valid="<?php /*phpcs:ignore*/ if ($block->escapeHtmlAttr($block->isApiKeyValid())):?>true<?php else:?>false<?php endif; ?>"
+    data-search-api-key="<?= /* @noEscape */ $searchApiKey; ?>"
+    data-environment-id="<?= $block->escapeHtmlAttr($block->getEnvironmentId()); ?>"
+    data-website-code="<?= $block->escapeHtmlAttr($block->getWebsiteCode()); ?>"
+    data-store-code="<?= $block->escapeHtmlAttr($block->getStoreCode()); ?>"
+    data-store-view-code="<?= $block->escapeHtmlAttr($block->getStoreViewCode()); ?>"
+    data-currency-symbol="<?= $block->escapeHtmlAttr($block->getCurrencySymbol()); ?>"
+    data-magento-edition="<?= $block->escapeHtmlAttr($block->getMagentoEdition()); ?>"
+    data-magento-version="<?= $block->escapeHtmlAttr($block->getMagentoVersion()); ?>"
+    data-module-version="<?= $block->escapeHtmlAttr($block->getModuleVersion()); ?>"
+    data-magento-middleware-url="<?=  /*phpcs:ignore*/  rtrim($block->escapeUrl($block->getUrl('livesearch/livesearch/middleware')), "/"); ?>"
+    data-magento-introspection-url="<?=  /*phpcs:ignore*/  rtrim($block->escapeUrl($block->getUrl('livesearch/livesearch/introspect')), "/"); ?>"
+    data-config-page-url="<?=  /*phpcs:ignore*/  $block->escapeUrl($block->getUrl('adminhtml/system_config/edit/section/services_connector')); ?>"
+    data-heartbeat-url="<?= $block->escapeUrl(rtrim($block->getUrl('livesearch/livesearch/heartbeat'), "/")); ?>"
+    id="root"
+></div>
+
+<script src="<?= $block->escapeUrl($block->getFrontendUrl()) ?>"></script>

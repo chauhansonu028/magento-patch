@@ -1,0 +1,162 @@
+//
+//  Tabs
+//  __________________________________________________
+
+//
+//  Imports
+//  --------------------------------------------------
+
+@import '../_utils';
+
+//
+//  Variables
+//  --------------------------------------------------
+
+@amblog-post-image__size: 100px;
+@amblog-post-image__background-image: url('data:image/svg+xml;base64, PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwKSIgZmlsbD0iI0Q3RDlERCI+PHBhdGggZD0iTTM3LjIzNyAyMy4xOGMtMi4zMjEgMS4xMDUtNC4yMTQgNC40NjItNi40MjggMi4yNDctMS4zNDUtMS40Ni0yLjk0Mi0zLjc4NC00Ljc3Ni02LjQxMi0xLjk4My0yLjgyNS00LjUxMS01LjI1NC03LjQ4Ni0yLjQ3OS0zLjMyMSAzLjEyNC01LjYwMiAxMS42LTUuOCAxNS45NjNsMzEuMzguMDFjLS43MTgtMi41NjMtMy41MDctMTAuOTQtNi44OS05LjMzek0zNy4wOSAxOC4yNThhMy44NTkgMy44NTkgMCAxMDAtNy43MTcgMy44NTkgMy44NTkgMCAwMDAgNy43MTd6Ii8+PHBhdGggZD0iTTQ4Ljg1MyA1LjU5NEg4LjAyM2MtLjYzMyAwLTEuMTQ4LjUxMy0xLjE0OCAxLjE0NnY1LjhIMS4xNDdDLjUxNCAxMi41NCAwIDEzLjA1NCAwIDEzLjY4N3YyOS41N2MwIC42MzQuNTE0IDEuMTQ3IDEuMTQ3IDEuMTQ3aDQwLjgzYy42MzMgMCAxLjE0OC0uNTE0IDEuMTQ4LTEuMTQ3di01Ljc5OWg1LjcyOGMuNjMzIDAgMS4xNDgtLjUxMyAxLjE0OC0xLjE0NlY2Ljc0Yy0uMDAxLS42MzItLjUxNi0xLjE0Ni0xLjE0OC0xLjE0NnptLTguODA3IDM1LjczMkgzLjA3OVYxNS42MmgzLjc5NnYxNy44NzJjLS41NzYgMi4yMjYtLjkzIDQuMzY1LTEuMDAzIDUuOTU2bDMxLjM4LjAxYTM2LjA4MiAzNi4wODIgMCAwMC0uNjMtMmgzLjQyNHYzLjg2OHptNi44NzUtNi45NDdIOS45NTRWOC42NzNoMzYuOTY3VjM0LjM4eiIvPjwvZz48ZGVmcz48Y2xpcFBhdGggaWQ9ImNsaXAwIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMCAwaDUwdjUwSDB6Ii8+PC9jbGlwUGF0aD48L2RlZnM+PC9zdmc+');
+
+//
+//  Common
+//  --------------------------------------------------
+
+& when (@media-common = true) {
+    .amblog-tabs-block.-title {
+        & {
+            border-bottom: 1px solid #d1d1d1;
+            display: flex;
+            list-style: none;
+            margin: 0 0 @amblog__indent__l * 2;
+            padding: 0;
+        }
+
+        .amblog-item {
+            .amblog-word-break;
+
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 0;
+            padding: 0 @amblog__indent 12px;
+            text-transform: capitalize;
+            transform: translateY(1px);
+            transition: border .1s;
+        }
+
+        .amblog-item.-active {
+            font-weight: 600;
+        }
+
+        .amblog-item.-active {
+            border-bottom-color: #4776f0;
+        }
+    }
+
+    .amblog-content-tab:not(.-active) {
+        display: none;
+    }
+
+    .amblog-tabs-block.-block .amblog-list {
+        & {
+            list-style: none;
+            padding: 0;
+        }
+
+        &.-active {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+    .amblog-content-tab .amblog-post-block {
+        & {
+            display: flex;
+        }
+
+        &:not(:first-child) {
+            margin-top: 20px;
+        }
+
+        .amblog-link {
+            display: block;
+        }
+
+        .amblog-image-wrapper {
+            align-items: center;
+            background: @amblog-image-wrapper__background-color center/50px no-repeat;
+            box-sizing: border-box;
+            display: flex;
+            height: @amblog-post-image__size;
+            justify-content: center;
+            margin-right: 20px;
+            min-width: @amblog-post-image__size;
+            overflow: hidden;
+            width: @amblog-post-image__size;
+        }
+
+        .amblog-image-wrapper.-placeholder {
+            background-image: @amblog-post-image__background-image;
+        }
+
+        .amblog-image {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+
+        .amblog-headline {
+            color: @amblog-gray__color;
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 25px;
+        }
+
+        .amblog-date {
+            color: @amblog-date__color;
+            font-size: 14px;
+            line-height: 19px;
+            margin-top: 5px;
+        }
+    }
+
+    .amblog-content-tab {
+        & {
+            margin-bottom: 30px;
+        }
+
+        > .pager {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+    }
+}
+
+//
+//  Mobile
+//  --------------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .amblog-tabs-block.-title .amblog-item {
+        font-size: 16px;
+    }
+}
+
+//
+//  Tablet
+//  --------------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__l) {
+    .amblog-tabs-block.-block .amblog-list.-active {
+        justify-content: flex-start;
+    }
+
+    .amblog-content-tab {
+        margin-bottom: 10px;
+    }
+}

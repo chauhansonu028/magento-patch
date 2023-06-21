@@ -1,0 +1,139 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var \Amasty\Blog\Block\Layout $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$swipeText = $block->hasMobileLeftColumn() ? __('Swipe to the right') : __('Swipe to the left');
+$additionalSidebarHtmlMobile = $additionalSidebarHtmlDesktop = $block->getChildHtml('additional.sidebar');
+?>
+
+<article class="mobile <?= $block->escapeHtml($block->getMobileLayoutCode()); ?>">
+    <?php if ($block->hasMobileLeftColumn()): ?>
+        <aside class="left amblog-aside-left" id="amblog_left_off_canvas">
+            <div class="amblog-close" data-amblog-js="close"></div>
+            <?php if ($additionalSidebarHtmlMobile): ?>
+                <div data-amblog-js="element-block" class="desktop-block amblog-element-block"
+                     data-set="sidebar-additional">
+                    <?= /** @noEscape */ $additionalSidebarHtmlMobile ?>
+                    <?php $additionalSidebarHtmlMobile = ''; ?>
+                </div>
+            <?php endif; ?>
+            <?php foreach ($block->getMobileBlocks('left_side') as $alias): ?>
+                <?php $blockHtml = $block->getSidebarBlockHtml($alias); ?>
+                <?php if ($blockHtml): ?>
+                    <div data-amblog-js="element-block" class="mobile-block amblog-element-block" data-set="sidebar-<?= $block->escapeHtml($alias); ?>">
+                        <?= /** @noEscape */ $blockHtml ?>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </aside>
+        <script type="text/javascript">
+            //<![CDATA[
+            require(['jquery', 'Amasty_Blog/js/vendor/swipe/swipy'], function ($) {
+                $(document).ready(function () {
+                    $('#amblog_left_off_canvas').swipy({'side':'left'});
+                });
+            });
+            //]]>
+        </script>
+    <?php endif; ?>
+    <section class="content amblog-main-content">
+        <?php if ($block->getMobileBlocks('right_side') || $block->getMobileBlocks('left_side')): ?>
+            <div class="swipe-me amblog-swipe <?= $block->escapeHtml($block->hasMobileLeftColumn() ? "-left" : "-right"); ?>"
+                 data-amblog-js="swipe-me"
+                 title="<?= $block->escapeHtml($swipeText) ?>">
+            </div>
+        <?php endif; ?>
+        <?php foreach ($block->getMobileBlocks('content') as $alias): ?>
+            <div class="mobile-block amblog-item" data-set="content-<?= $block->escapeHtml($alias); ?>">
+                <?= $block->getContentBlockHtml($alias); ?>
+            </div>
+        <?php endforeach; ?>
+    </section>
+    <?php if ($block->hasMobileRightColumn()): ?>
+        <aside class="right amblog-aside-right" id="amblog_right_off_canvas">
+            <div class="amblog-close" data-amblog-js="close"></div>
+            <?php if ($additionalSidebarHtmlMobile): ?>
+                <div data-amblog-js="element-block" class="desktop-block amblog-element-block"
+                     data-set="sidebar-additional">
+                    <?= /** @noEscape */ $additionalSidebarHtmlMobile ?>
+                </div>
+            <?php endif; ?>
+            <?php foreach ($block->getMobileBlocks('right_side') as $alias): ?>
+                <?php $blockHtml = $block->getSidebarBlockHtml($alias); ?>
+                <?php if ($blockHtml): ?>
+                    <div data-amblog-js="element-block" class="mobile-block amblog-element-block" data-set="sidebar-<?= $block->escapeHtml($alias); ?>">
+                        <?= /** @noEscape */ $blockHtml ?>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </aside>
+        <script type="text/javascript">
+            //<![CDATA[
+            require(['Amasty_Blog/js/vendor/swipe/swipy', 'jquery'], function (swip, $) {
+                $('#amblog_right_off_canvas').swipy({'side':'right'});
+            });
+            //]]>
+        </script>
+    <?php endif; ?>
+</article>
+
+<article class="desktop <?= $block->escapeHtml($block->getDesktopLayoutCode()); ?>">
+    <?php if ($block->hasDesktopLeftColumn()): ?>
+        <aside class="left">
+            <?php if ($additionalSidebarHtmlDesktop): ?>
+                <div data-amblog-js="element-block" class="desktop-block amblog-element-block"
+                     data-set="sidebar-additional">
+                    <?= /** @noEscape */ $additionalSidebarHtmlDesktop ?>
+                    <?php $additionalSidebarHtmlDesktop = '' ?>
+                </div>
+            <?php endif; ?>
+            <?php foreach ($block->getDesktopBlocks('left_side') as $alias): ?>
+                <?php $blockHtml = $block->getSidebarBlockHtml($alias); ?>
+                <?php if ($blockHtml): ?>
+                    <div data-amblog-js="element-block" class="desktop-block amblog-element-block" data-set="sidebar-<?= $block->escapeHtml($alias); ?>">
+                        <?= /** @noEscape */ $blockHtml ?>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </aside>
+    <?php endif; ?>
+    <section class="content amblog-main-content">
+        <?php foreach ($block->getDesktopBlocks('content') as $alias): ?>
+            <div class="desktop-block amblog-item"  data-set="content-<?= $block->escapeHtml($alias); ?>">
+                <?= $block->getContentBlockHtml($alias); ?>
+            </div>
+        <?php endforeach; ?>
+    </section>
+    <?php if ($block->hasDesktopRightColumn()): ?>
+        <aside class="right">
+            <?php if ($additionalSidebarHtmlDesktop): ?>
+                <div data-amblog-js="element-block" class="desktop-block amblog-element-block"
+                     data-set="sidebar-additional">
+                    <?= /** @noEscape */ $additionalSidebarHtmlDesktop ?>
+                </div>
+            <?php endif; ?>
+            <?php foreach ($block->getDesktopBlocks('right_side') as $alias): ?>
+                <?php $blockHtml = $block->getSidebarBlockHtml($alias); ?>
+                <?php if ($blockHtml): ?>
+                    <div data-amblog-js="element-block" class="desktop-block amblog-element-block"  data-set="sidebar-<?= $block->escapeHtml($alias); ?>">
+                        <?= /** @noEscape */ $blockHtml ?>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </aside>
+    <?php endif; ?>
+</article>
+
+<script type="text/javascript">
+    require(
+        ['jquery', 'Amasty_Blog/js/vendor/appendaround/appendaround'],
+        function ($) {
+            $('<?= $block->escapeHtml($block->getAskedBlockSelector()); ?>').appendAround();
+        }
+    )
+</script>

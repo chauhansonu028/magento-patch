@@ -1,0 +1,23 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Adminhtml\Posts\Edit\View
+ * @var $escaper Magento\Framework\Escaper
+ */
+?>
+
+<div class="ampost_views">
+    <label>
+        <span class="amblog_views_label"><?= $escaper->escapeHtml(__('Views:')) ?></span> <?= $escaper->escapeHtml($block->getViews()) ?>
+    </label>
+</div>
+
+<div class="ampost_likes">
+    <label>
+        <span class="amblog_likes_label"><?= $escaper->escapeHtml(__('Like:')) ?></span> <?= $escaper->escapeHtml($block->getLikes()) ?>
+    </label>
+</div>

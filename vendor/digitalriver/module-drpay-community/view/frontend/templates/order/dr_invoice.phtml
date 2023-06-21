@@ -1,0 +1,44 @@
+<?php
+/**
+ * Overrides order invoice rendering template
+ * Displays comma separated download URLs to separate file links
+ *
+ * @summary
+ * Provides download invoice links from Digitalriver instead of OOB magento order invoice section
+ * @author Vignesh Balasubramani <vignesh.balasubramani@gds.ey.com>
+ *
+ * @category Digitalriver
+ * @package Digitalriver_DrPay
+ */
+?>
+<?php
+    $invoiceLinks = $block->getInvoiceLinks();
+    $files = ($invoiceLinks) ? array_values($invoiceLinks) : [];
+
+//Displays one file link below another
+if (count($files) > 0) {
+    $_index = 0;
+    $_numberOfInvoices = count($files); ?>
+        <div class="order-details-items invoice">
+            <?php
+            foreach ($files as $file) {
+                //Index should not be displayed if there is only one link
+                $_index = ($_numberOfInvoices > 1) ? $_index + 1 : ''; ?>
+                <div class="sales-order-invoice-download">
+                    <a class="sales-order-invoice-link" target="_blank"
+                       href="<?= $block->escapeUrl($file->getDrFileLinkUrl()) ?>">
+                        <?= $block->escapeHtml(__('Download Invoice')) ?>
+                        <?= $block->escapeHtml($_index) ?>
+                    </a>
+                </div>
+                <?php
+            } ?>
+        </div>
+    <?php
+} else {
+    //DIRI-196 Display OOB Invoice page if file-links are not available
+    ?>
+        <?= $block->getChildHtml('sales.order.invoice') ?>
+    <?php
+}
+?>

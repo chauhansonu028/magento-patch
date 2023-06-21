@@ -1,0 +1,36 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Content\Lists\Pager
+ * @var $escaper Magento\Framework\Escaper
+ */
+$collection = $block->getCollection();
+?>
+
+<?php if ($collection && $collection->getSize()): ?>
+    <?php if ($block->getLastPageNum() > 1): ?>
+        <div class="amblog-pager-container">
+            <div class="amblog-links">
+                <a class="amblog-link -new <?= /* @noEscape */ ($block->isFirstPage()) ? '-disabled' : '' ?>"
+                   href="<?= $escaper->escapeUrl($block->getPreviousPageUrl()) ?>"
+                   rel="prev"
+                   data-amblog-js="pager-link"
+                   aria-label="<?= $escaper->escapeHtmlAttr(__('Newer Entries')) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Newer Entries')) ?>"></a>
+                <span class="amblog-pagination">
+                    <?= $escaper->escapeHtml(__('%1 of %2', $block->getCurrentPage(), $block->getLastPageNum())) ?>
+                </span>
+                <a class="amblog-link <?= /* @noEscape */  ($block->isLastPage()) ? '-disabled' : '' ?>"
+                   href="<?= $escaper->escapeUrl($block->getNextPageUrl()) ?>"
+                   rel="next"
+                   data-amblog-js="pager-link"
+                   aria-label="<?= $escaper->escapeHtmlAttr(__('Older Entries')) ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Older Entries')) ?>"></a>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Search\Api\SearchInterface" type="Magento\LiveSearchAdapter\Model\SearchAdapter" />
+    <preference for="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\DefaultFilterStrategyApplyChecker" type="Magento\LiveSearchAdapter\Model\ResourceModel\Fulltext\Collection\DefaultFilterStrategyApplyChecker" />
+    <type name="Magento\Search\Model\AdapterFactory">
+        <arguments>
+            <argument name="adapters" xsi:type="array">
+                <item name="livesearch" xsi:type="string">Magento\LiveSearchAdapter\Model\DummyAdapter</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Search\Model\EngineResolver">
+        <arguments>
+            <argument name="engines" xsi:type="array">
+                <item name="livesearch" xsi:type="string">livesearch</item>
+            </argument>
+            <argument name="defaultEngine" xsi:type="string">livesearch</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Search\Model\Adminhtml\System\Config\Source\Engine">
+        <arguments>
+            <argument name="engines" xsi:type="array">
+                <item sortOrder="30" name="livesearch" xsi:type="string">Live Search</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogSearch\Model\ResourceModel\EngineProvider">
+        <arguments>
+            <argument name="engines" xsi:type="array">
+                <item name="livesearch" xsi:type="string">Magento\LiveSearchAdapter\Model\ResourceModel\Engine</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\LiveSearchAdapter\Model\QueryArgumentProcessor\QueryArgumentProcessorResolver">
+        <arguments>
+            <argument name="queryArgumentProcessors" xsi:type="array">
+                <item name="phrase" xsi:type="object">Magento\LiveSearchAdapter\Model\QueryArgumentProcessor\SearchPhraseQueryArgumentProcessor</item>
+                <item name="filter" xsi:type="object">Magento\LiveSearchAdapter\Model\QueryArgumentProcessor\FilterQueryArgumentProcessor</item>
+                <item name="sort" xsi:type="object">Magento\LiveSearchAdapter\Model\QueryArgumentProcessor\SortQueryArgumentProcessor</item>
+                <item name="current_page" xsi:type="object">Magento\LiveSearchAdapter\Model\QueryArgumentProcessor\CurrentPageQueryArgumentProcessor</item>
+                <item name="page_size" xsi:type="object">Magento\LiveSearchAdapter\Model\QueryArgumentProcessor\PageSizeQueryArgumentProcessor</item>
+                <item name="context" xsi:type="object">Magento\LiveSearchAdapter\Model\QueryArgumentProcessor\ContextQueryArgumentProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Catalog\Model\ResourceModel\Attribute">
+        <plugin name="catalogsearchFulltextIndexerAttribute" type="Magento\CatalogSearch\Model\Indexer\Fulltext\Plugin\Attribute" disabled="true"/>
+    </type>
+    <type name="Magento\Store\Model\ResourceModel\Store">
+        <plugin name="catalogsearchFulltextIndexerStoreView" type="Magento\CatalogSearch\Model\Indexer\Fulltext\Plugin\Store\View" disabled="true"/>
+    </type>
+    <type name="Magento\Store\Model\ResourceModel\Group">
+        <plugin name="catalogsearchFulltextIndexerStoreGroup" type="Magento\CatalogSearch\Model\Indexer\Fulltext\Plugin\Store\Group" disabled="true"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Product">
+        <plugin name="catalogsearchFulltextProduct" type="Magento\CatalogSearch\Model\Indexer\Fulltext\Plugin\Product" disabled="true"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Category">
+        <plugin name="catalogsearchFulltextCategory" type="Magento\CatalogSearch\Model\Indexer\Fulltext\Plugin\Category" disabled="true"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Action">
+        <plugin name="catalogsearchFulltextMassAction" type="Magento\CatalogSearch\Model\Indexer\Fulltext\Plugin\Product\Action" disabled="true"/>
+    </type>
+    <type name="Magento\Catalog\Model\Indexer\Product\Category\Action\Rows">
+        <plugin name="catalogsearchFulltextCategoryAssignment" type="Magento\CatalogSearch\Model\Indexer\Fulltext\Plugin\Product\Category\Action\Rows" disabled="true"/>
+    </type>
+    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\SearchCriteriaResolverFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Magento\LiveSearchAdapter\Model\ResourceModel\Fulltext\Collection\SearchCriteriaResolver</argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\TotalRecordsResolverFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Magento\LiveSearchAdapter\Model\ResourceModel\Fulltext\Collection\TotalRecordsResolver</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Search\Model\Search\PageSizeProvider">
+        <arguments>
+            <argument name="pageSizeBySearchEngine" xsi:type="array">
+                <item name="livesearch" xsi:type="number">500</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\SearchResultApplierFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Magento\LiveSearchAdapter\Model\ResourceModel\Fulltext\Collection\SearchResultApplier</argument>
+        </arguments>
+    </type>
+    <type name="Magento\LiveSearchAdapter\Observer\Render">
+        <arguments>
+            <argument name="emptyResultResponseHeaders" xsi:type="array">
+                <!-- Cache-Control header tells the browser not to cache the object.-->
+                <item name="cache-control" xsi:type="string">no-store, no-cache, must-revalidate, max-age=0</item>
+                <!-- Surrogate-Control header tells Fastly to not cache the object  -->
+                <item name="surrogate-control" xsi:type="string">max-age=0</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

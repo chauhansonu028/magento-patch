@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\Blog\Model\Config\Backend\SimpleText">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="escaper" xsi:type="object">Magento\Framework\Escaper</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\DataProvider\Category\Modifier\UseDefault">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="repository" xsi:type="object">Amasty\Blog\Api\CategoryRepositoryInterface</item>
+            </argument>
+            <argument name="currentEntityKey" xsi:type="const">Amasty\Blog\Controller\Adminhtml\Categories\Edit::CURRENT_AMASTY_BLOG_CATEGORY</argument>
+            <argument name="fieldsByStore" xsi:type="const">Amasty\Blog\Api\Data\CategoryInterface::FIELDS_BY_STORE</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\DataProvider\Tag\Modifier\UseDefault">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="repository" xsi:type="object">Amasty\Blog\Api\TagRepositoryInterface</item>
+            </argument>
+            <argument name="currentEntityKey" xsi:type="const">Amasty\Blog\Controller\Adminhtml\Tags\Edit::CURRENT_AMASTY_BLOG_TAG</argument>
+            <argument name="fieldsByStore" xsi:type="const">Amasty\Blog\Api\Data\TagInterface::FIELDS_BY_STORE</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\DataProvider\Author\Modifier\UseDefault">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="repository" xsi:type="object">Amasty\Blog\Api\AuthorRepositoryInterface</item>
+            </argument>
+            <argument name="currentEntityKey" xsi:type="const">Amasty\Blog\Controller\Adminhtml\Authors\Edit::CURRENT_AMASTY_BLOG_AUTHOR</argument>
+            <argument name="fieldsByStore" xsi:type="const">Amasty\Blog\Api\Data\AuthorInterface::FIELDS_BY_STORE</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\DataProvider\Post\Modifier\UseDefault">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="repository" xsi:type="object">Amasty\Blog\Api\PostRepositoryInterface</item>
+            </argument>
+            <argument name="currentEntityKey" xsi:type="const">Amasty\Blog\Controller\Adminhtml\Posts\Edit::CURRENT_AMASTY_BLOG_POST</argument>
+            <argument name="fieldsByStore" xsi:type="const">Amasty\Blog\Api\Data\PostInterface::FIELDS_BY_STORE</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Amasty\Blog\Model\Config\Source\EmailTemplate" type="Amasty\Blog\Model\Config\Source\AbstractTemplate">
+        <arguments>
+            <argument name="origTemplateCode" xsi:type="string">amblog_notify_admin_new_comment_email_template</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\Model\Config\Source\ReplyEmailTemplate" type="Amasty\Blog\Model\Config\Source\AbstractTemplate">
+        <arguments>
+            <argument name="origTemplateCode" xsi:type="string">amblog_comments_email_template</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\Model\DataProvider\Category\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="use_default" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Blog\Model\DataProvider\Category\Modifier\UseDefault</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\Model\DataProvider\Tag\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="use_default" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Blog\Model\DataProvider\Tag\Modifier\UseDefault</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\Model\DataProvider\Author\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="use_default" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Blog\Model\DataProvider\Author\Modifier\UseDefault</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\Model\DataProvider\Post\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="use_default" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Blog\Model\DataProvider\Post\Modifier\UseDefault</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="related_products" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Blog\Ui\DataProvider\Posts\RelatedProducts\DataModifier</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Blog\Model\DataProvider\CategoryDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Amasty\Blog\Model\DataProvider\Category\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\DataProvider\TagDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Amasty\Blog\Model\DataProvider\Tag\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\DataProvider\AuthorDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Amasty\Blog\Model\DataProvider\Author\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\DataProvider\PostDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Amasty\Blog\Model\DataProvider\Post\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout\Desktop\Post"
+                 type="Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout">
+        <arguments>
+            <argument name="layout" xsi:type="string">desktop_post</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout\Desktop\Mlist"
+                 type="Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout">
+        <arguments>
+            <argument name="layout" xsi:type="string">desktop_list</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout\Mobile\Post"
+                 type="Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout\Mobile">
+        <arguments>
+            <argument name="layout" xsi:type="string">mobile_post</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout\Mobile\Mlist"
+                 type="Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout\Mobile">
+        <arguments>
+            <argument name="layout" xsi:type="string">mobile_list</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Blog\Model\ResourceModel\Posts\RelatedProducts\GetPostRelatedProducts">
+        <arguments>
+            <argument name="collectionModifiers" xsi:type="array">
+                <item name="basicAttributes" xsi:type="object">Amasty\Blog\Model\Posts\RelatedProducts\Products\AddBasicAttributesModifier</item>
+                <item name="backendView" xsi:type="object">Amasty\Blog\Model\Posts\RelatedProducts\Products\BackendViewCollectionModifier</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!--Add possibility for choose blog pages as widgets render places start -->
+    <type name="Magento\Framework\View\Element\Html\Select">
+        <plugin name="Amasty_Blog::add-blog-places-to-widget"
+                type="Amasty\Blog\Plugin\Framework\View\Element\Html\Select\AddBlogSectionToWidgetRenderPlaces"
+        />
+    </type>
+    <type name="Magento\Widget\Block\Adminhtml\Widget\Instance\Edit\Tab\Main\Layout">
+        <plugin name="Amasty_Blog::add-blog-display-on"
+                type="Amasty\Blog\Plugin\Widget\Block\Adminhtml\Widget\Instance\Edit\Tab\Main\Layout\AddBlogDisplayOnContainers"
+        />
+    </type>
+    <type name="Magento\Widget\Model\Widget\Instance">
+        <plugin name="Amasty_Blog::add-blog-layout-update"
+                type="Amasty\Blog\Plugin\Widget\Model\Widget\Instance\AddBlogLayoutHandles"
+        />
+    </type>
+    <!--Add possibility for choose blog pages as widgets render places end -->
+</config>

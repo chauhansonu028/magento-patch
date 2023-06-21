@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+<!--    Refund events-->
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="sunshine_sales_order_creditmemo_save_after" instance="Zendesk\Zendesk\Observer\CreditMemoSaveAfter" />
+    </event>
+
+<!--    Customer events-->
+    <event name="customer_save_after">
+        <observer name="sunshine_customer_saved" instance="Zendesk\Zendesk\Observer\CustomerSave" />
+    </event>
+    <event name="customer_delete_after">
+        <observer name="sunshine_customer_delete" instance="Zendesk\Zendesk\Observer\CustomerDelete" />
+    </event>
+    <event name="customer_address_save_after">
+        <observer name="sunshine_customer_address_save_after" instance="Zendesk\Zendesk\Observer\CustomerAddressSave" />
+    </event>
+
+<!--    Order events-->
+    <event name="sales_order_save_after">
+        <observer name="sunshine_sales_order_save_after" instance="Zendesk\Zendesk\Observer\OrderSave" />
+    </event>
+<!--    This event catches addresses being updated in orders in the admin. -->
+<!--    It will also be hit when an order is created on the frontend, but the code will prevent it from being sent in that case. -->
+    <event name="sales_order_address_save_after">
+        <observer name="sunshine_sales_order_address_save_after" instance="Zendesk\Zendesk\Observer\OrderAddressUpdate" />
+    </event>
+    <event name="sales_order_invoice_pay">
+        <observer name="sunshine_sales_order_paid" instance="Zendesk\Zendesk\Observer\OrderPaid" />
+    </event>
+    <event name="order_cancel_after">
+        <observer name="sunshine_order_cancel" instance="Zendesk\Zendesk\Observer\OrderCanceled" />
+    </event>
+    <event name="controller_action_predispatch_checkout_index_index">
+        <observer name="sunshine_proceed_to_checkout" instance="Zendesk\Zendesk\Observer\CheckoutBegin" />
+    </event>
+
+<!--    Cart events-->
+    <event name="checkout_cart_product_add_after">
+        <observer name="sunshine_checkout_cart_item_add" instance="Zendesk\Zendesk\Observer\CartItemAdd" />
+    </event>
+    <event name="sales_quote_remove_item">
+        <observer name="sunshine_checkout_cart_item_remove" instance="Zendesk\Zendesk\Observer\CartItemRemove" />
+    </event>
+
+<!--    Shipment events-->
+    <event name="sales_order_shipment_save_after">
+        <observer name="sunshine_shipment_saved." instance="Zendesk\Zendesk\Observer\OrderShipped" />
+    </event>
+</config>

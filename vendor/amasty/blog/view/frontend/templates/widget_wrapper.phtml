@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var \Amasty\Blog\Block\Layout\WidgetWrapper $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$wrappedBlock = $block->getWrappedBlock();
+?>
+
+<?php if ($wrappedBlock): ?>
+    <?php if ($result = trim($wrappedBlock->toHtml())): ?>
+        <div data-amblog-js="element-block" class="desktop-block amblog-element-block"
+             data-set="sidebar-<?= $escaper->escapeHtml($block->getWrappedBlockIdentifier()); ?>">
+            <?= /** @noEscape */ $result ?>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

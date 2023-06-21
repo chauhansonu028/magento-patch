@@ -1,0 +1,108 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Featured
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$collection = $block->getCollection();
+$headerText = $block->getHeaderText();
+$isShowShortContent = $block->isShowShortContent();
+$isShowDate = $block->isShowDate();
+$isHumanized = $block->isHumanized();
+$collectionCount = $collection->count();
+?>
+
+<?php if ($collectionCount): ?>
+    <div class="widget amblog-post-list amblog-element-block">
+        <div class="amblog-title">
+            <?php if ($headerText): ?>
+                <?= $escaper->escapeHtml(__($headerText)) ?>
+            <?php else: ?>
+                <?= $escaper->escapeHtml(__('Featured posts')) ?>
+            <?php endif; ?>
+        </div>
+        <div class="amblog-list post-slider">
+            <div class="post-items amblog-slick-slider"
+                 data-amblog-js="post-slider"
+                 data-mage-init='{"amBlogSlider":{
+                     "rows": 0,
+                     "responsive": [
+                        {
+                            "breakpoint": 480,
+                            "settings": {
+                                "arrows": false,
+                                "dots": true,
+                                "slidesToShow": 1
+                            }
+                        }
+                    ]
+                }}'>
+                <?php foreach ($collection as $post): ?>
+                    <div class="post-item <?= $post->getListThumbnailSrc() ? '': ' -post-no-image'?>">
+                        <?php if ($post->getListThumbnailSrc()): ?>
+                            <a href="<?= $escaper->escapeUrl($post->getUrl()) ?>"
+                               title="<?= $escaper->escapeHtmlAttr($post->getTitle()) ?>"
+                               aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()) ?>"
+                               class="post-image">
+                                <img src="<?= /* @noEscape */ $post->getListThumbnailSrc(); ?>"
+                                     alt="<?= $escaper->escapeHtmlAttr($post->getThumbnailAlt()); ?>">
+                            </a>
+                        <?php endif; ?>
+                        <div class="post-item-details">
+                            <a class="post-title amblog-headline"
+                               href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                               title="<?= $escaper->escapeHtmlAttr($post->getTitle()) ?>"
+                               aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()) ?>">
+                                <?= $escaper->escapeHtml($post->getTitle()); ?>
+                            </a>
+                            <?php if ($isShowShortContent && $post->getShortContent()): ?>
+                                <div class="short-description">
+                                    <?= $escaper->escapeHtml($block->getStrippedContent($post->getShortContent())); ?>
+                                </div>
+                            <?php endif; ?>
+                            <div class="amblog-featured-card-bottom">
+                                <?php if ($isShowShortContent): ?>
+                                    <a class="ampost-link"
+                                       href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                                       title="<?= $escaper->escapeHtmlAttr(__('Read more')) ?>"
+                                       aria-label="<?= $escaper->escapeHtmlAttr(__('Read more')) ?>">
+                                        <?= $escaper->escapeHtml(__('Read more')) ?>
+                                    </a>
+                                <?php endif; ?>
+                                <?php if ($isShowDate): ?>
+                                    <div class="amblog-date"
+                                        <?php if ($isHumanized): ?>
+                                            data-mage-init='{
+                                            "amBlogDates": "<?= $escaper->escapeJs($post->getPublishedAt()) ?>"
+                                        }'
+                                        <?php endif; ?>>
+                                        <?= $escaper->escapeHtml($isHumanized
+                                            ? __('Loading...')
+                                            : $block->renderDate($post->getPublishedAt())) ?>
+                                    </div>
+                                    <?php if ($post->getEditedAt() && $block->isShowEditedAt()): ?>
+                                        <span class="amblog-date">
+                                        <?= $escaper->escapeHtml(__('Edited ')) ?>
+                                        <span <?php if ($block->isHumanizedEditedAt()): ?>
+                                            data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($post->getEditedAt()) ?>"}'
+                                        <?php endif; ?>>
+                                            <?= $escaper->escapeHtml($block->isHumanizedEditedAt()
+                                                ? __('Loading...')
+                                                : $block->renderDate($post->getEditedAt(), true)) ?>
+                                        </span>
+                                    </span>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

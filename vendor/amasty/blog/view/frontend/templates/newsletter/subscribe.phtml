@@ -1,0 +1,47 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Newsletter\Subscribe
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$subscribeUrl = $block->getFormActionUrl();
+$uniqueValue = random_int(0, 10000);
+?>
+
+<div class="amblog-newsletter amblog-widget-container -newsletter" data-amblog-js="accordion">
+    <h3 class="amblog-title" data-amblog-js="heading">
+        <?= $escaper->escapeHtml(__('Subscribe to newsletter')) ?>
+    </h3>
+    <div class="amblog-item -newsletter amblog-form-newsletter" data-amblog-js="content">
+        <form class="amblog-form-container"
+              action="<?= $escaper->escapeUrl($subscribeUrl) ?>"
+              method="post"
+              data-mage-init='{"validation": {"errorClass": "mage-error"}}'
+              id="subscribe-validate-detail">
+            <div class="input-box amblog-field -newsletter">
+                <input class="amblog-input"
+                       id="subscribe_<?= $escaper->escapeHtmlAttr($uniqueValue) ?>"
+                       name="email"
+                       type="email"
+                       title="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                       placeholder="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                       aria-label="<?= $escaper->escapeHtmlAttr(__('Subscribe to newsletter')) ?>"
+                       data-mage-init='{"mage/trim-input":{}}'
+                       data-validate="{required:true, 'validate-email':true}"
+                />
+                <button class="amblog-btn"
+                        type="submit"
+                        title="<?= $escaper->escapeHtmlAttr(__('Subscribe')) ?>"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Subscribe')) ?>">
+                    <?= $escaper->escapeHtml(__('Subscribe')) ?>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+

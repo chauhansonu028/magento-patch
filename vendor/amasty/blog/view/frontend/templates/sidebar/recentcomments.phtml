@@ -1,0 +1,61 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var  \Amasty\Blog\Block\Sidebar\Recentcomments $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$collection = $block->getCommentsCollection();
+?>
+<?php if (!$block->isAlreadyWrapped()): ?>
+    <div class="amblog-element-block">
+<?php endif; ?>
+
+<?php if (count($collection)): ?>
+    <div data-amblog-js="accordion" class="amblog-widget-container -comments">
+        <h3 class="amblog-title" data-amblog-js="heading">
+            <?= $escaper->escapeHtml($block->getBlockHeader()); ?>
+        </h3>
+        <ul class="amblog-list" data-amblog-js="content">
+        <?php foreach ($collection as $comment): ?>
+            <li class="amblog-item -comment amblog-recent-comment-<?= $escaper->escapeHtml((int)$comment->getId()); ?>">
+                <a class="amblog-headline" href="<?= $escaper->escapeUrl($comment->getUrl()); ?>">
+                    <?= $escaper->escapeHtml($comment->getPostTitle()); ?>
+                </a>
+                <?php if ($block->needShowThesis()): ?>
+                <div class="amblog-comment">
+                    <?= $escaper->escapeHtml($block->getStrippedContent($comment->getMessage())); ?>
+                </div>
+                <?php endif; ?>
+                <div class="amblog-footer-block">
+                    <div class="amblog-author">
+                        <svg class="amblog-svg user <?= $escaper->escapeHtml($block->getColorClass()); ?>">
+                            <use xlink:href="<?= $escaper->escapeUrl($block->getViewFileUrl('Amasty_Blog::images/sprite.svg')); ?>#user"></use>
+                        </svg>
+                        <?= $escaper->escapeHtml($comment->getName() ?: __('Guest')); ?>
+                    </div>
+                    <?php if ($block->needShowDate()): ?>
+                        <div class="amblog-date -comment"
+                            <?php if ($block->isHumanized()): ?>
+                                data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($block->renderDate($comment->getCreatedAt())) ?>"}'
+                            <?php endif; ?>>
+                            <?= $escaper->escapeHtml($block->isHumanized()
+                                ? __('Loading...')
+                                : $block->renderDate($comment->getCreatedAt())) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+    </div>
+<?php else: ?>
+    <div class="amblog-empty"><?= $escaper->escapeHtml(__('Comments were not found')); ?></div>
+<?php endif; ?>
+
+<?php if (!$block->isAlreadyWrapped()): ?>
+    </div>
+<?php endif; ?>
+

@@ -1,0 +1,313 @@
+{
+    "amasty_blog_categories": {
+        "column": {
+            "category_id": true,
+            "url_key": true,
+            "sort_order": true,
+            "created_at": true,
+            "updated_at": true,
+            "parent_id": true,
+            "path": true,
+            "level": true
+        },
+        "index": {
+            "AMASTY_BLOG_CATEGORIES_URL_KEY": true,
+            "AMASTY_BLOG_CATEGORIES_SORT_ORDER": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_blog_categories_store": {
+        "column": {
+            "category_id": true,
+            "store_id": true,
+            "name": true,
+            "status": true,
+            "meta_title": true,
+            "meta_description": true,
+            "meta_tags": true,
+            "meta_robots": true,
+            "url_key": true,
+            "description": true
+        },
+        "index": {
+            "AMASTY_BLOG_CATEGORIES_STORE_NAME": true,
+            "AMASTY_BLOG_CATEGORIES_STORE_NAME_DESCRIPTION": true,
+            "AMASTY_BLOG_CATEGORIES_STORE_STORE_ID_STATUS": true,
+            "AMASTY_BLOG_CATEGORIES_STORE_STORE_ID": true,
+            "AMASTY_BLOG_CATEGORIES_STORE_URL_KEY": true
+        },
+        "constraint": {
+            "FK_DA44380CCD41C087A1C752ECF0189046": true,
+            "PRIMARY": true
+        }
+    },
+    "amasty_blog_posts": {
+        "column": {
+            "post_id": true,
+            "status": true,
+            "title": true,
+            "url_key": true,
+            "short_content": true,
+            "full_content": true,
+            "meta_title": true,
+            "meta_tags": true,
+            "meta_description": true,
+            "meta_robots": true,
+            "created_at": true,
+            "updated_at": true,
+            "edited_at": true,
+            "published_at": true,
+            "recently_commented_at": true,
+            "user_define_publish": true,
+            "notify_on_enable": true,
+            "display_short_content": true,
+            "comments_enabled": true,
+            "views": true,
+            "post_thumbnail": true,
+            "list_thumbnail": true,
+            "thumbnail_url": true,
+            "grid_class": true,
+            "canonical_url": true,
+            "post_thumbnail_alt": true,
+            "list_thumbnail_alt": true,
+            "author_id": true,
+            "related_post_ids": true,
+            "is_featured": true,
+            "posted_by": true,
+            "facebook_profile": true,
+            "twitter_profile": true,
+            "google_profile": true,
+            "is_open_graph_enabled": true,
+            "open_graph_meta_title": true,
+            "open_graph_meta_description": true,
+            "open_graph_meta_type": true
+        },
+        "index": {
+            "AMASTY_BLOG_POSTS_TITLE_SHORT_CONTENT_FULL_CONTENT": true,
+            "AMASTY_BLOG_POSTS_URL_KEY": true,
+            "AMASTY_BLOG_POSTS_PUBLISHED_AT": true,
+            "AMASTY_BLOG_POSTS_AUTHOR_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_blog_posts_store": {
+        "column": {
+            "post_id": true,
+            "store_id": true,
+            "status": true,
+            "published_at": true,
+            "title": true,
+            "url_key": true,
+            "short_content": true,
+            "full_content": true,
+            "meta_title": true,
+            "meta_description": true,
+            "meta_tags": true,
+            "meta_robots": true,
+            "canonical_url": true,
+            "post_thumbnail_alt": true,
+            "list_thumbnail_alt": true
+        },
+        "index": {
+            "AMASTY_BLOG_POSTS_STORE_POST_ID": true,
+            "AMASTY_BLOG_POSTS_STORE_TITLE": true,
+            "AMASTY_BLOG_POSTS_STORE_PUBLISHED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_BLOG_POSTS_STORE_POST_ID_AMASTY_BLOG_POSTS_POST_ID": true
+        }
+    },
+    "amasty_blog_posts_category": {
+        "column": {
+            "post_id": true,
+            "category_id": true
+        },
+        "index": {
+            "AMASTY_BLOG_POSTS_CATEGORY_POST_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_BLOG_POSTS_CATEGORY_POST_ID_AMASTY_BLOG_POSTS_POST_ID": true,
+            "AMASTY_BLOG_POSTS_CTGR_CTGR_ID_AMASTY_BLOG_CATEGORIES_CTGR_ID": true
+        }
+    },
+    "amasty_blog_posts_tag": {
+        "column": {
+            "post_id": true,
+            "tag_id": true
+        },
+        "index": {
+            "AMASTY_BLOG_POSTS_TAG_POST_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_BLOG_POSTS_TAG_POST_ID_AMASTY_BLOG_POSTS_POST_ID": true
+        }
+    },
+    "amasty_blog_post_helpful": {
+        "column": {
+            "vote_id": true,
+            "post_id": true,
+            "type": true,
+            "ip": true
+        },
+        "index": {
+            "AMASTY_BLOG_POST_HELPFUL_POST_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_blog_tags": {
+        "column": {
+            "tag_id": true,
+            "url_key": true,
+            "name": true,
+            "meta_title": true,
+            "meta_tags": true,
+            "meta_description": true
+        },
+        "index": {
+            "AMASTY_BLOG_TAGS_URL_KEY": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_blog_tags_store": {
+        "column": {
+            "tag_id": true,
+            "store_id": true,
+            "name": true,
+            "meta_title": true,
+            "meta_tags": true,
+            "meta_description": true,
+            "meta_robots": true,
+            "url_key": true
+        },
+        "index": {
+            "AMASTY_BLOG_TAGS_STORE_NAME": true,
+            "AMASTY_BLOG_TAGS_STORE_STORE_ID": true,
+            "AMASTY_BLOG_TAGS_STORE_STORE_ID_TAG_ID": true,
+            "AMASTY_BLOG_TAGS_STORE_URL_KEY": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_BLOG_TAGS_STORE_TAG_ID_AMASTY_BLOG_TAGS_TAG_ID": true,
+            "AMASTY_BLOG_TAGS_STORE_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "amasty_blog_author": {
+        "column": {
+            "author_id": true,
+            "url_key": true,
+            "facebook_profile": true,
+            "twitter_profile": true,
+            "linkedin_profile": true,
+            "youtube_profile": true,
+            "instagram_profile": true,
+            "tiktok_profile": true,
+            "image": true
+        },
+        "index": {
+            "AMASTY_BLOG_AUTHOR_URL_KEY": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_blog_author_store": {
+        "column": {
+            "author_id": true,
+            "store_id": true,
+            "name": true,
+            "meta_title": true,
+            "meta_tags": true,
+            "meta_description": true,
+            "meta_robots": true,
+            "job_title": true,
+            "short_description": true,
+            "description": true,
+            "url_key": true
+        },
+        "index": {
+            "AMASTY_BLOG_AUTHOR_STORE_NAME": true,
+            "AMASTY_BLOG_AUTHOR_STORE_STORE_ID": true,
+            "AMASTY_BLOG_AUTHOR_STORE_URL_KEY": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMSTY_BLG_ATHR_STRE_AMSTY_BLG_ATHR_ATHR_ID": true,
+            "AMASTY_BLOG_AUTHOR_STORE_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "amasty_blog_comments": {
+        "column": {
+            "comment_id": true,
+            "post_id": true,
+            "store_id": true,
+            "status": true,
+            "customer_id": true,
+            "reply_to": true,
+            "message": true,
+            "name": true,
+            "email": true,
+            "session_id": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "AMASTY_BLOG_COMMENTS_STORE_ID": true,
+            "AMASTY_BLOG_COMMENTS_CUSTOMER_ID": true,
+            "AMASTY_BLOG_COMMENTS_STATUS_STORE_ID": true,
+            "AMASTY_BLOG_COMMENTS_REPLY_TO": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_BLOG_COMMENTS_POST_ID_AMASTY_BLOG_POSTS_POST_ID": true,
+            "AMST_BLG_COMMNTS_RPL_TO_AMST_BLG_CMMNTS_PST_ID": true
+        }
+    },
+    "amasty_blog_views": {
+        "column": {
+            "view_id": true,
+            "post_id": true,
+            "customer_id": true,
+            "session_id": true,
+            "remote_addr": true,
+            "store_id": true,
+            "created_at": true,
+            "referer_url": true
+        },
+        "index": {
+            "AMASTY_BLOG_VIEWS_POST_ID": true,
+            "AMASTY_BLOG_VIEWS_CUSTOMER_ID": true,
+            "AMASTY_BLOG_VIEWS_STORE_ID": true,
+            "AMASTY_BLOG_VIEWS_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_BLOG_VIEWS_POST_ID_AMASTY_BLOG_POSTS_POST_ID": true
+        }
+    },
+    "amasty_blog_posts_products": {
+        "column": {
+            "post_id": true,
+            "product_id": true,
+            "position": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_BLOG_POSTS_PRODUCTS_POST_ID_AMASTY_BLOG_POSTS_POST_ID": true,
+            "AMASTY_BLOG_POSTS_PRDCTS_PRDCT_ID_CTLG_PRDCT_ENTITY_ENTITY_ID": true
+        },
+        "index": {
+            "AMASTY_BLOG_POSTS_PRODUCTS_POSITION": true
+        }
+    }
+}

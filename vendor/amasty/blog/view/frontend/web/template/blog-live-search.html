@@ -1,0 +1,12 @@
+<% if (data.message) { %>
+    <li class="amblog-suggest-empty"><%= data.message %></li>
+<% } else { %>
+    <% _.each(data, function(value, key) { %>
+        <li class="amblog-suggest-title" disabled><%= _.escape(key) %></li>
+        <% _.each(value, function(sVal, sKey) { %>
+            <li role="option" class="amblog-suggest">
+                <a href="<%= sVal.url %>"><%= _.escape(sVal.title) %></a>
+            </li>
+        <% }) %>
+    <% }) %>
+<% } %>

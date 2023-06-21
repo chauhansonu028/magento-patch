@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="customer-blog-posts"/>
+        <referenceBlock name="customer_account_navigation">
+            <block class="Amasty\Blog\Block\Link\BlogPostsLink"
+                   name="amblog-customer-account-tab-blog-posts">
+                <arguments>
+                    <argument name="path" xsi:type="string">blogposts</argument>
+                    <argument translate="true" name="label" xsi:type="string">Blog Posts</argument>
+                    <argument name="sortOrder" xsi:type="number">42</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

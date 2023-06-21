@@ -1,0 +1,485 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="amasty_blog_categories" resource="default" engine="innodb" comment="amasty_blog_categories">
+        <column xsi:type="int" name="category_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Category Id"/>
+        <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <column xsi:type="int" name="parent_id" padding="11" unsigned="true" nullable="true" identity="false" default="0" comment="Parent Id"/>
+        <column xsi:type="varchar" name="path" nullable="false" length="255" default="" comment="path"/>
+        <column xsi:type="int" name="level" padding="11" unsigned="false" nullable="false" identity="false" default="1" comment="Level"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="category_id"/>
+        </constraint>
+
+        <index referenceId="AMASTY_BLOG_CATEGORIES_SORT_ORDER" indexType="btree">
+            <column name="sort_order"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_categories_store" resource="default" engine="innodb" comment="amasty_blog_categories_store">
+        <column xsi:type="int" name="category_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Category Id"/>
+        <column xsi:type="int" name="store_id" padding="10" unsigned="true"  nullable="false" identity="false" comment="Store Id"/>
+        <column xsi:type="varchar" name="url_key" nullable="true" length="255" comment="Url Key"/>
+        <column xsi:type="mediumtext" name="name" nullable="true" comment="Name"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Category description"/>
+        <column xsi:type="smallint" name="status" padding="5" unsigned="true" nullable="true" identity="false" comment="Status"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Meta title"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Meta description"/>
+        <column xsi:type="varchar" name="meta_tags" nullable="true" length="255" comment="Meta tags"/>
+        <column xsi:type="varchar" name="meta_robots" nullable="true" length="50" comment="Meta Robots"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="category_id"/>
+            <column name="store_id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign"
+                    referenceId="AMASTY_BLOG_CTGS_STRE_CTG_ID_AMASTY_BLOG_CTGS_CTG_ID"
+                    table="amasty_blog_categories_store"
+                    column="category_id"
+                    referenceTable="amasty_blog_categories"
+                    referenceColumn="category_id"
+                    onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_CATEGORIES_STORE_NAME_DESCRIPTION" indexType="fulltext">
+            <column name="name"/>
+            <column name="description"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_CATEGORIES_STORE_STORE_ID_STATUS" indexType="btree">
+            <column name="store_id"/>
+            <column name="status"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_CATEGORIES_STORE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_CATEGORIES_STORE_URL_KEY" indexType="btree">
+            <column name="url_key"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_posts" resource="default" engine="innodb" comment="amasty_blog_posts">
+        <column xsi:type="int" name="post_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Subscription Id"/>
+        <column xsi:type="smallint" name="status" padding="5" unsigned="true" nullable="false" identity="false" comment="Status"/>
+        <column xsi:type="mediumtext" name="title" nullable="false" comment="Title"/>
+        <column xsi:type="varchar" name="url_key" nullable="false" length="255" comment="Url Key"/>
+        <column xsi:type="text" name="short_content" nullable="true" comment="Short Content"/>
+        <column xsi:type="longtext" name="full_content" nullable="false" comment="Full Content"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Meta Title"/>
+        <column xsi:type="varchar" name="meta_tags" nullable="true" length="255" comment="Meta Tags"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Meta Description"/>
+        <column xsi:type="varchar" name="meta_robots" nullable="true" length="50" comment="Meta Robots"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <column xsi:type="timestamp" name="published_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"/>
+        <column xsi:type="timestamp" name="edited_at" on_update="false" nullable="true"/>
+        <column xsi:type="timestamp" name="recently_commented_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"/>
+        <column xsi:type="smallint" name="user_define_publish" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="User Define Publish"/>
+        <column xsi:type="smallint" name="notify_on_enable" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Notify On Enable"/>
+        <column xsi:type="smallint" name="display_short_content" padding="6" unsigned="false" nullable="false" identity="false" default="1" comment="Display Short Content"/>
+        <column xsi:type="smallint" name="comments_enabled" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Comments Enabled"/>
+        <column xsi:type="int" name="views" padding="10" unsigned="true" nullable="false" identity="false" comment="Views"/>
+        <column xsi:type="text" name="post_thumbnail" nullable="true" comment="Post Thumbnail"/>
+        <column xsi:type="text" name="list_thumbnail" nullable="true" comment="List Thumbnail"/>
+        <column xsi:type="text" name="thumbnail_url" nullable="true" comment="Thumbnail Url"/>
+        <column xsi:type="varchar" name="grid_class" nullable="false" length="2" default="w1" comment="Grid Class"/>
+        <column xsi:type="text" name="canonical_url" nullable="true" comment="Canonical Url"/>
+        <column xsi:type="varchar" name="post_thumbnail_alt" nullable="false" length="255" default="" comment="Thumbnail Post Alt"/>
+        <column xsi:type="varchar" name="list_thumbnail_alt" nullable="false" length="255" default="" comment="Thumbnail Post Alt"/>
+        <column xsi:type="int" name="author_id" padding="11" unsigned="false" nullable="true" identity="false" comment="Author Id"/>
+        <column xsi:type="text" name="related_post_ids" nullable="false" comment="Related Post Ids"/>
+        <column xsi:type="boolean" name="is_featured" nullable="false" comment="Is Featured"/>
+        <column xsi:type="boolean" name="is_open_graph_enabled" nullable="true" comment="Add Open Graph Metadata"/>
+        <column xsi:type="mediumtext" name="open_graph_meta_title" nullable="true" comment="Open Graph Title"/>
+        <column xsi:type="text" name="open_graph_meta_description" nullable="true" comment="Open Graph Description"/>
+        <column xsi:type="varchar" name="open_graph_meta_type" nullable="true" length="255" comment="Open Graph Type"/>
+
+        <constraint xsi:type="primary" referenceId="AMASTY_BLOG_POSTS_PRIMARY">
+            <column name="post_id"/>
+        </constraint>
+
+        <index referenceId="AMASTY_BLOG_POSTS_TITLE_SHORT_CONTENT_FULL_CONTENT" indexType="fulltext">
+            <column name="title"/>
+            <column name="short_content"/>
+            <column name="full_content"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_POSTS_URL_KEY" indexType="btree">
+            <column name="url_key"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_POSTS_PUBLISHED_AT" indexType="btree">
+            <column name="published_at"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_POSTS_AUTHOR_ID" indexType="btree">
+            <column name="author_id"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_posts_store" resource="default" engine="innodb" comment="amasty_blog_posts_store">
+        <column xsi:type="int" name="post_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Post Id"/>
+        <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+
+        <column xsi:type="smallint" name="status" padding="5" unsigned="true" nullable="true" identity="false" comment="Status"/>
+        <column xsi:type="timestamp" name="published_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP"/>
+        <column xsi:type="mediumtext" name="title" nullable="true" comment="Title"/>
+        <column xsi:type="varchar" name="url_key" nullable="true" length="255" comment="Url Key"/>
+        <column xsi:type="text" name="short_content" nullable="true" comment="Short Content"/>
+        <column xsi:type="longtext" name="full_content" nullable="true" comment="Full Content"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Meta Title"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Meta Description"/>
+        <column xsi:type="varchar" name="meta_tags" nullable="true" length="255" comment="Meta Tags"/>
+        <column xsi:type="varchar" name="meta_robots" nullable="true" length="50" comment="Meta Robots"/>
+        <column xsi:type="text" name="canonical_url" nullable="true" comment="Canonical Url"/>
+        <column xsi:type="varchar" name="post_thumbnail_alt" nullable="true" length="255" comment="Thumbnail Post Alt"/>
+        <column xsi:type="varchar" name="list_thumbnail_alt" nullable="true" length="255" comment="Thumbnail List Alt"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="store_id"/>
+        </constraint>
+
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_POSTS_STORE_POST_ID_AMASTY_BLOG_POSTS_POST_ID"
+            table="amasty_blog_posts_store"
+            column="post_id"
+            referenceTable="amasty_blog_posts"
+            referenceColumn="post_id"
+            onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_POSTS_STORE_TITLE" indexType="fulltext">
+            <column name="title"/>
+            <column name="full_content"/>
+        </index>
+
+        <index referenceId="AMASTY_BLOG_POSTS_STORE_POST_ID" indexType="btree">
+            <column name="post_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_POSTS_STORE_PUBLISHED_AT" indexType="btree">
+            <column name="published_at"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_posts_category" resource="default" engine="innodb" comment="amasty_blog_posts_category">
+        <column xsi:type="int" name="post_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Post Id"/>
+        <column xsi:type="int" name="category_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Category Id"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="category_id"/>
+        </constraint>
+
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_POSTS_CATEGORY_POST_ID_AMASTY_BLOG_POSTS_POST_ID"
+            table="amasty_blog_posts_category"
+            column="post_id"
+            referenceTable="amasty_blog_posts"
+            referenceColumn="post_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_POSTS_CATEGORY_CATEGORY_ID_AMASTY_BLOG_CATEGORIES_CATEGORY_ID"
+            table="amasty_blog_posts_category"
+            column="category_id"
+            referenceTable="amasty_blog_categories"
+            referenceColumn="category_id"
+            onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_POSTS_CATEGORY_POST_ID" indexType="btree">
+            <column name="post_id"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_posts_tag" resource="default" engine="innodb" comment="amasty_blog_posts_tag">
+        <column xsi:type="int" name="post_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Post Id"/>
+        <column xsi:type="int" name="tag_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Tag Id"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="tag_id"/>
+        </constraint>
+
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMSTY_BLG_PSTS_TG_PST_ID_AMSTY_BLG_PSTS_PST_ID"
+            table="amasty_blog_posts_tag"
+            column="post_id"
+            referenceTable="amasty_blog_posts"
+            referenceColumn="post_id"
+            onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_POSTS_TAG_POST_ID" indexType="btree">
+            <column name="post_id"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_post_helpful" resource="default" engine="innodb" comment="Blog post vote table">
+        <column xsi:type="int" name="vote_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Vote Id"/>
+        <column xsi:type="int" name="post_id" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Post table id"/>
+        <column xsi:type="smallint" name="type" padding="6" unsigned="false" nullable="true" identity="false" comment="type"/>
+        <column xsi:type="text" name="ip" nullable="true" comment="ip"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="vote_id"/>
+        </constraint>
+
+        <index referenceId="AMASTY_BLOG_POST_HELPFUL_POST_ID" indexType="btree">
+            <column name="post_id"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_tags" resource="default" engine="innodb" comment="amasty_blog_tags">
+        <column xsi:type="int" name="tag_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Tag Id"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="tag_id"/>
+        </constraint>
+    </table>
+
+    <table name="amasty_blog_tags_store" resource="default" engine="innodb" comment="amasty_blog_tags_store">
+        <column xsi:type="int" name="tag_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Tag Id"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+        <column xsi:type="varchar" name="url_key" nullable="true" length="255" comment="Url Key"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Name"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Meta Title"/>
+        <column xsi:type="varchar" name="meta_tags" nullable="true" length="255" comment="Meta Tags"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Meta Description"/>
+        <column xsi:type="varchar" name="meta_robots" nullable="true" length="50" comment="Meta Robots"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="tag_id"/>
+            <column name="store_id"/>
+        </constraint>
+
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_TAGS_STORE_TAG_ID_AMASTY_BLOG_TAGS_TAG_ID"
+            table="amasty_blog_tags_store"
+            column="tag_id"
+            referenceTable="amasty_blog_tags"
+            referenceColumn="tag_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_TAGS_STORE_STORE_ID_STORE_STORE_ID"
+            table="amasty_blog_tags_store"
+            column="store_id"
+            referenceTable="store"
+            referenceColumn="store_id"
+            onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_TAGS_STORE_NAME" indexType="fulltext">
+            <column name="name"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_TAGS_STORE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_TAGS_STORE_URL_KEY" indexType="btree">
+            <column name="url_key"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_author" resource="default" engine="innodb" comment="amasty_blog_author">
+        <column xsi:type="int" name="author_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Author Id"/>
+        <column xsi:type="varchar" name="facebook_profile" nullable="true" length="255" comment="Facebook Profile"/>
+        <column xsi:type="varchar" name="twitter_profile" nullable="true" length="255" comment="Twitter profile"/>
+        <column xsi:type="varchar" name="linkedin_profile" nullable="true" length="255" comment="Linkedin Profile"/>
+        <column xsi:type="varchar" name="youtube_profile" nullable="true" length="255" comment="Youtube Profile"/>
+        <column xsi:type="varchar" name="instagram_profile" nullable="true" length="255" comment="Instagram Profile"/>
+        <column xsi:type="varchar" name="tiktok_profile" nullable="true" length="255" comment="TikTok Profile"/>
+        <column xsi:type="varchar" name="image" nullable="true" length="255" comment="Image"/>
+
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="author_id"/>
+        </constraint>
+    </table>
+
+    <table name="amasty_blog_author_store" resource="default" engine="innodb" comment="amasty_blog_author_store">
+        <column xsi:type="int" name="author_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Author Id"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+        <column xsi:type="varchar" name="url_key" nullable="true" length="255" comment="Url Key"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Name"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Meta Title"/>
+        <column xsi:type="varchar" name="meta_tags" nullable="true" length="255" comment="Meta Tags"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Meta Description"/>
+        <column xsi:type="varchar" name="meta_robots" nullable="true" length="50" comment="Meta Robots"/>
+        <column xsi:type="varchar" name="job_title" nullable="true" length="255" comment="Job Title"/>
+        <column xsi:type="mediumtext" name="short_description" nullable="true" comment="Short Description"/>
+        <column xsi:type="mediumtext" name="description" nullable="true" comment="Description"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="author_id"/>
+            <column name="store_id"/>
+        </constraint>
+
+        <index referenceId="AMASTY_BLOG_AUTHOR_STORE_NAME" indexType="fulltext">
+            <column name="name"/>
+        </index>
+
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMSTY_BLG_ATHR_STRE_AMSTY_BLG_ATHR_ATHR_ID"
+            table="amasty_blog_author_store"
+            column="author_id"
+            referenceTable="amasty_blog_author"
+            referenceColumn="author_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_AUTHOR_STORE_STORE_ID_STORE_STORE_ID"
+            table="amasty_blog_author_store"
+            column="store_id"
+            referenceTable="store"
+            referenceColumn="store_id"
+            onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_AUTHOR_STORE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_AUTHOR_STORE_URL_KEY" indexType="btree">
+            <column name="url_key"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_comments" resource="default" engine="innodb" comment="amasty_blog_comments">
+        <column xsi:type="bigint" name="comment_id" padding="20" unsigned="true" nullable="false" identity="true" comment="Comment Id"/>
+        <column xsi:type="int" name="post_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Post Id"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+        <column xsi:type="smallint" name="status" padding="5" unsigned="true" nullable="false" identity="false" comment="Status"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Customer Id"/>
+        <column xsi:type="bigint" name="reply_to" padding="20" unsigned="true" nullable="true" identity="false" comment="Reply To"/>
+        <column xsi:type="text" name="message" nullable="true" comment="Message"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Name"/>
+        <column xsi:type="varchar" name="email" nullable="true" length="255" comment="Email"/>
+        <column xsi:type="varchar" name="session_id" nullable="true" length="255" comment="Session Id"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="comment_id"/>
+        </constraint>
+
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_COMMENTS_POST_ID_AMASTY_BLOG_POSTS_POST_ID"
+            table="amasty_blog_comments"
+            column="post_id"
+            referenceTable="amasty_blog_posts"
+            referenceColumn="post_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMST_BLG_COMMNTS_RPL_TO_AMST_BLG_CMMNTS_PST_ID"
+            table="amasty_blog_comments"
+            column="reply_to"
+            referenceTable="amasty_blog_comments"
+            referenceColumn="comment_id"
+            onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_COMMENTS_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_COMMENTS_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_COMMENTS_STATUS_STORE_ID" indexType="btree">
+            <column name="status"/>
+            <column name="store_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_COMMENTS_REPLY_TO" indexType="btree">
+            <column name="reply_to"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_views" resource="default" engine="innodb" comment="amasty_blog_views">
+        <column xsi:type="bigint" name="view_id" padding="20" unsigned="true" nullable="false" identity="true" comment="View Id"/>
+        <column xsi:type="int" name="post_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Post Id"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" identity="false" comment="Customer Id"/>
+        <column xsi:type="varchar" name="session_id" nullable="false" length="255" comment="Session Id"/>
+        <column xsi:type="bigint" name="remote_addr" padding="20" unsigned="false" nullable="false" identity="false" comment="Remote Address"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" comment="Store Id"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="varchar" name="referer_url" nullable="true" length="255" comment="Referer Url"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="view_id"/>
+        </constraint>
+
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_VIEWS_POST_ID_AMASTY_BLOG_POSTS_POST_ID"
+            table="amasty_blog_views"
+            column="post_id"
+            referenceTable="amasty_blog_posts"
+            referenceColumn="post_id"
+            onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_VIEWS_POST_ID" indexType="btree">
+            <column name="post_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_VIEWS_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_VIEWS_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="AMASTY_BLOG_VIEWS_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+    </table>
+
+    <table name="amasty_blog_posts_products" resource="default" engine="innodb" comment="amasty_blog_views">
+        <column xsi:type="int" name="post_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Post Id"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Product Id"/>
+        <column xsi:type="int" name="position" padding="10" unsigned="true" nullable="false" identity="false" comment="Sort order on frontend"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+            <column name="product_id"/>
+        </constraint>
+
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_POSTS_PRODUCTS_POST_ID_AMASTY_BLOG_POSTS_POST_ID"
+            table="amasty_blog_posts_products"
+            column="post_id"
+            referenceTable="amasty_blog_posts"
+            referenceColumn="post_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="AMASTY_BLOG_POSTS_PRDCTS_PRDCT_ID_CTLG_PRDCT_ENTITY_ENTITY_ID"
+            table="amasty_blog_posts_products"
+            column="product_id"
+            referenceTable="catalog_product_entity"
+            referenceColumn="entity_id"
+            onDelete="CASCADE"
+        />
+
+        <index referenceId="AMASTY_BLOG_POSTS_PRODUCTS_POSITION" indexType="btree">
+            <column name="position"/>
+        </index>
+    </table>
+</schema>

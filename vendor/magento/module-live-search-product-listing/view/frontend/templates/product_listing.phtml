@@ -1,0 +1,49 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\LiveSearchProductListing\Block\Frontend\SaaSContext */
+/** @var $helper \Magento\Search\Helper\Data */
+//phpcs:ignore
+$helper = $this->helper(\Magento\Search\Helper\Data::class);
+?>
+
+<div id="livesearch_root"
+     data-currency-symbol="<?= $block->escapeHtmlAttr($block->getCurrencySymbol()); ?>"
+     data-magento-edition="<?= $block->escapeHtmlAttr($block->getMagentoEdition()); ?>"
+     data-magento-version="<?= $block->escapeHtmlAttr($block->getMagentoVersion()); ?>"
+     data-module-version="<?= $block->escapeHtmlAttr($block->getModuleVersion()); ?>"
+></div>
+
+<script>
+    require([
+            'magentoStorefrontEvents',
+            "<?= $block->escapeUrl($block->getFrontendUrl()); ?>"
+        ],
+        function () {
+            const root = document.getElementById("livesearch_root");
+            window.LiveSearchPLP({storeDetails: {
+                    environmentId: "<?= $block->escapeJs($block->getEnvironmentId()); ?>",
+                    websiteCode: "<?= $block->escapeJs($block->getWebsiteCode()); ?>",
+                    storeCode: "<?= $block->escapeJs($block->getStoreCode()); ?>",
+                    storeViewCode: "<?= $block->escapeJs($block->getStoreViewCode()); ?>",
+                    config: {
+                        pageSize: "<?= $block->escapeJs($block->getAutocompleteLimit()); ?>",
+                        minQueryLength: "<?= $block->escapeJs($helper->getMinQueryLength()); ?>",
+                        currencySymbol: "<?= $block->escapeJs($block->getCurrencySymbol()); ?>",
+                        displayOutOfStock: "<?= $block->escapeJs($block->isDisplayOutOfStock()); ?>"
+                    },
+                    context: {
+                        customerGroup: "<?= $block->escapeJs($block->getCustomerGroupCode()); ?>"
+                    }
+                }, root});
+        });
+
+    require(['magentoStorefrontEvents'], function (magentoStorefrontEvents) {
+        magentoStorefrontEvents.context.setSearchExtension({
+            version: "<?= $block->escapeHtmlAttr($block->getModuleVersion()); ?>"
+        });
+    });
+</script>

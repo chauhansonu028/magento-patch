@@ -1,0 +1,12 @@
+{
+    "catalog_product_data_submitted_hash": {
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "catalog_product_attribute_data_submitted_hash": {
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

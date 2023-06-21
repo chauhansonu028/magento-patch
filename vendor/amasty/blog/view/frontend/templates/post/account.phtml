@@ -1,0 +1,127 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Magento\Framework\View\Element\Template
+ * @var $escaper Magento\Framework\Escaper
+ * @var $viewModel Account
+ */
+
+use Amasty\Blog\ViewModel\Posts\Account;
+
+$viewModel = $block->getViewModel();
+?>
+
+<div class="tabs-wrap">
+    <ul class="amblog-tabs-block -title" data-mage-init='{"amBlogTabs":{}}' data-amblog-js="tabs">
+        <?php if ($viewModel->isLikeEnabled()): ?>
+            <li class="amblog-item -active"
+                data-amblog-js="tab-label"
+                data-tab-title="#<?= /* @noEscape */ Account::LIKED_PAGE_VAR_NAME ?>"
+                data-tab-id="1">
+                <?= $escaper->escapeHtml(__('Posts I Liked')) ?>
+            </li>
+        <?php endif; ?>
+        <?php if ($viewModel->isCommentEnabled()): ?>
+            <li class="amblog-item <?= (!$viewModel->isLikeEnabled()) ? '-active' : '' ?>"
+                data-amblog-js="tab-label"
+                data-tab-title="#<?= /* @noEscape */ Account::COMMENTS_PAGE_VAR_NAME ?>"
+                data-tab-id="2">
+                <?= $escaper->escapeHtml(__('Posts I Commented')) ?>
+            </li>
+        <?php endif; ?>
+    </ul>
+</div>
+
+<div data-amblog-js="content-tabs-block">
+    <?php if ($viewModel->isLikeEnabled()): ?>
+        <section class="amblog-content-tab -active"
+             data-amblog-js="content-tab"
+             data-tab-id="1">
+        <?php $likeCollection = $viewModel->getLikedCollection() ?: [] ?>
+        <?php if ($likeCollection && $likeCollection->getSize()): ?>
+            <?php foreach ($likeCollection as $like): ?>
+                <?php $post = $viewModel->getPost($like);?>
+                <div class="amblog-post-block">
+                    <?php $imageSrc = $post->getListThumbnailSrc(); ?>
+                    <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                       class="amblog-image-wrapper <?= $escaper->escapeHtmlAttr($imageSrc ? '' : '-placeholder') ?>"
+                       aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>"
+                       title="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>">
+                        <?php if ($imageSrc): ?>
+                            <figure class="amblog-image"
+                                    title="<?= $escaper->escapeHtmlAttr($post->getThumbnailAlt()); ?>"
+                                    style="background-image: url(<?= $escaper->escapeUrl($imageSrc); ?>)"></figure>
+                        <?php endif; ?>
+                    </a>
+                    <div class="amblog-content">
+                        <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                           class="amblog-headline"
+                           aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>"
+                           title="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>">
+                            <?= $escaper->escapeHtml($post->getTitle()); ?>
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <?= $viewModel->getLikedToolbar()->toHtml(); ?>
+        <?php else: ?>
+            <div class="amblog-notify-message">
+                <span>
+                    <?= $escaper->escapeHtml(__('There are no posts you liked. To read our Blog, please, click')) ?>
+                    <a href="<?= $escaper->escapeUrl($viewModel->getBlogUrl()); ?>"><?= $escaper->escapeHtml(__('here')) ?></a>
+                </span>
+            </div>
+        <?php endif; ?>
+    </section>
+    <?php endif; ?>
+    <?php if ($viewModel->isCommentEnabled()): ?>
+        <section class="amblog-content-tab <?= (!$viewModel->isLikeEnabled()) ? '-active' : '' ?>"
+             data-amblog-js="content-tab"
+             data-tab-id="2">
+        <?php $commentsCollection = $viewModel->getCommentsCollection() ?: [] ?>
+        <?php if ($commentsCollection && $commentsCollection->getSize()): ?>
+            <?php foreach ($commentsCollection as $comment): ?>
+                <?php $post = $comment->getPost();?>
+                <div class="amblog-post-block">
+                    <?php $imageSrc = $post->getListThumbnailSrc(); ?>
+                    <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>#am-blog-comment-<?= (int)$comment->getId() ?>"
+                       class="amblog-image-wrapper <?= $escaper->escapeHtmlAttr($imageSrc ? '' : '-placeholder') ?>"
+                       aria-label="<?= $escaper->escapeHtml($post->getTitle()); ?>"
+                       title="<?= $escaper->escapeHtml($post->getTitle()); ?>">
+                        <?php if ($imageSrc): ?>
+                            <figure class="amblog-image"
+                                    title="<?= $escaper->escapeHtmlAttr($post->getThumbnailAlt()); ?>"
+                                    style="background-image: url(<?= $escaper->escapeUrl($imageSrc); ?>)"></figure>
+                        <?php endif; ?>
+                    </a>
+                    <div class="amblog-content">
+                        <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>#am-blog-comment-<?= (int)$comment->getId() ?>"
+                           class="amblog-headline"
+                           aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>"
+                           title="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>">
+                            <?= $escaper->escapeHtml($post->getTitle()); ?>
+                        </a>
+                        <?php if ($comment->getUpdatedAt()): ?>
+                            <div class="amblog-date">
+                                <?=  $escaper->escapeHtml($viewModel->renderDate($comment->getUpdatedAt())); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <?= $viewModel->getComentsToolbar()->toHtml(); ?>
+        <?php else: ?>
+            <div class="amblog-notify-message">
+                <span>
+                    <?= $escaper->escapeHtml(__('There are no posts you commented. To read our Blog, please, click')) ?>
+                    <a href="<?= $escaper->escapeUrl($viewModel->getBlogUrl()); ?>"><?= $escaper->escapeHtml(__('here')) ?></a>
+                </span>
+            </div>
+        <?php endif; ?>
+    </section>
+    <?php endif; ?>
+</div>

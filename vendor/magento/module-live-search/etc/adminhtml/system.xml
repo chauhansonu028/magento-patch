@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="catalog">
+            <group id="search">
+                <!--  hide Advanced Search related configuration -->
+                <field id="search_recommendations_enabled" translate="label comment" type="select" sortOrder="80" showInDefault="0" showInWebsite="0" showInStore="0" canRestore="0" />
+                <field id="search_recommendations_count" translate="label" type="text" sortOrder="81" showInDefault="0" showInWebsite="0" showInStore="0" canRestore="0" />
+                <field id="search_recommendations_count_results_enabled" translate="label" type="select" sortOrder="82" showInDefault="0" showInWebsite="0" showInStore="0" canRestore="0" />
+                <field id="search_suggestion_enabled" translate="label comment" type="select" sortOrder="90" showInDefault="0" showInWebsite="0" showInStore="0" canRestore="0" />
+                <field id="search_suggestion_count" translate="label" type="text" sortOrder="91" showInDefault="0" showInWebsite="0" showInStore="0" canRestore="0" />
+                <field id="search_suggestion_count_results_enabled" translate="label comment" type="select" sortOrder="92" showInDefault="0" showInWebsite="0" showInStore="0" canRestore="0" />
+            </group>
+        </section>
+        <tab id="live_search" translate="label" sortOrder="600">
+            <label>Live Search</label>
+        </tab>
+        <section id="storefront_features" translate="label" type="text" sortOrder="15" showInDefault="1" showInStore="1">
+            <label>Storefront Features</label>
+            <tab>live_search</tab>
+            <resource>Magento_LiveSearch::storefront_features</resource>
+            <group id="website_configuration" translate="label" type="text" sortOrder="1" showInDefault="1" showInStore="1">
+                <label>Storefront Features</label>
+                <comment>As a store administrator, you can control which Storefront features are available.</comment>
+                <!-- Live Search Features config fields -->
+            </group>
+        </section>
+    </system>
+</config>

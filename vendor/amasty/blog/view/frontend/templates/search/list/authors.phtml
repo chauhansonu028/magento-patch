@@ -1,0 +1,115 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Content\Search\Section
+ * @var $parentBlock Amasty\Blog\Block\Content\AbstractBlock
+ * @var $escaper Magento\Framework\Escaper
+ * @var $author Amasty\Blog\Model\Author
+ */
+
+$toolbar = $block->getToolbar();
+
+// @codingStandardsIgnoreLine
+$helper = $this->helper(\Amasty\Blog\Helper\Image::class);
+?>
+
+<div class="amblog-container-list amblog-search-block">
+    <ul class="amblog-list">
+    <?php foreach ($toolbar->getCollection() as $author): ?>
+        <li class="amblog-author-info amblog-element-block widget">
+            <div class="amblog-content" data-amblog-js="content">
+                <div class="amblog-image-wrapper <?= $author->getImage() ? '' : '-placeholder' ?>">
+                    <?php if ($author->getImage()): ?>
+                        <figure class="amblog-image"
+                                style="background-image: url(<?= $escaper->escapeUrl($helper->getImageUrl($author->getImage())); ?>)"></figure>
+                    <?php endif; ?>
+                </div>
+                <div class="amblog-author-name">
+                    <a href="<?=$escaper->escapeUrl($author->getUrl())?>"
+                       title="<?= $escaper->escapeHtmlAttr($author->getName()); ?>"
+                       aria-label="<?= $escaper->escapeHtmlAttr($author->getName()); ?>"
+                       class="amblog-title -author">
+                        <?= $escaper->escapeHtml($author->getName()); ?>
+                    </a>
+
+                    <?php if ($author->getJobTitle()): ?>
+                        <h4 class="amblog-job"><?= $escaper->escapeHtml($author->getJobTitle()); ?></h4>
+                    <?php endif; ?>
+                </div>
+
+                <?php if ($author->getShortDescription()): ?>
+                    <p class="amblog-description"><?= $escaper->escapeHtml($author->getShortDescription()); ?></p>
+                <?php endif; ?>
+
+                <ul class="amblog-social-container">
+                        <?php if ($author->getTwitterProfile()): ?>
+                            <li class="amblog-icon -twitter">
+                                <a class="amblog-social"
+                                   target="_blank"
+                                   href="<?= $escaper->escapeUrl($author->getTwitterProfile()); ?>"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Twitter')); ?>"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('Twitter')); ?>">
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ($author->getFacebookProfile()): ?>
+                            <li class="amblog-icon -facebook">
+                                <a class="amblog-social"
+                                   target="_blank"
+                                   href="<?= $escaper->escapeUrl($author->getFacebookProfile()); ?>"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Facebook')); ?>"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('Facebook')); ?>">
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ($author->getLinkedinProfile()): ?>
+                            <li class="amblog-icon -linkedin">
+                                <a class="amblog-social"
+                                   target="_blank"
+                                   href="<?= $escaper->escapeUrl($author->getLinkedinProfile()); ?>"
+                                   title="<?= $escaper->escapeHtmlAttr(__('LinkedIn')); ?>"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('LinkedIn')); ?>">
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ($author->getYoutubeProfile()): ?>
+                            <li class="amblog-icon -youtube">
+                                <a class="amblog-social"
+                                   target="_blank"
+                                   href="<?= $escaper->escapeUrl($author->getYoutubeProfile()); ?>"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Youtube')); ?>"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('Youtube')); ?>">
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ($author->getInstagramProfile()): ?>
+                            <li class="amblog-icon -instagram">
+                                <a class="amblog-social"
+                                   target="_blank"
+                                   href="<?= $escaper->escapeUrl($author->getInstagramProfile()); ?>"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Instagram')); ?>"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('Instagram')); ?>">
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ($author->getTiktokProfile()): ?>
+                            <li class="amblog-icon -tiktok">
+                                <a class="amblog-social"
+                                   target="_blank"
+                                   href="<?= $escaper->escapeUrl($author->getTiktokProfile()); ?>"
+                                   title="<?= $escaper->escapeHtmlAttr(__('TikTok')); ?>"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('TikTok')); ?>">
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+            </div>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+    <?= $toolbar->toHtml(); ?>
+</div>

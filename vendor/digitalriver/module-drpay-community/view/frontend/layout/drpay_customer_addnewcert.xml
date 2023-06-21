@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <head>
+        <css src="https://js.digitalriverws.com/v1/css/DigitalRiver.css"  src_type="url" rel="stylesheet" type="text/css"  />
+    </head>
+    <body>
+        <referenceBlock name="head.additional">
+            <block name="dr-js" template="Digitalriver_DrPay::payment/form-top-js.phtml" before="-" />
+        </referenceBlock>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">U.S. Tax Certificates - Upload Certificate</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block
+                ifconfig="dr_settings/tax_conf/active"
+                name="dr-add-new-certificate-form"
+                template="Digitalriver_DrPay::customer/add-new-certificate-form.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Digitalriver\DrPay\ViewModel\TaxManagement</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

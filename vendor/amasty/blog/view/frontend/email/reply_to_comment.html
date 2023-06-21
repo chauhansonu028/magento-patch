@@ -1,0 +1,22 @@
+<!--@subject Notification about Reply @-->
+<!--@vars {
+"var post_link":"Post url",
+"var reply_name":"Replay name",
+"var reply_date":"Replay date",
+"var reply_message":"Replay message",
+"var unsubscribe_link":"Unsubscribe link"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Hello!"}}</p>
+<p>{{trans "There is a new reply to the comment thread You were participating in."}} {{trans "Please, see details below:"}}</p>
+<p>{{trans "Reply to comment:"}}</p>
+<p>{{var reply_name}} {{var reply_date}}</p>
+<p>{{var reply_message}}</p>
+<p>{{trans "If You want to reply, please, click "}}<a href="{{var post_link}}">{{trans "here"}}</a>.</p>
+{{if unsubscribe_link}}
+<p>{{trans "You can unsubscribe from similar notifications "}}<a href="{{var unsubscribe_link}}">{{trans "here"}}</a>.</p>
+{{/if}}
+
+{{template config_path="design/email/footer_template"}}

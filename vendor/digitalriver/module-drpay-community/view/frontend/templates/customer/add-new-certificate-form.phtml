@@ -1,0 +1,116 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+/** @var \Digitalriver\DrPay\ViewModel\TaxManagement $viewModel */
+$viewModel = $block->getViewModel();
+?>
+<form class="form"
+      action="<?= $escaper->escapeUrl($viewModel->getFormAction()) ?>"
+      method="post"
+      id="form-validate"
+      enctype="multipart/form-data"
+      data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>">
+
+    <fieldset class="fieldset">
+        <legend class="legend"><span><?= /** @noEscape */__('New Tax Certificate Information') ?></span></legend>
+        <br>
+        <div class="field company required">
+            <label for="company" class="label">
+                    <span><?= /** @noEscape */
+                        __('Company Name') ?></span>
+            </label>
+            <div class="control">
+                <input type="text" class="input-text" data-validate='{"required": true}' name="company" id="company" />
+            </div>
+        </div>
+        <div class="field tax_authority required">
+            <label for="tax_authority" class="label">
+                <span><?= /** @noEscape */
+                    __('Certificate Tax Authority') ?></span>
+            </label>
+            <div class="control">
+                <select data-validate='{"required": true}' name="tax_authority" id="tax-authority">
+                    <?php foreach ($viewModel->getRegions()->getData() as $region): ?>
+                        <option value=<?= $escaper->escapeHtmlAttr($region['code']) ?>>
+                            <?= $escaper->escapeHtmlAttr($region['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="field start_date required">
+            <label for="tax_authority" class="label">
+                <span><?= /** @noEscape */ __('Start Date') ?></span>
+            </label>
+            <div class="control">
+                <input type="text" class="date-picker" data-validate='{"required": true}'
+                       name="start_date" id="start-date">
+            </div>
+        </div>
+        <div class="field expiry_date required">
+            <label for="tax_authority" class="label">
+                <span><?= /** @noEscape */ __('Expiration Date') ?></span>
+            </label>
+            <div class="control">
+                <input type="text" class="date-picker" data-validate='{"required": true}'
+                       name="expiry_date" id="expiry-date">
+            </div>
+        </div>
+        <div class="field upload_cert required">
+            <label for="upload_cert" class="label">
+                <span>
+                    <?= /** @noEscape */ __('Upload your certificate (only  jpg, pdf, png, csv files are accepted)') ?>
+                </span>
+            </label>
+            <div class="control">
+                <input type="file" data-validate='{"required": true,  extension: "jpg|pdf|png|csv"}'
+                       name="upload_cert" id="upload-cert">
+            </div>
+        </div>
+        <div class="field compliance-checkbox required">
+            <div class="control">
+                <input type="checkbox" data-validate='{"required": true}' name="check" id="compliance-checkbox" />
+                <span id="dr-compliance-text-box"></span>
+            </div>
+        </div>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit"
+                    class="action submit primary disabled submit-certificate-action"
+                    data-action="save-certificate"
+                    title="<?=  /** @noEscape */  __('Submit') ?>">
+                <span><?=  /** @noEscape */ __('Submit') ?></span>
+            </button>
+        </div>
+        <div class="secondary">
+            <a class="action back" href="<?= $escaper->escapeUrl($block->getBackUrl()) ?>">
+                <span><?=  /** @noEscape */ __('Cancel') ?></span>
+            </a>
+        </div>
+    </div>
+</form>
+<script type="text/x-magento-init">
+    {
+        ".date-picker": {
+            "DigitalRiverCalendarWidget": {}
+        },
+        "#dr-compliance-text-box": {
+            "DigitalRiverComplianceWidget": {
+                "public_key": "<?= $escaper->escapeHtmlAttr($viewModel->getPublicKey()) ?>",
+                "mage_locale": "<?= $escaper->escapeHtmlAttr($viewModel->getLocale()) ?>",
+                "default_selling_entity": "<?= $escaper->escapeHtmlAttr($viewModel->getDefaultSellingEntity()) ?>"
+            }
+        },
+        "#form-validate": {
+            "DigitalRiverNewCertificateValidationWidget": {}
+        },
+        "#compliance-checkbox": {
+            "DigitalRiverComplianceSubmitButtonState": {
+                "checkboxSelector": "#compliance-checkbox",
+                "submitButtonSelector": ".submit-certificate-action"
+            }
+        }
+    }
+</script>

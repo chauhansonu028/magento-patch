@@ -1,0 +1,134 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Comments\Form
+ * @var $escaper Magento\Framework\Escaper
+ */
+?>
+
+<?php if ($block->canPost() && (!$block->isLoggedIn() || $block->isAjaxRendering())): ?>
+    <?php if ($block->canUserPost()): ?>
+        <div class="amblog-form-head" data-amblog-js="form-head">
+            <div class="amblog-secondary-title">
+                <?php if ($block->isReply()): ?>
+                    <?= $escaper->escapeHtml(__('Replying to ')) . $escaper->escapeHtml($block->getReplyToCustomerName()); ?>
+                <?php else: ?>
+                    <?= $escaper->escapeHtml(__('Leave your comment')); ?>
+                <?php endif; ?>
+            </div>
+            <span class="amblog-head-note">
+                <?= $escaper->escapeHtml(__('Your email address will not be published')); ?>
+            </span>
+        </div>
+        <form class="amblog-form-comment"
+              data-amblog-js="form"
+              id="amblog-form-<?= $escaper->escapeHtmlAttr($block->getPostId()); ?>">
+            <fieldset class="amblog-fieldset">
+                <textarea
+                     name="message"
+                     class="required-entry amblog-input -textarea"
+                     id="message_field"
+                     rows="3"
+                     placeholder="<?= $escaper->escapeHtmlAttr(__('Comment')) ?>"></textarea>
+                <div class="amblog-customer">
+                    <?php if ($block->isAskName()): ?>
+                    <div class="amblog-wrapper">
+                        <input type="text"
+                               name="name"
+                               placeholder="<?= $escaper->escapeHtmlAttr(__('Your name')); ?>"
+                               id="name_field"
+                               class="required-entry amblog-input -name"
+                               value="<?= $escaper->escapeHtmlAttr($block->getCustomerName()) ?>" />
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($block->isAskEmail()): ?>
+                    <div class="amblog-wrapper">
+                            <input type="text"
+                                   name="email"
+                                   id="email_field"
+                                   placeholder="<?= $escaper->escapeHtmlAttr(__("Your e-mail")); ?>"
+                                   class="required-entry validate-email amblog-input -email"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getCustomerEmail()); ?>" />
+                    </div>
+                        <?php if ($block->isLoggedIn()): ?>
+                            <input type="hidden"
+                                   name="customer_id"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getCustomerId()); ?>" />
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+                <?php if ($block->isGdprEnabled()): ?>
+                <?php $randId = random_int(0, 10000); ?>
+                    <div class="amblog-gdprtext">
+                        <input type="checkbox"
+                               name="gdpr_agree"
+                               data-amblog-js="gdpr-agree"
+                               class="required-entry amblog-input -gdpr"
+                               id="gdpr-agree<?= $escaper->escapeHtmlAttr($randId) ?>">
+                        <label class="amblog-label" for="gdpr-agree<?= $escaper->escapeHtmlAttr($randId); ?>">
+                            <?= /* @noEscape */ $block->getGdprText(); ?>
+                        </label>
+                    </div>
+                <?php endif; ?>
+                <?php $gdprCheckboxesHtml = $block->getGdprCheckboxHtml(); ?>
+                <?php if (!empty($gdprCheckboxesHtml)): ?>
+                    <?= /** @noEscape */ $gdprCheckboxesHtml ?>
+                <?php endif; ?>
+                <input type="hidden"
+                       name="secure_code"
+                       value="<?= $escaper->escapeHtmlAttr($block->getSecureCode()); ?>" />
+                <input type="hidden"
+                       name="reply_to"
+                       value="<?= $escaper->escapeHtmlAttr($block->getReplyTo()); ?>" />
+                <input type="hidden"
+                       name="session_id"
+                       value="<?= $escaper->escapeHtmlAttr($block->getSessionId()); ?>" />
+                <button class="amblog-btn"
+                        id="amblog_submit_comment"
+                        type="submit"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Post comment')); ?>"
+                        title="<?= $escaper->escapeHtmlAttr(__('Post comment')); ?>">
+                    <?php if ($block->isReply()): ?>
+                        <?= $escaper->escapeHtml(__('Post Reply ')) ?>
+                    <?php else: ?>
+                        <?= $escaper->escapeHtml(__('Post Comment')); ?>
+                    <?php endif; ?>
+                </button>
+                <?php if ($block->isReply()): ?>
+                    <button class="amblog-link-btn"
+                            type="button"
+                            data-amblog-js="close-form"
+                            data-amblog-form-id="amblog-form-<?= $escaper->escapeHtmlAttr($block->getPostId()); ?>"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Close reply form')); ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Close reply form')); ?>">
+                            <?= $escaper->escapeHtml(__('Cancel')); ?>
+                    </button>
+                <?php endif; ?>
+            </fieldset>
+        </form>
+    <?php else: ?>
+        <div class="amblog-guest-comment">
+            <p>
+                <?= $escaper->escapeHtml(__('Please ')); ?>
+                <a class="amblog-ref"
+                   href="<?= $escaper->escapeUrl($block->getLoginUrl()); ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('login')); ?>">
+                    <?= $escaper->escapeHtml(__('login')); ?>
+                </a>
+                <?= $escaper->escapeHtml(($block->isReply() ? __(' to reply.') : __(' to comment.'))); ?>
+            </p>
+            <p><?= $escaper->escapeHtml(__('Don\'t have an account?')); ?></p>
+            <a class="amblog-ref"
+               href="<?= $escaper->escapeUrl($block->getRegisterUrl()); ?>"
+               title="<?= $escaper->escapeHtmlAttr(__('Sign Up for free')); ?>">
+                <?= $escaper->escapeHtml(__('Sign Up for free')); ?>
+            </a>
+        </div>
+    <?php endif; ?>
+<?php else: ?>
+    <p><?= $escaper->escapeHtml(__('New comments for this post are not allowed')); ?></p>
+<?php endif; ?>

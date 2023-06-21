@@ -1,0 +1,7 @@
+<?php
+// phpcs:disable Magento2.Templates.ThisInTemplate
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var string $jsUrl */
+$jsUrl = $this->helper(Digitalriver\DrPay\Helper\Config::class)->getDropInJsUrl();
+?>
+<script type="text/javascript" src="<?= $escaper->escapeUrl($jsUrl) ?>"></script>

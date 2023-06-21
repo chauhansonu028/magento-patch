@@ -1,0 +1,90 @@
+<?php
+$order = $block->getOrder();
+$paymentInstruction = $order->getPayment()->getAdditionalInformation();
+?>
+<?php if (isset($paymentInstruction) && isset($paymentInstruction['referenceId'])): ?>
+    <div style="border: 1px solid #ccc;margin: 10px 0 20px;">
+        <h3 style="background: #1979c3;padding: 10px 15px;margin: 0;color: #fff;">
+            <?= $block->escapeHtml(__("Payment Instructions")); ?>
+        </h3>
+        <div style="padding: 15px;">
+            <p><?= $block->escapeHtml(__("Please make your payment now to complete your order.")); ?></p>
+            <p>
+                <?= /** @noEscape */ $block->escapeHtml(
+                    __("Provide your bank with the following wire transfer instruction:")
+                ); ?>
+            </p>
+            <p>
+                <b><?= /** @noEscape */ $block->escapeHtml(__("Amount:")); ?></b>
+                <?= /** @noEscape */$order->formatPrice($block->escapeHtml($order->getGrandTotal())); ?>
+            </p>
+            <p>
+                <b><?= $block->escapeHtml(__("Wire Transfer Reference Number:")); ?></b>
+                <?= $block->escapeHtml($paymentInstruction['referenceId']); ?>
+            </p>
+            <p>
+                <b><?= $block->escapeHtml(__("Bank:")); ?></b>
+                <?= $block->escapeHtml($paymentInstruction['bankName']); ?>
+            </p>
+            <?php
+            isset($paymentInstruction['country']) || $paymentInstruction['country'] = '';
+            if (isset($paymentInstruction['additionalBankInformation'])):?>
+                <p>
+                    <b><?= $block->escapeHtml(__("Location:")); ?></b>
+                    <?= $block->escapeHtml($paymentInstruction['additionalBankInformation'])
+                    . ', ' . $block->escapeHtml($paymentInstruction['city']) . ', '
+                    . $block->escapeHtml($paymentInstruction['country']); ?>
+                </p>
+            <?php else: ?>
+                <p>
+                    <b><?= $block->escapeHtml(__("Location:")); ?></b>
+                    <?= $block->escapeHtml($paymentInstruction['city'])
+                    . ', ' . $block->escapeHtml($paymentInstruction['country']); ?>
+                </p>
+            <?php endif; ?>
+            <?php if (isset($paymentInstruction['accountHolder'])): ?>
+                <p>
+                    <b><?= $block->escapeHtml(__("Account Holder:")); ?></b>
+                    <?= $block->escapeHtml($paymentInstruction['accountHolder']); ?>
+                </p>
+            <?php endif; ?>
+            <?php if (isset($paymentInstruction['accountNumber'])): ?>
+                <p>
+                    <b><?= $block->escapeHtml(__("Account Number:")); ?></b>
+                    <?= $block->escapeHtml($paymentInstruction['accountNumber']); ?>
+                </p>
+            <?php endif; ?>
+            <?php if (isset($paymentInstruction['swiftCode'])): ?>
+                <p>
+                    <b><?= $block->escapeHtml(__("Swift Code:")); ?></b>
+                    <?= $block->escapeHtml($paymentInstruction['swiftCode']); ?>
+                </p>
+            <?php endif; ?>
+            <?php if (isset($paymentInstruction['expirationTime'])): ?>
+                <p>
+                    <b><?= /** @noEscape */ $block->escapeHtml(__("Expiration Time:")); ?></b>
+                    <?= /** @noEscape */ $block->formatDate(
+                        $paymentInstruction['expirationTime'],
+                        IntlDateFormatter::MEDIUM,
+                        true
+                    ); ?>
+                </p>
+            <?php endif; ?>
+            <?php if (isset($paymentInstruction['iban'])): ?>
+                <p>
+                    <b><?= $block->escapeHtml(__("IBAN:")); ?></b>
+                    <?= $block->escapeHtml($paymentInstruction['iban']); ?>
+                </p>
+            <?php endif; ?>
+            <!-- <p>Please ensure you use your <b>Reference Number</b> as your
+            transaction reference when you electronically transfer the money  for payment. </p> -->
+        </div>
+    </div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Digitalriver_DrPay/js/clear-cart": {}
+    }
+}
+</script>

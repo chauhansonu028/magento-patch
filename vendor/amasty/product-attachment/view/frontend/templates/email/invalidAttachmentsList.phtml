@@ -1,0 +1,21 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Product Attachments Base for Magento 2
+ */
+use Amasty\ProductAttachment\Model\Healthcheck\InvalidLinksProvider;
+
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+?>
+
+<!--get invalid attachments from email variable 'invalidAttachments'-->
+<?php foreach ($block->getData('invalid_attachments') as $item): ?>
+    <tr>
+        <td><?= /* @noEscape */ $item->getId() ?></td>
+        <td><a href="<?= /* @noEscape */ $item->getUrl() ?>" target="_blank"><?= /* @noEscape */ $item->getUrl() ?></a></td>
+        <td><?= /* @noEscape */ $item->getResponse() ?></td>
+    </tr>
+<?php endforeach; ?>

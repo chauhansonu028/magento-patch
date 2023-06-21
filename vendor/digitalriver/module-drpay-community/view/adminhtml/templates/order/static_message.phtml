@@ -1,0 +1,22 @@
+<?php
+/**
+ * Template to display static message in Invoice
+ * or Credit memo view page in admin
+ *
+ * @summary Static Notice Message display template
+ * @author Vignesh Balasubramani <vignesh.balasubramani@gds.ey.com>
+ * @category Digitalriver
+ * @package Digitalriver_DrPay
+ */
+
+/**
+ * @var StaticMessage $block
+ *
+ */
+
+use Digitalriver\DrPay\Block\Adminhtml\Order\StaticMessage;
+?>
+<div class="dr_static_message">
+    <span><?= $block->escapeHtml($block->getStaticMessage()) ?></span>
+</div>
+<br/>

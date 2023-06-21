@@ -1,0 +1,114 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var \Amasty\Blog\Block\Content\Post\RelatedProducts $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Amasty\Blog\ViewModel\Posts\RelatedProducts $viewModel
+ */
+
+$viewModel = $block->getViewModel();
+$productsCount = count($viewModel->getPostProducts());
+?>
+
+<?php if ($viewModel->isCanRender()): ?>
+    <div class="block widget amblog-element-block amblog-related-wrapper -related-products">
+        <div class="amblog-title">
+            <?= $escaper->escapeHtml($viewModel->getRelatedProductsBlockName()) ?>
+        </div>
+        <div class="amblog-list">
+            <div class="amblog-related-grid amblog-grid-list amblog-slick-slider"
+                 data-mage-init='{"amBlogSlider": {
+                "centerMode": false,
+                "infinite": false,
+                "rows": 0,
+                "slidesToShow": <?= $escaper->escapeHtml($productsCount > 4 ? 4 : $productsCount) ?>,
+                "slidesToScroll": 1,
+                "responsive": [
+                    {
+                        "breakpoint": 1024,
+                        "settings": {
+                            "slidesToShow": <?= $escaper->escapeHtml($productsCount > 3 ? 3 : $productsCount) ?>
+                        }
+                    },
+                    {
+                        "breakpoint": 892,
+                        "settings": {
+                            "slidesToShow": <?= $escaper->escapeHtml($productsCount > 2 ? 2 : $productsCount) ?>
+                        }
+                    },
+                    {
+                        "breakpoint": 768,
+                        "settings": {
+                            "slidesToShow": <?= $escaper->escapeHtml($productsCount > 3 ? 3 : $productsCount) ?>
+                        }
+                    },
+                    {
+                        "breakpoint": 640,
+                        "settings": {
+                            "slidesToShow": <?= $escaper->escapeHtml($productsCount > 2 ? 2 : $productsCount) ?>
+                        }
+                    },
+                    {
+                        "breakpoint": 480,
+                        "settings": {
+                            "arrows": false,
+                            "dots": true,
+                            "slidesToShow": 1
+                        }
+                    },
+                    {
+                        "breakpoint": 320,
+                        "settings": {
+                            "slidesToShow": 1,
+                            "arrows": false
+                        }
+                    }
+                ]
+            }}'
+            >
+                <?php foreach ($viewModel->getPostProducts() as $product): ?>
+                    <div class="amblog-item-product product-item">
+                        <a class="product photo product-item-photo"
+                           href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>">
+                            <?= /* @noEscape */ $viewModel->getImageHtml($product) ?>
+                        </a>
+                        <div class="product details product-item-details">
+                            <a class="product-item-link"
+                               href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>"
+                               title="<?= $escaper->escapeHtmlAttr($product->getName()) ?>"
+                               aria-label="<?= $escaper->escapeHtmlAttr($product->getName()) ?>">
+                                <?= $escaper->escapeHtml($product->getName()) ?>
+                            </a>
+
+                            <?= /* @noEscape */ $viewModel->getReviewsHtml($product) ?>
+                            <?= /* @noEscape */ $viewModel->getProductPriceHtml($product) ?>
+
+                            <div class="product actions product-item-actions">
+                                <?php if ($product->isSaleable()): ?>
+                                    <?php
+                                    $postData = $viewModel->getAddToCartPostParams($product);
+                                    ?>
+                                    <button type="button"
+                                            class="action tocart primary"
+                                            data-post='<?= $escaper->escapeHtmlAttr($postData) ?>'
+                                            title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>"
+                                            aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>">
+                                        <?= $escaper->escapeHtml(__('Add to Cart')) ?>
+                                    </button>
+                                <?php else: ?>
+                                    <div class="stock unavailable">
+                                        <?= $escaper->escapeHtml(__('Out of stock')) ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

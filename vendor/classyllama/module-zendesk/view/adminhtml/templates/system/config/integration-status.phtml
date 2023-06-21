@@ -1,0 +1,21 @@
+<?php
+// @codingStandardsIgnoreFile
+
+use Zendesk\Zendesk\Block\Adminhtml\System\Config\IntegrationStatus;
+
+/** @var $block IntegrationStatus */
+
+$actionUrl = $block->getActionUrl();
+$integrationStatusClass = !empty($actionUrl) ? 'zendesk-status-action-required' : 'zendesk-status-ok';
+?>
+<div class="integration-status <?= $block->escapeHtmlAttr($integrationStatusClass) ?>">
+    <?= $block->escapeHtml($block->getButtonLabel()) ?>
+</div>
+
+<?php if ($actionUrl !== null): ?>
+    <div class="integration-action">
+        <a href="<?= $block->escapeHtmlAttr($actionUrl) ?>" class="action-primary fix-zendesk-integration">
+            <?= $block->escapeHtml(__('Configure Magento Integration on the current scope')) ?>
+        </a>
+    </div>
+<?php endif; ?>

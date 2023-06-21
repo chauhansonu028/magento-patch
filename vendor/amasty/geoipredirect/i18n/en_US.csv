@@ -1,0 +1,61 @@
+Country,Country
+Currency,Currency
+Url,Url
+"--Please Select--","--Please Select--"
+"All Except Specified URLs","All Except Specified URLs"
+"Specified URLs","Specified URLs"
+"Redirect From Home Page Only","Redirect From Home Page Only"
+"Notification Popup","Notification Popup"
+"Confirmation Popup","Confirmation Popup"
+"Redirect notification","Redirect notification"
+Accept,Accept
+Decline,Decline
+"GeoIp Redirect","GeoIp Redirect"
+General,General
+"Enable GeoIP Redirect","Enable GeoIP Redirect"
+"General setting affecting all rules","General setting affecting all rules"
+"Display Popup to Customers when Redirecting","Display Popup to Customers when Redirecting"
+"The setting allows your website to be compliant with EU regulations regarding geo-blocking and country redirects. <a href=""https://ec.europa.eu/digital-single-market/en/geo-blocking-digital-single-market"" target=""_blank"">Details</a>","The setting allows your website to be compliant with EU regulations regarding geo-blocking and country redirects. <a href=""https://ec.europa.eu/digital-single-market/en/geo-blocking-digital-single-market"" target=""_blank"">Details</a>"
+"Redirect Popup Type","Redirect Popup Type"
+"Notification Redirect Popup Text","Notification Redirect Popup Text"
+"<strong>Note: </strong>This text will be displayed to a customer on a popup before redirection happens.","<strong>Note: </strong>This text will be displayed to a customer on a popup before redirection happens."
+"Confirmation Redirect Popup Text","Confirmation Redirect Popup Text"
+"<strong>Note: </strong>This text will be displayed to a customer on a popup before redirection happens. He will be allowed to decline redirection and stay at the initial website.","<strong>Note: </strong>This text will be displayed to a customer on a popup before redirection happens. He will be allowed to decline redirection and stay at the initial website."
+Restriction,Restriction
+"Apply Logic To","Apply Logic To"
+"Accepted URLs","Accepted URLs"
+"Please specify relative URLs (like /about-us/). Each URL on a separate line.","Please specify relative URLs (like /about-us/). Each URL on a separate line."
+"Excepted URLs","Excepted URLs"
+"Please specify relative URLs (like /about-us/). Each URL on a separate line.<br>
+Note: URLs are excluded by partial occurrence. If you specify ""blog"", all URL's containing ""blog"" will be excluded","Please specify relative URLs (like /about-us/). Each URL on a separate line.<br>
+Note: URLs are excluded by partial occurrence. If you specify ""blog"", all URL's containing ""blog"" will be excluded"
+"User Agents to Ignore","User Agents to Ignore"
+"Ip to Ignore","Ip to Ignore"
+"Each IP on a separate line.","Each IP on a separate line."
+"First visit redirect only","First visit redirect only"
+"<strong style=""color:red"">Warning!</strong> If you select ""No"" visitors will be not able to change Store View / currency.","<strong style=""color:red"">Warning!</strong> If you select ""No"" visitors will be not able to change Store View / currency."
+"Redirect Between Websites","Redirect Between Websites"
+"Yes - a customer will be redirected to the store view of a website from another website within your Magento.<br/>
+(e.g. a customer tried to reach the default store view of the Website A, but was redirected to the store view 2 of the Website B)<br/>
+No - a customer will be redirected to another store view only within one website. No redirection will occur if a customer reached another website of your Magento.<br/>
+(e.g. a customer tried to reach the default store view of the Website A - success. A customer tried to reach the default store view of Website B and was redirected to the store view 2 of Website B)","Yes - a customer will be redirected to the store view of a website from another website within your Magento.<br/>
+(e.g. a customer tried to reach the default store view of the Website A, but was redirected to the store view 2 of the Website B)<br/>
+No - a customer will be redirected to another store view only within one website. No redirection will occur if a customer reached another website of your Magento.<br/>
+(e.g. a customer tried to reach the default store view of the Website A - success. A customer tried to reach the default store view of Website B and was redirected to the store view 2 of Website B)"
+"Restriction by IP","Restriction by IP"
+"IP to block","IP to block"
+"CMS page to display","CMS page to display"
+"<strong>Note:</strong> the chosen CMS page will be displayed to the restricted customer","<strong>Note:</strong> the chosen CMS page will be displayed to the restricted customer"
+"Redirect within your Magento instance","Redirect within your Magento instance"
+"Enable Country --> Store View","Enable Country --> Store View"
+"Use this setting to set a store view/website redirection for your Magento instance. If you need to set a redirection to a website (not store view), please set the redirection to the default store view of the website.
+Using this type of redirection a user will be redirected to the same page type. (e.g. from a product page to the same product page of another store view/website)","Use this setting to set a store view/website redirection for your Magento instance. If you need to set a redirection to a website (not store view), please set the redirection to the default store view of the website.
+Using this type of redirection a user will be redirected to the same page type. (e.g. from a product page to the same product page of another store view/website)"
+"Affected Countries","Affected Countries"
+"Country to Currency Switch","Country to Currency Switch"
+"Enable Country --> Currency","Enable Country --> Currency"
+"Country to Currency Mapping","Country to Currency Mapping"
+"Redirect to website outside your Magento instance","Redirect to website outside your Magento instance"
+"Enable Country --> URL","Enable Country --> URL"
+"Use this setting set a redirection to an external website. A user will be redirected just to the specified URL.","Use this setting set a redirection to an external website. A user will be redirected just to the specified URL."
+"Country to URL Mapping","Country to URL Mapping"

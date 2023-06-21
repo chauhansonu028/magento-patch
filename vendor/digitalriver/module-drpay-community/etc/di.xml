@@ -1,0 +1,379 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- ***********************
+         * Data API preferences
+         *********************** -->
+    <preference for="Digitalriver\DrPay\Api\Data\CatalogSyncInterface"
+                type="Digitalriver\DrPay\Model\CatalogSync"/>
+    <preference for="Digitalriver\DrPay\Api\Data\ChargeInterface"
+                type="Digitalriver\DrPay\Model\Charge"/>
+    <preference for="Digitalriver\DrPay\Api\Data\OfflineRefundInterface"
+                type="Digitalriver\DrPay\Model\Data\OfflineRefund"/>
+    <preference for="Digitalriver\DrPay\Api\Data\OfflineRefundSearchResultInterface"
+                type="Digitalriver\DrPay\Model\OfflineRefund\SearchResult"/>
+    <preference for="Digitalriver\DrPay\Api\Data\PlaceOrderResultInterface"
+                type="Digitalriver\DrPay\Model\Data\PlaceOrderResult"/>
+    <preference for="Digitalriver\DrPay\Api\Data\RefundInterface"
+                type="Digitalriver\DrPay\Model\Refund"/>
+    <preference for="Digitalriver\DrPay\Api\Webhook\SetOfflineRefundTokenInterface"
+                type="Digitalriver\DrPay\Model\OfflineRefund\SetToken"/>
+
+    <!-- ********************
+         * API preferences
+         ******************** -->
+    <preference for="Digitalriver\DrPay\Api\CatalogSyncRepositoryInterface"
+                type="Digitalriver\DrPay\Model\CatalogSyncRepository"/>
+    <preference for="Digitalriver\DrPay\Api\ChargeRepositoryInterface"
+                type="Digitalriver\DrPay\Model\ChargeRepository"/>
+    <preference for="Digitalriver\DrPay\Api\DigitalRiverCustomerIdManagementInterface"
+                type="Digitalriver\DrPay\Model\DigitalRiverCustomerIdManagement"/>
+    <preference for="Digitalriver\DrPay\Api\DrConnectorRepositoryInterface"
+                type="Digitalriver\DrPay\Model\DrConnectorRepository"/>
+    <preference for="Digitalriver\DrPay\Api\HttpClientInterface"
+                type="Digitalriver\DrPay\Framework\HTTP\Client\Curl"/>
+    <preference for="Digitalriver\DrPay\Api\RefundRegistryInterface"
+                type="Digitalriver\DrPay\Model\OfflineRefund\Registry"/>
+    <preference for="Digitalriver\DrPay\Api\OfflineRefundRepositoryInterface"
+                type="Digitalriver\DrPay\Model\OfflineRefund\RepositoryCached"/>
+    <preference for="Digitalriver\DrPay\Api\PlaceOrderResultBuilderInterface"
+                type="Digitalriver\DrPay\Model\Service\PlaceOrderResultBuilder"/>
+    <preference for="Digitalriver\DrPay\Api\RefundRepositoryInterface"
+                type="Digitalriver\DrPay\Model\RefundRepository"/>
+    <preference for="Digitalriver\DrPay\Api\SkuGroupApiClientInterface"
+                type="Digitalriver\DrPay\Model\SkuGroup\ApiClient"/>
+    <preference for="Digitalriver\DrPay\Api\SkuGroupProviderInterface"
+                type="Digitalriver\DrPay\Model\SkuGroup\DataProviderCached"/>
+    <preference for="Digitalriver\DrPay\Api\TaxIdInterface"
+                type="Digitalriver\DrPay\Model\TaxId"/>
+    <preference for="Digitalriver\DrPay\Api\TaxIdManagementInterface"
+                type="Digitalriver\DrPay\Model\TaxIdManagement"/>
+    <preference for="Digitalriver\DrPay\Api\InvoiceAttributeInterface"
+                type="Digitalriver\DrPay\Model\InvoiceAttribute"/>
+    <preference for="Digitalriver\DrPay\Api\InvoiceAttributeManagementInterface"
+                type="Digitalriver\DrPay\Model\InvoiceAttributeManagement"/>
+    <preference for="Digitalriver\DrPay\Api\OfflineRefundManagementInterface"
+                type="Digitalriver\DrPay\Model\OfflineRefund\Management"/>
+    <preference for="Digitalriver\DrPay\Api\QuoteManagementInterface"
+                type="Digitalriver\DrPay\Model\Sales\QuoteManagement"/>
+    <preference for="Digitalriver\DrPay\Api\GuestQuoteManagementInterface"
+                type="Digitalriver\DrPay\Model\Sales\GuestQuoteManagement"/>
+
+    <!-- **************************
+         * Core class overrides
+         ************************** -->
+    <!-- Display Duty Fee and IOR Tax on Credit memo update totals -->
+    <preference for="Magento\Sales\Model\Order\CreditmemoFactory"
+                type="Digitalriver\DrPay\Model\Order\CreditmemoFactory"/>
+
+    <!-- ********************
+         * Virtual types
+         ******************** -->
+    <virtualType name="CatalogSyncFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">
+                    Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter
+                </item>
+                <item name="fulltext" xsi:type="object">
+                    Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CatalogSyncProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">
+                Digitalriver\DrPay\Model\ResourceModel\CatalogSync\Collection
+            </argument>
+            <argument name="filterPool" xsi:type="object" shared="false">CatalogSyncFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="ChargeFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">
+                    Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter
+                </item>
+                <item name="fulltext" xsi:type="object">
+                    Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="ChargeProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">
+                Digitalriver\DrPay\Model\ResourceModel\Charge\Collection
+            </argument>
+            <argument name="filterPool" xsi:type="object" shared="false">CatalogSyncFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Digitalriver\DrPay\Model\ResourceModel\CatalogSync\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">dr_catalog_sync_queue</argument>
+            <argument name="resourceModel" xsi:type="string">
+                Digitalriver\DrPay\Model\ResourceModel\CatalogSync\Collection
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Digitalriver\DrPay\Model\ResourceModel\Charge\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">dr_catalog_sync_queue</argument>
+            <argument name="resourceModel" xsi:type="string">Digitalriver\DrPay\Model\ResourceModel\Charge\Collection
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Digitalriver\DrPay\Model\ResourceModel\Refund\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">dr_refund</argument>
+            <argument name="resourceModel" xsi:type="string">Digitalriver\DrPay\Model\ResourceModel\Refund\Collection
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="RefundFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">
+                    Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter
+                </item>
+                <item name="fulltext" xsi:type="object">
+                    Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="RefundProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">
+                Digitalriver\DrPay\Model\ResourceModel\Refund\Collection
+            </argument>
+            <argument name="filterPool" xsi:type="object" shared="false">CatalogSyncFilterPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- *********************
+         * Logger definitions
+         ********************* -->
+    <type name="Digitalriver\DrPay\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">DrLogger</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Digitalriver\DrPay\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- **************
+         * Plugins
+         ************** -->
+    <type name="Magento\Customer\Api\AccountManagementInterface">
+        <plugin name="Digitalriver_DrPay::AddGuestEmailToSession"
+                type="Digitalriver\DrPay\Plugin\Customer\AccountManagement\AddGuestEmailToSession"/>
+    </type>
+    <type name="Magento\CatalogImportExport\Model\Import\Product\Validator">
+        <plugin name="Digitalriver_DrPay::ValidateHsCode"
+                type="Digitalriver\DrPay\Plugin\CatalogImportExport\Import\Product\ValidatorPlugin"/>
+    </type>
+    <type name="Magento\Quote\Api\CartManagementInterface">
+        <plugin name="purchase_order_create_on_dr" type="Digitalriver\DrPay\Plugin\Model\QuoteManagementPlugin"/>
+    </type>
+    <type name="Magento\Sales\Api\Data\CreditmemoInterface">
+        <plugin name="Digitalriver_DrPay::AddOfflineRefundExtensionAttribute"
+                type="Digitalriver\DrPay\Plugin\Sales\Order\Creditmemo\AddOfflineRefundExtensionAttribute"/>
+    </type>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <!-- Display Duty Fee and IOR Tax on Order API Call -->
+        <plugin name="display_order_duty_ior_tax_order_api" type="Digitalriver\DrPay\Plugin\OrderRepository"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Creditmemo\Total\Grand">
+        <!-- Include Duty Fee and IOR Tax on credit memo calculation -->
+        <plugin name="addDutyFeeToTotal" type="Digitalriver\DrPay\Plugin\Sales\Order\Creditmemo\Total\GrandPlugin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Sender\CreditmemoSender">
+        <plugin name="StaticMessageSenderPlugin" type="Digitalriver\DrPay\Plugin\StaticMessageSenderPlugin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Sender\InvoiceSender">
+        <plugin name="StaticMessageSenderPlugin" type="Digitalriver\DrPay\Plugin\StaticMessageSenderPlugin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Invoice\Total\Grand">
+        <!-- Include Duty Fee and IOR Tax on invoice calculation -->
+        <plugin name="addDutyFeeToInvoiceTotal" type="Digitalriver\DrPay\Plugin\Sales\Order\Invoice\Total\GrandPlugin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Item">
+        <plugin name="salesOrderItemCancel" type="Digitalriver\DrPay\Plugin\Sales\Order\ItemPlugin" sortOrder="1"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Pdf\Creditmemo">
+        <!-- Plugin for validating HS Code during Import -->
+        <plugin name="AddStaticMessagePlugin" type="Digitalriver\DrPay\Plugin\AddStaticMessagePlugin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Pdf\Invoice">
+        <!-- DIRI-169 Changes to include Static Message for OOB invoice and Credit memo -->
+        <plugin name="AddStaticMessagePlugin" type="Digitalriver\DrPay\Plugin\AddStaticMessagePlugin"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Shipment">
+        <plugin name="salesOrderShipmentRegister" type="Digitalriver\DrPay\Plugin\Sales\Order\ShipmentPlugin"
+                sortOrder="1"/>
+    </type>
+    <type name="Magento\SalesRule\Model\Quote\Address\Total\ShippingDiscount">
+        <plugin name="create_dr_quote"
+                type="Digitalriver\DrPay\Plugin\SalesRule\Model\Quote\Address\Total\ShippingDiscount"/>
+    </type>
+    <type name="Magento\Weee\Model\Total\Quote\Weee">
+        <plugin sortOrder="1" name="digitalriverDrPayWeee"
+                type="Digitalriver\DrPay\Plugin\Model\Total\Quote\WeeePlugin"/>
+    </type>
+    <type name="Magento\Weee\Model\Total\Quote\WeeeTax">
+        <plugin name="digitalriverDrPayWeee" disabled="true"/>
+    </type>
+
+    <!-- **********************************
+         * Constructor argument definitions
+         ********************************** -->
+    <type name="Digitalriver\DrPay\Model\AggregatePriceProcessor">
+        <arguments>
+            <argument name="priceProcessors" xsi:type="array">
+                <item name="default" xsi:type="object">Digitalriver\DrPay\Model\AggregatePrice\DefaultProcessor</item>
+                <item name="simple" xsi:type="object">Digitalriver\DrPay\Model\AggregatePrice\SimpleProcessor</item>
+                <item name="bundle" xsi:type="object">Digitalriver\DrPay\Model\AggregatePrice\BundleProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\BundleValidation">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="DynamicPriceValidator" xsi:type="object">
+                    Digitalriver\DrPay\Model\BundleValidation\DynamicPriceValidator
+                </item>
+                <item name="DigitalRiverEligible" xsi:type="object">
+                    Digitalriver\DrPay\Model\BundleValidation\DigitalRiverEligible
+                </item>
+                <item name="DrAllocatedPercentIntValidator" xsi:type="object">
+                    Digitalriver\DrPay\Model\BundleValidation\DrAllocatedPercentIntValidator
+                </item>
+                <item name="DrAllocatedPercentSummaValidator" xsi:type="object">
+                    Digitalriver\DrPay\Model\BundleValidation\DrAllocatedPercentSummaValidator
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\DrCheckoutDataProviderPool">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <!-- Add checkout data provides here -->
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\OfflineRefund\Repository">
+        <arguments>
+            <argument name="drLogger" xsi:type="object">Digitalriver\DrPay\Logger\Logger</argument>
+            <argument name="offlineRefundHydrator" xsi:type="object">
+                Digitalriver\DrPay\Model\Data\OfflineRefund\Hydrator
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\OfflineRefund\RepositoryCached">
+        <arguments>
+            <argument name="offlineRefundRepository" xsi:type="object">
+                Digitalriver\DrPay\Model\OfflineRefund\Repository
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\PrimarySourceValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <!-- Add source validators here -->
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\Sales\QuoteManagement">
+        <arguments>
+            <argument name="logger" xsi:type="object">Digitalriver\DrPay\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\SecondarySourceInfoCollector">
+        <arguments>
+            <argument name="secondarySourceInfoCollectors" xsi:type="array">
+                <item name="100" xsi:type="object">Digitalriver\DrPay\Model\SecondaryInfoProvider\StaticInfo</item>
+                <item name="200" xsi:type="object">Digitalriver\DrPay\Model\SecondaryInfoProvider\PurchaseOrder</item>
+                <item name="300" xsi:type="object">Digitalriver\DrPay\Model\SecondaryInfoProvider\ShippingAddress</item>
+                <item name="999" xsi:type="object">Digitalriver\DrPay\Model\SecondaryInfoProvider\TotalAmount</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\SecondaryInfoProvider\TotalAmount">
+        <arguments>
+            <argument name="extractKeys" xsi:type="array">
+                <item name="purchaseOrderAmount" xsi:type="const">
+                    Digitalriver\DrPay\Model\SecondaryInfoProvider\PurchaseOrder::KEY_PO_AMOUNT
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\SkuGroup\ApiClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">Digitalriver\DrPay\Logger\Logger</argument>
+            <argument name="responseValidator" xsi:type="object">
+                Digitalriver\DrPay\Model\Validator\SkuGroupResponse
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\SkuGroup\DataProviderCached">
+        <arguments>
+            <argument name="skuGroupProvider" xsi:type="object">
+                Digitalriver\DrPay\Model\SkuGroup\DataProvider
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\SourceNameProviderPool">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <!-- Add source name providers here -->
+            </argument>
+        </arguments>
+    </type>
+    <type name="Digitalriver\DrPay\Model\RefundActionPool">
+        <arguments>
+            <argument name="actions" xsi:type="array">
+                <!-- Add refund actions here -->
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="catalog_sync_sync_listing_data_source" xsi:type="string">
+                    Digitalriver\DrPay\Model\ResourceModel\CatalogSync\Grid\Collection
+                </item>
+                <item name="charge_listing_data_source" xsi:type="string">
+                    Digitalriver\DrPay\Model\ResourceModel\Charge\Grid\Collection
+                </item>
+                <item name="refund_listing_data_source" xsi:type="string">
+                    Digitalriver\DrPay\Model\ResourceModel\Refund\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="dr_order_id" xsi:type="string">sales_order.dr_order_id</item>
+                <item name="dr_payment_method" xsi:type="string">sales_order.dr_payment_method</item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

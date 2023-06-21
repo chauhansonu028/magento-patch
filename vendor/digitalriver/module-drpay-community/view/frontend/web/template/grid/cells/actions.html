@@ -1,0 +1,16 @@
+<!--
+/**
+ * Copyright (c) Gorilla, Inc. (http://www.gorillagroup.com)
+ * Gorilla Mod add aria-label to link
+ */
+-->
+
+<a
+    class="action-menu-item"
+    if="$col.isSingle($row()._rowIndex)"
+    repeat="foreach: $col.getVisibleActions($row()._rowIndex), item: '$action'"
+    click="$col.getActionHandler($action())"
+    text="$action().label"
+    attr="target: $col.getTarget($action()),
+            href: $action().href,
+            'aria-label' : $t('Delete' + $col.rows[$action().rowIndex].card_type + ' ' + $col.rows[$action().rowIndex].card_number)"/>

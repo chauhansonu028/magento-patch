@@ -1,0 +1,12 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */ /**  @var $block \Amasty\Blog\Block\Adminhtml\System\Config\Field\Layout\Renderer */?>
+<div class="mp-layout-element"
+     mp-name="<?= $block->escapeHtml($block->getElementName()); ?>"
+     mp-id="<?= $block->escapeHtml($block->getElementId()); ?>"
+     mp-value='<?= $block->escapeHtml($block->getElementValue()) ?>'
+     mp-config='<?= /* @noEscape */ $block->getLayoutConfigJson(); ?>'>
+</div>

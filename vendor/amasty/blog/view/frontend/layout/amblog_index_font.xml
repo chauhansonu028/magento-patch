@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="head.additional">
+            <block name="amblog.post.head.font"
+                   class="Magento\Framework\View\Element\Template"
+                   template="Amasty_Blog::post/head/font.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Amasty\Blog\ViewModel\Posts\Head\Font</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

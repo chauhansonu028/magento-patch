@@ -1,0 +1,149 @@
+//
+//  Post navigation styles
+//  __________________________________________________
+
+//
+//  Variables
+//  --------------------------------------------------
+
+@amblog-navigation-arrow__width: 10px;
+@amblog-navigation-arrow__height: 19px;
+@amblog-navigation-icon__offset: 20px;
+
+//
+//  Common
+//  --------------------------------------------------
+
+& when (@media-common = true) {
+    .amblog-navigation-container {
+        align-items: flex-start;
+        background: @amblog-input-background;
+        border-radius: 0 0 5px 5px;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+        padding: @amblog__indent__xxl;
+        position: relative;
+    }
+
+    .amblog-navigation-container .amblog-navigation {
+        & {
+            display: flex;
+            flex-direction: column;
+            margin: 0 10px;
+            max-width: 45%;
+        }
+
+        &.-previous {
+            & {
+                margin-left: @amblog-navigation-arrow__width + @amblog-navigation-icon__offset;
+            }
+
+            > .amblog-title-link:before {
+                content: '';
+                left: @amblog-navigation-icon__offset;
+            }
+        }
+
+        &.-next {
+            & {
+                align-items: flex-end;
+                margin-right: @amblog-navigation-arrow__width + @amblog-navigation-icon__offset;
+            }
+
+            > .amblog-title-link {
+                text-align: right;
+            }
+
+            > .amblog-title-link:after {
+                content: '';
+                right: @amblog-navigation-icon__offset;
+                transform: translateY(-50%) rotate(180deg);
+            }
+        }
+
+        > .amblog-title-link {
+            & {
+                .amblog-word-break;
+
+                color: @amblog-default-text__color;
+                font-size: 2rem;
+                font-weight: @font-weight__bold;
+                line-height: 2.7rem;
+                margin: 0;
+                padding: 0;
+                text-transform: initial;
+            }
+
+            &:before,
+            &:after {
+                background-image: @amblog-navigation-arrow__background-image;
+                height: @amblog-navigation-arrow__height;
+                min-width: @amblog-navigation-arrow__width;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: @amblog-navigation-arrow__width;
+            }
+        }
+
+        > .amblog-date {
+            margin-top: 5px;
+        }
+
+        .amblog-navigation-label {
+            color: @amblog-placeholder__color;
+            font-size: 1.2rem;
+            line-height: 1.6rem;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+//
+//  Mobile
+//  --------------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__xs) {
+    .amblog-navigation-container .amblog-navigation {
+        & {
+            margin-top: @amblog-navigation-arrow__width + @amblog-navigation-icon__offset;
+        }
+
+        &.-previous {
+            & {
+                margin-left: 0;
+            }
+
+            > .amblog-title-link:before {
+                left: ~'calc(@{amblog-navigation-icon__offset} * 2)'; /* stylelint-disable-line */
+                right: inherit;
+            }
+        }
+
+        &.-next {
+            & {
+                margin-right: 0;
+            }
+
+            > .amblog-title-link:after {
+                left: inherit;
+                right: ~'calc(@{amblog-navigation-icon__offset} * 2)'; /* stylelint-disable-line */
+            }
+        }
+
+        > .amblog-title-link {
+            &:before,
+            &:after {
+                bottom: ~'calc(100% - 50px)';
+                top: inherit;
+            }
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__xxs) {
+    .amblog-navigation-container .amblog-navigation > .amblog-title-link {
+        .amblog-ellipsis(3);
+    }
+}

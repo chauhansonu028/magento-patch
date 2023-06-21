@@ -1,0 +1,43 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+
+/**
+ * @var $block Amasty\Blog\Block\Content\Post\Details
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$post = $block->getPost();
+$commentCount = $block->getCommentsCount();
+$commentsSvg = $commentCount < 1 ? '#no-comment' : '#comment';
+?>
+
+<?php if ($post->getUseCommentsGlobal() && $post->getCommentsEnabled()): ?>
+    <div class="amblog-wrap" data-amblog-js="short_comments">
+        <?php if ($commentCount < 1): ?>
+            <div class="amblog-no-comments">
+        <?php endif; ?>
+        <svg class="amblog-svg comment <?= $escaper->escapeHtml($block->getColorClass()); ?>">
+            <use xlink:href="<?= $escaper->escapeUrl(
+                $block->getViewFileUrl('Amasty_Blog::images/sprite.svg')
+            ); ?><?= $escaper->escapeHtml($commentsSvg); ?>"></use>
+        </svg>
+        <div class="comments amblog-post-item -comments">
+            <a class="amblog-ref" href="<?= $escaper->escapeUrl($block->getCommentsUrl()); ?>">
+                <?php if ($commentCount == 1): ?>
+                    <?= $escaper->escapeHtml(__("%1 comment", $commentCount)); ?>
+                <?php elseif ($commentCount > 1): ?>
+                    <?= $escaper->escapeHtml(__("%1 comments", $commentCount)); ?>
+                <?php else: ?>
+                    <?= $escaper->escapeHtml(__('0 comments')); ?>
+                <?php endif; ?>
+            </a>
+        </div>
+        <?php if ($commentCount < 1): ?>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

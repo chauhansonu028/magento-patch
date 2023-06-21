@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <head>
+        <css src="Amasty_Blog::css/edit.css"/>
+        <css src="Amasty_Blog::css/jquery.tagit.css"/>
+        <css src="Amasty_Blog::css/tagit.ui-zendesk-custom.css"/>
+        <link src="Amasty_Blog::variables.js"/>
+    </head>
+    <body>
+        <referenceContainer name="page.main.actions">
+            <block class="Magento\Backend\Block\Store\Switcher" name="store_switcher">
+                <action method="setUseConfirm">
+                    <argument name="params" xsi:type="string">1</argument>
+                </action>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <uiComponent name="posts_form"/>
+        </referenceContainer>
+
+        <referenceContainer name="js">
+            <block class="Amasty\Blog\Block\Adminhtml\Posts\Edit\PreviewJsInit" name="amblog.preview.js" template="Amasty_Blog::posts/edit/preview_js_init.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

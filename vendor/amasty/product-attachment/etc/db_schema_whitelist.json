@@ -1,0 +1,166 @@
+{
+    "amasty_file": {
+        "column": {
+            "file_id": true,
+            "attachment_type": true,
+            "filepath": true,
+            "link": true,
+            "extension": true,
+            "size": true,
+            "mime_type": true,
+            "url_hash": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "AMASTY_FILE_URL_HASH": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_file_icon": {
+        "column": {
+            "icon_id": true,
+            "filetype": true,
+            "image": true,
+            "is_active": true,
+            "attachment_type": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_file_icon_extension": {
+        "column": {
+            "extension_id": true,
+            "icon_id": true,
+            "extension": true
+        },
+        "index": {
+            "AMASTY_FILE_ICON_EXTENSION_EXTENSION": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_FILE_ICON_EXTENSION_ICON_ID_AMASTY_FILE_ICON_ICON_ID": true
+        }
+    },
+    "amasty_file_store": {
+        "column": {
+            "file_store_id": true,
+            "file_id": true,
+            "store_id": true,
+            "filename": true,
+            "label": true,
+            "is_visible": true,
+            "customer_groups": true,
+            "include_in_order": true,
+            "position": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_FILE_STORE_FILE_ID_AMASTY_FILE_FILE_ID": true
+        }
+    },
+    "amasty_file_store_category": {
+        "column": {
+            "file_store_category_id": true,
+            "category_id": true,
+            "file_store_id": true,
+            "file_id": true,
+            "store_id": true,
+            "filename": true,
+            "label": true,
+            "is_visible": true,
+            "customer_groups": true,
+            "include_in_order": true,
+            "position": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_FILE_STORE_CATEGORY_FILE_ID_AMASTY_FILE_FILE_ID": true
+        }
+    },
+    "amasty_file_store_product": {
+        "column": {
+            "file_store_product_id": true,
+            "product_id": true,
+            "file_store_id": true,
+            "file_id": true,
+            "store_id": true,
+            "filename": true,
+            "label": true,
+            "is_visible": true,
+            "customer_groups": true,
+            "include_in_order": true,
+            "position": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_FILE_STORE_PRODUCT_FILE_ID_AMASTY_FILE_FILE_ID": true
+        }
+    },
+    "amasty_file_store_category_product": {
+        "column": {
+            "file_store_category_product_id": true,
+            "category_id": true,
+            "product_id": true,
+            "file_store_id": true,
+            "file_id": true,
+            "store_id": true,
+            "filename": true,
+            "label": true,
+            "is_visible": true,
+            "customer_groups": true,
+            "include_in_order": true,
+            "position": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_FILE_STORE_CATEGORY_PRODUCT_FILE_ID_AMASTY_FILE_FILE_ID": true
+        }
+    },
+    "amasty_file_report": {
+        "column": {
+            "item_id": true,
+            "file_id": true,
+            "store_id": true,
+            "customer_id": true,
+            "download_source": true,
+            "product_id": true,
+            "category_id": true,
+            "order_id": true,
+            "downloaded_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_file_import": {
+        "column": {
+            "import_id": true,
+            "store_ids": true,
+            "created_at": true,
+            "import_file": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_file_import_file": {
+        "column": {
+            "import_file_id": true,
+            "import_id": true,
+            "filepath": true,
+            "filename": true,
+            "label": true,
+            "is_visible": true,
+            "customer_groups": true,
+            "include_in_order": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_FILE_IMPORT_FILE_IMPORT_ID_AMASTY_FILE_IMPORT_IMPORT_ID": true
+        }
+    }
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Display Credit memo download links from Digital River
+ *
+ * @summary Replaces OOB magento credit memo details with download links from DR
+ * @author Vignesh Balasubramani <vignesh.balasubramani@gds.ey.com>
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- DIRI-132 displaying credit memo details through Digital River -->
+        <referenceContainer name="content">
+            <block class="Digitalriver\DrPay\Block\Sales\Order\CreditMemo" name="sales.creditmemo.container" template="Digitalriver_DrPay::order/dr_credit_memo.phtml" after="sales.order.info.links"/>
+        </referenceContainer>
+        <referenceBlock name="creditmemo_totals">
+            <block class="Digitalriver\DrPay\Block\Sales\Order\DutyFee" name="duty_tax" template="Digitalriver_DrPay::order/duty_fee_ior_tax.phtml" />
+        </referenceBlock>
+
+        <referenceBlock name="creditmemo_items" template="Digitalriver_DrPay::creditmemo/view/items.phtml">
+            <arguments>
+                <argument name="dr_refund_offline_view_model" xsi:type="object">
+                    Digitalriver\DrPay\ViewModel\DrOfflineRefundData
+                </argument>
+            </arguments>
+        </referenceBlock>
+
+        <move element="sales.order.creditmemo" destination="sales.creditmemo.container" before="-"/>
+    </body>
+</page>

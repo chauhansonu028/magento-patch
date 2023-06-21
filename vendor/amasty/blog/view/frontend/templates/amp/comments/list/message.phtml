@@ -1,0 +1,40 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var \Amasty\Blog\Block\Comments\Message $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$commentClass = $block->isMyComment() ? 'my-comment' : '';
+?>
+
+<div class="amblog-comment" id="am-blog-comment-<?= $escaper->escapeHtml($block->getMessageId()); ?>">
+    <?php if ($block->getMessage()->getReplyTo()): ?>
+        <div class="is-reply"></div>
+    <?php endif; ?>
+
+    <div class="am-comment-content <?= $escaper->escapeHtml($commentClass) ?>">
+        <div class="am-comment-header">
+            <span class="am-comment-author">
+                <strong><?= $escaper->escapeHtml($block->getAuthor()); ?></strong>
+            </span>
+            <span class="am-comment-date">
+                <?= /* @noEscape */ $block->getDate(); ?>
+            </span>
+            <?php if ($block->getNeedApproveMessage()): ?>
+                <span class="am-comment-willapprove">
+                    <?= $escaper->escapeHtml(__("This comment will become public after administrator approval.")); ?>
+                </span>
+            <?php endif; ?>
+        </div>
+        <div class="am-comment-content">
+            <?= /* @noEscape */ $block->getContent(); ?>
+        </div>
+    </div>
+</div>
+<div class="am-replies">
+    <?= $block->getRepliesHtml(); ?>
+    <div class="am-comment-form" id="am-comment-form-<?= $escaper->escapeHtml($block->getMessageId()); ?>"></div>
+</div>

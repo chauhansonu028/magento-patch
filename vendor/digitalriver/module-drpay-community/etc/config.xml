@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <drpay_dropin>
+                <active>1</active>
+                <sort_order>1</sort_order>
+                <model>Digitalriver\DrPay\Model\DropIn</model>
+                <order_status>pending_payment</order_status>
+                <title>
+                    <![CDATA[ DigitalRiver Payments ]]>
+                </title>
+            </drpay_dropin>
+        </payment>
+        <dr_settings>
+            <catalog_sync>
+                <error_email_template>dr_settings_catalog_sync_error_email_template</error_email_template>
+                <error_email_identity>general</error_email_identity>
+                <batch_limit>250</batch_limit>
+                <dr_sku_group_api_ttl>900</dr_sku_group_api_ttl>
+            </catalog_sync>
+            <stored_methods>
+                <enable>1</enable>
+            </stored_methods>
+        </dr_settings>
+        <crontab>
+            <default>
+                <jobs>
+                    <catalog_sync>
+                        <schedule>
+                            <cron_expr>0 0 * * *</cron_expr>
+                        </schedule>
+                    </catalog_sync>
+                </jobs>
+            </default>
+        </crontab>
+        <tax>
+            <weee>
+                <enable>1</enable>
+            </weee>
+        </tax>
+    </default>
+</config>

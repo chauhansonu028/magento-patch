@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Digitalriver_DrPay::css/select2.min.css" />
+    </head>
+    <body>
+        <referenceContainer name="page.main.actions">
+            <block class="Digitalriver\DrPay\Block\Catalog\Product\AttributeValues" name="taxvalues_container" template="Digitalriver_DrPay::product/view/tax_values_container.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Digitalriver\DrPay\ViewModel\DrHelper</argument>
+                </arguments>
+            </block>
+            <block class="Digitalriver\DrPay\Block\Catalog\Product\AttributeValues" name="attributes_container" template="Digitalriver_DrPay::product/view/attributes_container.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Digitalriver\DrPay\ViewModel\DrHelper</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

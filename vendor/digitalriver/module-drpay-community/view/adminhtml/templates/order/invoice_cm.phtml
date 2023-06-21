@@ -1,0 +1,52 @@
+<?php
+/**
+ * Template to display Invoice and Refunds section
+ *
+ * @summary Invoice and CM links display template
+ * @author Vignesh Balasubramani <vignesh.balasubramani@gds.ey.com>
+ * @category Digitalriver
+ * @package Digitalriver_DrPay
+ */
+
+/**
+ * @var InvoiceAndRefunds $block
+ *
+ */
+
+use Digitalriver\DrPay\Block\Adminhtml\Order\InvoiceAndRefunds;
+
+?>
+<?php
+    $order = $block->getOrder();
+    $invoicesAndRefunds = $block->getInvoicesAndRefunds($order);
+?>
+<section class="admin__page-section dr_invoice_and_refunds_section">
+    <div class="admin__page-section-title">
+        <span class="title">Invoices and Credit Memos for this Order</span>
+    </div>
+    <div class="admin__page-section-content">
+        <table class="admin__table-secondary dr_invoice_refunds_view_table">
+            <?php foreach ($invoicesAndRefunds as $invoiceOrRefund) {
+                $invoiceOrRefund['date'] = $block->formatDate(
+                    $invoiceOrRefund['date'],
+                    \IntlDateFormatter::MEDIUM,
+                    true
+                ); ?>
+            <tr>
+                <td>
+                    <?= $block->escapeHtml($invoiceOrRefund['date']) ?>
+                </td>
+                <td><?= $block->escapeHtml(__($invoiceOrRefund['message'])) ?></td>
+                <td>
+                    <a target="_blank" href=<?= $block->escapeUrl($invoiceOrRefund['link']) ?>>
+                        <?= $block->escapeHtml(__('Link')) ?>
+                    </a>
+                </td>
+            </tr>
+            <?php } ?>
+        </table>
+        <?php if (count($invoicesAndRefunds) === 0) { ?>
+        <div><span><?= $block->escapeHtml(__('We couldn\'t find any records.')) ?></span></div>
+    <?php } ?>
+    </div>
+</section>

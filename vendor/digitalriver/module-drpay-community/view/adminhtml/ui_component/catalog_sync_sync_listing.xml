@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">catalog_sync_sync_listing.catalog_sync_sync_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save" class="Digitalriver\DrPay\Block\Adminhtml\Cron\ManualButton"/>
+        </buttons>
+        <spinner>catalog_sync_sync_columns</spinner>
+        <deps>
+            <dep>catalog_sync_sync_listing.catalog_sync_sync_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="catalog_sync_sync_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">entity_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Digitalriver_DrPay::catalog_sync_grid</aclResource>
+        <dataProvider class="CatalogSyncProvider" name="catalog_sync_sync_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="catalog_sync_sync_columns">
+        <column name="entity_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="product_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Product ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="product_sku">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Product SKU</label>
+            </settings>
+        </column>
+        <column name="status">
+            <settings>
+                <filter>select</filter>
+                <options class="Digitalriver\DrPay\Model\Config\Status\Options"/>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+        <column name="request_data">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Request Data</label>
+            </settings>
+        </column>
+        <column name="response_data">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Response Data</label>
+            </settings>
+        </column>
+        <column name="added_to_queue_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Added To Queue</label>
+            </settings>
+        </column>
+        <column name="synced_to_dr_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Sync to Digital River</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

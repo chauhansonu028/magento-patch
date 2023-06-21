@@ -1,0 +1,23 @@
+{
+    "name": "magento/module-live-search-terms",
+    "description": "Live Search Popular Terms",
+    "type": "magento2-module",
+    "license": [
+        "proprietary"
+    ],
+    "version": "3.0.1",
+    "require": {
+        "php": "~8.1.0||~8.2.0",
+        "magento/framework": ">=103.0.4",
+        "magento/module-search": "^101.0.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\LiveSearchTerms\\": ""
+        }
+    }
+}
+

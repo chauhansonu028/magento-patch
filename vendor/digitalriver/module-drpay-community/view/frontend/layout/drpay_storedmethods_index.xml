@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <head>
+        <css src="https://js.digitalriverws.com/v1/css/DigitalRiver.css"  src_type="url" rel="stylesheet" type="text/css"  />
+    </head>
+    <body>
+        <referenceBlock name="head.additional">
+            <block name="dr-js" template="Digitalriver_DrPay::payment/form-top-js.phtml" before="-" />
+        </referenceBlock>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Stored Payment Methods</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <container name="dr.wrapper" htmlTag="div" htmlClass="stored-methods__wrapper">
+                <container name="content.grid" htmlTag="div">
+                    <uiComponent name="stored_methods_grid"/>
+                </container>
+                <block name="stored-methods-add-method-btn" template="Digitalriver_DrPay::stored_methods/add_method.phtml" cacheable="false">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">Digitalriver\DrPay\ViewModel\StoredMethods</argument>
+                        <argument name="address_view_model" xsi:type="object">Magento\Customer\ViewModel\Address</argument>
+                    </arguments>
+                    <block class="Magento\Customer\Block\Address\Edit" name="customer_address_edit" template="Digitalriver_DrPay::stored_methods/address/edit.phtml" cacheable="false">
+                        <arguments>
+                            <argument name="attribute_data" xsi:type="object">Magento\Customer\Block\DataProviders\AddressAttributeData</argument>
+                            <argument name="post_code_config" xsi:type="object">Magento\Customer\Block\DataProviders\PostCodesPatternsAttributeData</argument>
+                            <argument name="view_model" xsi:type="object">Magento\Customer\ViewModel\Address</argument>
+                            <argument name="title" translate="true" xsi:type="string">Stored Payment Methods</argument>
+                        </arguments>
+                    </block>
+                </block>
+            </container>
+        </referenceContainer>
+    </body>
+</page>

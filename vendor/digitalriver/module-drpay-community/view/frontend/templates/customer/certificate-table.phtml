@@ -1,0 +1,52 @@
+<?php
+/** @var $block \Digitalriver\DrPay\Block\Customer\TaxCertificateList */
+/** @var $escaper \Magento\Framework\Escaper */
+
+/** @var \Digitalriver\DrPay\ViewModel\TaxManagement $viewModel */
+$viewModel = $block->getViewModel();
+$items = $viewModel->getTaxCertificateList();
+?>
+<?php if (empty($items)): ?>
+    <div class="message info empty"><span>
+            <?= /** @noEscape */ __('You do not have any tax exempt certificates.') ?>
+        </span></div>
+<?php else: ?>
+    <div class="table-wrapper digital-river-certificate-table">
+        <table class="data table table-order-items history" id="digital-river-certificate">
+            <thead>
+            <tr>
+                <th scope="col" class="col id"><?= /** @noEscape  */ __('Company Name') ?></th>
+                <th scope="col" class="col date"><?= /** @noEscape  */ __('Certificate Tax Authority') ?></th>
+                <th scope="col" class="col total"><?= /** @noEscape  */ __('Start Date') ?></th>
+                <th scope="col" class="col status"><?= /** @noEscape  */ __('Expiration Date') ?></th>
+                <?= $block->getChildHtml('extra.column.header') ?>
+            </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($items as $item): ?>
+                    <tr>
+                        <td><?= $escaper->escapeHtml($item['companyName']) ?></td>
+                        <td><?= $escaper->escapeHtml($item['taxAuthority']) ?></td>
+                        <td><?= $escaper->escapeHtml($item['startDate']) ?></td>
+                        <td><?= $escaper->escapeHtml($item['endDate']) ?></td>
+
+                        <?php $extra = $block->getChildBlock('extra.container'); ?>
+                        <?php if ($extra): ?>
+                            <?= $extra->getChildHtml() ?>
+                        <?php endif; ?>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>
+
+<a href="<?= $escaper->escapeUrl($block->getUrl('drpay/customer/addnewcert')) ?>" class="action primary">
+    <?= /** @noEscape  */ __('Upload Certificate') ?>
+</a>
+
+<?php if ($viewModel->canGoBackToCheckout()): ?>
+    <a href="<?= $escaper->escapeUrl($block->getUrl('checkout')) ?>" class="action">
+        <?= /** @noEscape  */ __('Back to checkout') ?>
+    </a>
+<?php endif; ?>

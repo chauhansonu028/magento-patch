@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Digitalriver_DrPay::catalog_sync" title="Catalog Sync Grid" translate="title" module="Digitalriver_DrPay" sortOrder="20" parent="Magento_Catalog::inventory" action="drpay/sync/index" resource="Digitalriver_DrPay::catalog_sync_grid" dependsOnConfig="dr_settings/config/active"/>
+    </menu>
+</config>

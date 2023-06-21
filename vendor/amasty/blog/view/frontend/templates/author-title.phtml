@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var \Amasty\Blog\Block\Layout\AuthorInfo $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$author = $block->getAuthorData();
+?>
+
+<?php if ($author): ?>
+    <h2 class="amblog-article-title">
+        <?= $escaper->escapeHtml(__('Articles by %1', $author->getName())); ?>
+    </h2>
+    <?php if ($author->getDescription()): ?>
+        <div class="amblog-author-description">
+            <?= $escaper->escapeHtml(nl2br($author->getDescription()), ['br']); ?>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

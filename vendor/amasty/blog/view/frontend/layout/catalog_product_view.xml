@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product.info.details">
+            <block
+                class="Amasty\Blog\Block\Content\Product\View\RelatedPostsTab"
+                name="product.info.details.amblog.related_posts"
+                template="Amasty_Blog::catalog/product/view/related_posts.phtml"
+                group="detailed_info"
+                ifconfig="amblog/posts_products_relation/show_related_posts_on_pp"
+            >
+                <arguments>
+                    <argument name="sort_order" xsi:type="number">100</argument>
+                    <argument name="view_model" xsi:type="object">
+                        Amasty\Blog\ViewModel\Product\View\RelatedPosts
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

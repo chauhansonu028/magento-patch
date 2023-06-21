@@ -1,0 +1,27 @@
+<?php
+/**
+ * Add JS file to implement selects' options' values
+ *
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+
+/** @var \Digitalriver\DrPay\ViewModel\DrHelper $viewModel */
+$viewModel = $block->getData('view_model');
+$drIsEnabled = $viewModel->getIsDrEnabled();
+$jsonSerializer = $viewModel->getJsonSerializer();
+?>
+<?php if ($drIsEnabled): ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Digitalriver_DrPay/js/updatecountryselect": {
+                    "countryData": <?= /** @noEscape */ $jsonSerializer->serialize($block->getCountryDetails()); ?>
+                },
+                "Digitalriver_DrPay/js/updateattributes": {
+                    "eccnData": <?= /** @noEscape */ $jsonSerializer->serialize($block->getEccnDetails()); ?>
+                }
+            }
+        }
+    </script>
+<?php endif; ?>

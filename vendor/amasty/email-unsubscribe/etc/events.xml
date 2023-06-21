@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="amasty_update_unsubscribed_emails">
+        <observer name="amasty_unsubscribe_emails" instance="Amasty\EmailUnsubscribe\Model\Observer\UnsubscribeEmails"/>
+    </event>
+
+    <event name="amasty_get_unsubscribe_link">
+        <observer name="amasty_unsubscribe_link" instance="Amasty\EmailUnsubscribe\Model\Observer\UnsubscribeLink"/>
+    </event>
+</config>

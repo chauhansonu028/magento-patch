@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="https://js.digitalriverws.com/v1/css/DigitalRiver.css"  src_type="url" rel="stylesheet" type="text/css"  />
+    </head>
+    <body>
+        <referenceBlock name="head.additional">
+            <block name="dr-js" template="Digitalriver_DrPay::payment/form-top-js.phtml" before="-" />
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block ifconfig="payment/drpay_dropin/active"
+                   name="dropin" before="checkout.root"
+                   cacheable="false"
+                   template="Digitalriver_DrPay::payment/dropin.phtml" />
+        </referenceContainer>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
+                                            <item name="children" xsi:type="array">
+                                                <item name="payment" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="payments-list" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="dr-tax-vat-id" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Digitalriver_DrPay/js/view/tax-vat-id</item>
+                                                                    <item name="displayArea" xsi:type="string">additional-payment-form-fieldset</item>
+                                                                </item>
+                                                                <item name="dr-invoice-attribute" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Digitalriver_DrPay/js/view/invoice-attribute</item>
+                                                                    <item name="displayArea" xsi:type="string">additional-payment-form-fieldset</item>
+                                                                </item>
+                                                                <item name="dr-set-payment-information-after" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Digitalriver_DrPay/js/view/payment/set-payment-information-after</item>
+                                                                    <item name="displayArea" xsi:type="string">additional-payment-form-fieldset</item>
+                                                                </item>
+                                                                <item name="dr-compliance" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Digitalriver_DrPay/js/mixins/payment-renderer/compliance</item>
+                                                                    <item name="displayArea" xsi:type="string">before-place-order</item>
+                                                                </item>
+                                                                <item name="drpay_dropin-form" xsi:type="array">
+                                                                    <item name="children" xsi:type="array">
+                                                                        <item name="form-fields" xsi:type="array">
+                                                                            <item name="children" xsi:type="array">
+                                                                                <item name="company" xsi:type="array">
+                                                                                    <item name="validation" xsi:type="array">
+                                                                                        <item name="validate-deps-business-purchase" xsi:type="string"></item>
+                                                                                    </item>
+                                                                                </item>
+                                                                            </item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="renders" xsi:type="array">
+                                                            <!-- merge payment method renders here -->
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="drpay_dropin-payment" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Digitalriver_DrPay/js/view/payment/dropin</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="drpay_dropin" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
+                                            <item name="children" xsi:type="array">
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="before-form" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="dr-tax-id-checkbox-container" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Digitalriver_DrPay/js/view/checkout/summary/dr-tax-id-checkbox</item>
+                                                                </item>
+                                                                <item name="drfooter" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Digitalriver_DrPay/js/view/drfooter</item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="shipping-address-fieldset" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="company" xsi:type="array">
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="min_text_length" xsi:type="number">0</item>
+                                                                        <item name="validate-deps-business-purchase" xsi:type="string"></item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                                <item name="sidebar" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="summary" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="totals" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <!--  Start of the main content -->
+                                                        <item name="duty_and_tariffs" xsi:type="array">
+                                                            <!-- The path to js file-->
+                                                            <item name="component" xsi:type="string">Digitalriver_DrPay/js/view/checkout/summary/duty_fee_and_tariffs</item>
+                                                            <item name="sortOrder" xsi:type="string">100</item>
+                                                            <item name="config" xsi:type="array">
+                                                                <item name="title" xsi:type="string" translate="true">Duties and Tariffs</item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="dr_fees" xsi:type="array">
+                                                            <!-- The path to js file-->
+                                                            <item name="component" xsi:type="string">Digitalriver_DrPay/js/view/checkout/summary/fees</item>
+                                                            <item name="sortOrder" xsi:type="string">101</item>
+                                                            <item name="config" xsi:type="array">
+                                                                <item name="title" xsi:type="string" translate="true">Regulatory Fees</item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="weee" xsi:type="array">
+                                                            <item name="config" xsi:type="array">
+                                                                <item name="componentDisabled" xsi:type="boolean">true</item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="grand-total" xsi:type="array">
+                                                            <item name="sortOrder" xsi:type="string">105</item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                                <item name="cart_items" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="details" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="subtotal" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Tax/js/view/checkout/summary/item/details/subtotal</item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                                <!--  End-->
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

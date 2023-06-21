@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Taxjar_SalesTax
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Taxjar
+ * @package    Taxjar_SalesTax
+ * @copyright  Copyright (c) 2017 TaxJar. TaxJar is a trademark of TPS Unlimited, Inc. (http://www.taxjar.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager:etc/config.xsd">
+    <preference for="Magento\Tax\Model\Sales\Total\Quote\Tax" type="Taxjar\SalesTax\Model\Tax\Sales\Total\Quote\Tax" />
+    <preference for="Taxjar\SalesTax\Api\Data\Tax\NexusSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Taxjar\SalesTax\Api\Data\Tax\NexusInterface" type="Taxjar\SalesTax\Model\Tax\Nexus" />
+    <preference for="Taxjar\SalesTax\Api\Tax\NexusRepositoryInterface" type="Taxjar\SalesTax\Model\Tax\Nexus\Repository" />
+    <preference for="Taxjar\SalesTax\Api\AddressValidationInterface" type="Taxjar\SalesTax\Model\AddressValidation" />
+    <preference for="Taxjar\SalesTax\Api\Client\ClientInterface" type="Taxjar\SalesTax\Model\Client" />
+    <preference for="Taxjar\SalesTax\Api\Data\Sales\Order\MetadataInterface" type="Taxjar\SalesTax\Model\Sales\Order\Metadata" />
+    <preference for="Taxjar\SalesTax\Api\Data\Sales\Order\MetadataSearchResultInterface" type="Taxjar\SalesTax\Model\Sales\Order\MetadataSearchResult" />
+    <preference for="Taxjar\SalesTax\Api\Data\Sales\MetadataRepositoryInterface" type="Taxjar\SalesTax\Model\Sales\Order\MetadataRepository" />
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="SyncTransactionsCommand" xsi:type="object">Taxjar\SalesTax\Console\Command\SyncTransactionsCommand</item>
+                <item name="SyncProductCategoriesCommand" xsi:type="object">Taxjar\SalesTax\Console\Command\SyncProductCategoriesCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Customer\Api\CustomerRepositoryInterface">
+        <plugin name="taxjar_customer_repository_interface" type="Taxjar\SalesTax\Plugin\Customer\Model\ResourceModel\CustomerRepository"/>
+    </type>
+    <type name="Magento\Framework\RequireJs\Config\File\Collector\Aggregated">
+        <plugin name="manage_address_validation_mixins" type="Taxjar\SalesTax\Plugin\RequireJs\AfterFiles" sortOrder="100"/>
+    </type>
+    <type name="Magento\Tax\Model\Sales\Total\Quote\CommonTaxCollector">
+        <plugin name="taxjar_apply_tax_class" type="Taxjar\SalesTax\Plugin\Tax\Model\Sales\Total\Quote\TaxjarCommonTaxCollector" />
+    </type>
+    <type name="Magento\Sales\Model\Order\ItemRepository">
+        <plugin name="taxjar_sales_order_itemrepository" type="Taxjar\SalesTax\Plugin\Sales\Model\Order\ItemRepository" />
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\View">
+        <plugin name="taxjar_sales_order_view" type="Taxjar\SalesTax\Plugin\Sales\Block\Adminhtml\Order\View"/>
+    </type>
+    <type name="Magento\Quote\Api\CartManagementInterface">
+        <plugin name="taxjar_quote_management" type="Taxjar\SalesTax\Plugin\Quote\Model\QuoteManagement" />
+    </type>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="taxjar_order_repository" type="Taxjar\SalesTax\Plugin\Sales\Model\OrderRepository" />
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <plugin name="taxjarBeforeApplyFilters" type="Taxjar\SalesTax\Plugin\BeforeApplyFilters"/>
+    </type>
+    <type name="Taxjar\SalesTax\Console\Command\SyncProductCategoriesCommand">
+        <arguments>
+            <argument name="state" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
+            <argument name="logger" xsi:type="object">Taxjar\SalesTax\Model\Logger\Proxy</argument>
+            <argument name="importCategories" xsi:type="object">Taxjar\SalesTax\Observer\ImportCategories\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Taxjar\SalesTax\Console\Command\SyncTransactionsCommand">
+        <arguments>
+            <argument name="state" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
+            <argument name="eventManager" xsi:type="object">Magento\Framework\Event\Manager\Proxy</argument>
+            <argument name="logger" xsi:type="object">Taxjar\SalesTax\Model\Logger\Proxy</argument>
+            <argument name="backfillTransactions" xsi:type="object">Taxjar\SalesTax\Observer\BackfillTransactions\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Taxjar\SalesTax\Model\Logger">
+        <arguments>
+            <argument name="fileDriver" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+</config>

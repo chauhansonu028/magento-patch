@@ -1,0 +1,48 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $escaper Magento\Framework\Escaper
+ * @var $block Amasty\Blog\Block\Sidebar\Search
+ */
+?>
+
+<div class="amblog-search" data-amblog-js="accordion">
+    <h3 class="amblog-title" data-amblog-js="heading">
+        <?= $escaper->escapeHtml($block->getBlockHeader()); ?>
+    </h3>
+    <div class="amblog-item -search amblog-form-search" data-amblog-js="content">
+        <form class="amblog-form-container"
+              action="<?= $escaper->escapeUrl($block->getSearchUrl()); ?>"
+              data-amblog-js="search"
+              method="get">
+            <div class="input-box amblog-field">
+                <input type="text"
+                       data-mage-init='{"amBlogSearch": {
+                            "minCharacterLength":"<?= /* @noEscape */ $block->getMinCharactersLength(); ?>",
+                            "liveSearchUrl":"<?= /* @noEscape */ $block->getLiveSearchUrl(); ?>"
+                       }}'
+                       autocomplete="off"
+                       placeholder="<?= $escaper->escapeHtml(__('Find some...')) ?>"
+                       class="input-text required-entry amblog-input"
+                       id="search-blog"
+                       name="query"
+                       role="textbox"
+                       aria-label="<?= $escaper->escapeHtml(__('Search')); ?>"
+                       value="<?= $escaper->escapeHtml($block->getQuery()); ?>"
+                       maxlength="100"
+                />
+                <ul class="amblog-search-suggest" data-amblog-js="suggest-list"></ul>
+            </div>
+            <div class="amblog-loader -search"></div>
+            <button class="amblog-btn"
+                    role="button"
+                    title="<?= $escaper->escapeHtml(__('Search')); ?>"
+                    aria-label="<?= $escaper->escapeHtml(__('Search')); ?>"
+                    type="submit"></button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="default-src">
+            <values>
+                <!-- WIDGETS -->
+                <!-- qa -->
+                <value id="live-search-product-listing-widgets-qa" type="host">plp-widgets-ui-qa.magento-datasolutions.com</value>
+                <!-- prod -->
+                <value id="live-search-product-listing-widgets-prod" type="host">plp-widgets-ui.magento.ds.com</value>
+                <!-- EIM -->
+                <value id="search_eim_telemetry" type="host">*.telemetry-dev.adobe.io</value>
+                <value id="search_eim_telemetry-tld" type="host">telemetry-dev.adobe.io</value>
+                <value id="amcglobal-tld" type="host">amcglobal.sc.omtrdc.net</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <!-- WIDGETS -->
+                <!-- qa -->
+                <value id="live-search-product-listing-widgets-qa" type="host">plp-widgets-ui-qa.magento-datasolutions.com</value>
+                <!-- prod -->
+                <value id="live-search-product-listing-widgets-prod" type="host">plp-widgets-ui.magento.ds.com</value>
+
+                <!-- EIM -->
+                <value id="search_eim_telemetry" type="host">*.telemetry-dev.adobe.io</value>
+                <value id="search_eim_telemetry-tld" type="host">telemetry-dev.adobe.io</value>
+
+                <value id="amcglobal-tld" type="host">amcglobal.sc.omtrdc.net</value>
+
+                <!-- Feature flagging -->
+                <value id="floodgate" type="host">p13n.adobe.io</value>
+                <value id="floodgate-multiregion" type="host">p13n-mr.adobe.io</value>
+
+                <value id="self" type="host">*</value>
+            </values>
+        </policy>
+        <policy id="script-src">
+            <values>
+                <!-- WIDGETS -->
+                <!-- qa -->
+                <value id="live-search-product-listing-widgets-qa" type="host">plp-widgets-ui-qa.magento-datasolutions.com</value>
+                <!-- prod -->
+                <value id="live-search-product-listing-widgets-prod" type="host">plp-widgets-ui.magento.ds.com</value>
+                <!-- all -->
+                <value id="search_use_typekit" type="host">use.typekit.net</value>
+                <!-- EIM -->
+                <value id="search_eim_telemetry" type="host">*.telemetry-dev.adobe.io</value>
+                <value id="amcglobal" type="host">amcglobal.sc.omtrdc.net</value>
+                <value id="adobedtm" type="host">*.adobedtm.com</value>
+                <value id="self" type="host">*</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <!-- WIDGETS -->
+                <!-- qa -->
+                <value id="live-search-product-listing-widgets-qa" type="host">plp-widgets-ui-qa.magento-datasolutions.com</value>
+                <!-- prod -->
+                <value id="live-search-product-listing-widgets-prod" type="host">plp-widgets-ui.magento.ds.com</value>
+                <!-- all -->
+                <value id="search_google_fonts" type="host">fonts.googleapis.com</value>
+                <!-- EIM -->
+                <value id="search_eim_telemetry" type="host">*.telemetry-dev.adobe.io</value>
+                <value id="amcglobal" type="host">amcglobal.sc.omtrdc.net</value>
+            </values>
+        </policy>
+        <policy id="media-src">
+            <values>
+                <!-- WIDGETS -->
+                <!-- qa -->
+                <value id="live-search-product-listing-widgets-qa" type="host">plp-widgets-ui-qa.magento-datasolutions.com</value>
+                <!-- prod -->
+                <value id="live-search-product-listing-widgets-prod" type="host">plp-widgets-ui.magento.ds.com</value>
+                <!-- EIM -->
+                <value id="search_eim_telemetry" type="host">*.telemetry-dev.adobe.io</value>
+                <value id="amcglobal" type="host">amcglobal.sc.omtrdc.net</value>
+            </values>
+        </policy>
+        <policy id="manifest-src">
+            <values>
+                <!-- WIDGETS -->
+                <!-- qa -->
+                <value id="live-search-product-listing-widgets-qa" type="host">plp-widgets-ui-qa.magento-datasolutions.com</value>
+                <!-- prod -->
+                <value id="live-search-product-listing-widgets-prod" type="host">plp-widgets-ui.magento.ds.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <!-- WIDGETS -->
+                <!-- qa -->
+                <value id="live-search-product-listing-widgets-qa" type="host">plp-widgets-ui-qa.magento-datasolutions.com</value>
+                <!-- prod -->
+                <value id="live-search-product-listing-widgets-prod" type="host">plp-widgets-ui.magento.ds.com</value>
+                <!-- all -->
+                <value id="search_p_typekit" type="host">p.typekit.net</value>
+                <!-- EIM -->
+                <value id="search_eim_telemetry" type="host">*.telemetry-dev.adobe.io</value>
+                <value id="amcglobal" type="host">amcglobal.sc.omtrdc.net</value>
+                <value id="everesttech" type="host">*.everesttech.net</value>
+                <value id="data" type="host">data:</value>
+                <value id="demdex" type="host">*.demdex.net</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <!-- EIM -->
+                <value id="demdex" type="host">*.demdex.net</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="search_google_gstatic" type="host">fonts.gstatic.com</value>
+                <value id="search_use_typekit" type="host">use.typekit.net</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

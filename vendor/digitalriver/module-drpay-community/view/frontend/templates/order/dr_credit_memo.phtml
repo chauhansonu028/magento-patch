@@ -1,0 +1,41 @@
+<?php
+/**
+ * Overrides credit memo rendering template
+ * Displays comma separated download URLs to separate file links
+ *
+ * @summary
+ * Provides credit memo links from Digitalriver instead of OOB magento credit memo section
+ * @author Vignesh Balasubramani <vignesh.balasubramani@gds.ey.com>
+ *
+ * @category Digitalriver
+ * @package Digitalriver_DrPay
+ */
+?>
+
+<?php
+$creditMemoLinks = $block->getCreditMemoLinks();
+$files = ($creditMemoLinks) ? array_values($creditMemoLinks) : [];
+
+//Separates multiple URLs with commas and displays one link below another
+if (count($creditMemoLinks) > 0):
+    $_index = 0;
+    $_numberOfCreditMemos = count($creditMemoLinks); ?>
+    <div class="order-details-items creditmemo">
+        <?php foreach ($files as $file): ?>
+            <?php
+            //Index should not be displayed if there is only one link
+            $_index = ($_numberOfCreditMemos > 1) ? $_index + 1 : ''; ?>
+            <div class="sales-order-credit-memo-download">
+                <a class="sales-order-credit-memo-link" target="_blank"
+                   href="<?= $block->escapeUrl(trim($file->getDrFileLinkUrl())) ?>">
+                    <?= $block->escapeHtml(__('Download Credit Memo')) ?>
+                    <?= $block->escapeHtml($_index) ?>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php else:
+    //DIRI-196 Display OOB Credit memo page if file-link is not available
+    ?>
+    <?= $block->getChildHtml('sales.order.creditmemo') ?>
+<?php endif; ?>

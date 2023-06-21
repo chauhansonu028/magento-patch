@@ -1,0 +1,27 @@
+<!--@subject Invalid Linked Product Attachments  @-->
+<!--@vars
+{"var website":"Website Name And Code",
+"var invalidAttachments":"Invalid Attachments"}
+@-->
+{{template config_path="design/email/header_template"}}
+
+{{trans "It seems that some of your Linked Product Attachments which are associated with the website %website have become unavailable" website=$website | raw }}
+<br>
+<table>
+    <thead>
+    <tr>
+        <th>Attachment Id</th>
+        <th>Attachment Link</th>
+        <th>Response</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{layout
+    handle="email_invalid_attachments_links"
+    invalidAttachments=$invalidAttachments
+    area="frontend"
+    }}
+    </tbody>
+</table>
+
+{{template config_path="design/email/footer_template"}}

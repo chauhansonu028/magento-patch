@@ -1,0 +1,30 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Magento\Framework\View\Element\Template
+ * @var $escaper Magento\Framework\Escaper
+ * @var $viewModel Amasty\Blog\ViewModel\Posts\Head\Font
+ */
+
+$viewModel = $block->getViewModel();
+?>
+
+<?php if ($viewModel->hasGoogleFont()): ?>
+    <style lang="css">
+        @import url('<?= $escaper->escapeUrl($viewModel->getGoogleFontUrl()); ?>');
+        [class*="amblog-index-post"] .page-title,
+        [class*="amblog-post-preview"] .page-title,
+        .amblog-post-container .amblog-content > *:not(.amblog-bottom),
+        .amblog-container-list .amblog-content > *:not(.amblog-bottom),
+        .amblog-grid-list .amblog-content > *:not(.amblog-bottom),
+        .amblog-content blockquote,
+        .amblog-content cite {
+            font-family: <?= $escaper->escapeCss($viewModel->getGoogleFont()); ?>, sans-serif;
+            font-style: <?= $escaper->escapeCss($viewModel->getGoogleFontStyle()); ?>;
+        }
+    </style>
+<?php endif; ?>

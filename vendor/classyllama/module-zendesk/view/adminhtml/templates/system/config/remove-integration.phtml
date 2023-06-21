@@ -1,0 +1,81 @@
+<?php
+// @codingStandardsIgnoreFile
+
+use Zendesk\Zendesk\Block\Adminhtml\System\Config\RemoveIntegration;
+
+/** @var $block RemoveIntegration */
+?>
+
+<?php if ($block->displayButton()): ?>
+    <button class="scalable action-secondary"
+        type="button"
+       id="<?= $block->getHtmlId() ?>"
+       data-url="<?= $block->escapeHtmlAttr($block->getRemoveUrl()) ?>"
+    >
+        <?= $block->escapeHtml($block->getButtonLabel()) ?>
+    </button>
+
+    <div id="remove-zendesk-integration-confirmation">
+        <p class="warning">
+            <?= $block->escapeHtml(__('You are currently on the %1 scope.', $block->getScopeName())) ?>
+        </p>
+        <p class="bold">
+            <?= $block->escapeHtml(__('Are you sure you want to remove the Zendesk integration?')) ?>
+        </p>
+        <p>
+            <?= $block->escapeHtml(__('This will result in the following actions:')) ?>
+        </p>
+        <ul>
+            <?php if ($block->getIsDefaultScope()): ?>
+                <li>
+                    <?= $block->escapeHtml(__('The Zendesk app will be removed from the Zendesk Support account.')) ?>
+                </li>
+            <?php endif; ?>
+            <li>
+                <?= $block->escapeHtml(__('The Zendesk Web Widget will be removed from the Magento storefront.')) ?>
+            </li>
+            <li>
+                <?= $block->escapeHtml(__('The Zendesk integration will be removed from Magento.')) ?>
+            </li>
+            <li>
+                <?= $block->escapeHtml(__('The Zendesk API credentials will be cleared.')) ?>
+            </li>
+        </ul>
+    </div>
+
+    <script type="application/javascript">
+        require([
+            'jquery',
+            'Magento_Ui/js/modal/confirm'
+        ], function($, confirmation) {
+            $('#<?= $block->getHtmlId() ?>').click(function(e) {
+                var button = this;
+
+                confirmation({
+                    title: '<?= $block->escapeHtml(__('Confirm Removing Zendesk Integration')) ?>',
+                    content: document.getElementById('remove-zendesk-integration-confirmation').innerHTML,
+                    modalClass: 'modal-popup confirm modal-remove-zendesk-integration-confirmation',
+                    actions: {
+                        confirm: function() {
+                            var form = new Element('form', {method: 'post', action: button.dataset.url});
+
+                            form.appendChild(
+                                new Element('input', {
+                                    type: 'hidden',
+                                    name: 'form_key',
+                                    value: '<?= $block->escapeHtmlAttr($block->getFormKey()) ?>'}
+                                )
+                            );
+
+                            document.body.appendChild(form);
+
+                            form.submit();
+                        }
+                    }
+                })
+            });
+
+
+        });
+    </script>
+<?php endif; ?>

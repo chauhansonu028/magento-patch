@@ -1,0 +1,54 @@
+<?php
+/**
+ * Renders ECCN attribute details in Product edit page
+ *
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+
+/** @var \Digitalriver\DrPay\Block\Adminhtml\Product\EccnDetailsBlock $block */
+
+$drIsEnabled = $block->getIsDrEnabled();
+$jsonSerializer = $block->getJsonSerializer();
+?>
+
+<?php if ($drIsEnabled): ?>
+    <div class="eccn-details-container">
+        <div class="dr-classification-code-container">
+            <div class="title-item">DR Classification Code</div>
+            <div class="dr-classification-item">
+                <p class="dr-classification-content"></p>
+            </div>
+        </div>
+        <div class="dr-description-container">
+            <div class="title-item">DR Description</div>
+            <div class="dr-description-item">
+                <p class="dr-description-content"></p>
+            </div>
+        </div>
+        <div class="dr-notes-container">
+            <div class="title-item">DR Notes</div class="title-item">
+            <div class="dr-notes-item">
+                <p class="dr-notes-content"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        require([
+            'jquery',
+            'uiRegistry',
+            'Digitalriver_DrPay/js/utils/setoptions',
+        ], function ($,uiRegistry,setoptions) {
+            $(function () {
+                let eccnField = uiRegistry.get('index = dr_eccn_code');
+                let eccnObservable = eccnField.value;
+                let eccnResponseData = <?= /** @noEscape */ $jsonSerializer->serialize($block->getEccnDetails()) ?>;
+
+                if(eccnObservable){
+                    setoptions(eccnObservable._latestValue, eccnResponseData);
+                }
+            });
+        });
+    </script>
+<?php endif; ?>

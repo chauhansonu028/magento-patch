@@ -1,0 +1,15 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */ $tags = $block->getTags(); ?>
+<?php if ($tags && count($tags)): ?>
+    <?php foreach ($tags as $tag): ?>
+        <a class="amblog-tag"
+           href="<?= $block->escapeUrl($tag->getUrl()); ?>"
+           title="<?= $block->escapeHtml($tag->getName()); ?>">
+            <?= $block->escapeHtml($tag->getName()); ?>
+        </a>
+    <?php endforeach; ?>
+<?php endif; ?>

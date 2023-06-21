@@ -1,0 +1,19 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Product Attachments Base for Magento 2
+ */
+/** @var \Amasty\ProductAttachment\Block\Widgets\AttachmentsList $block */
+?>
+<?php if ($files = $block->getAttachments()): ?>
+    <div class="widget am-attachments am-attachments-<?= $block->escapeHtml($block->getWidgetType()); ?>">
+        <?php if ($block->getBlockTitle()): ?>
+        <div class="block-title">
+            <strong><?= $block->escapeHtml($block->getBlockTitle()); ?></strong>
+        </div>
+        <?php endif; ?>
+
+        <?= /* @noEscape */ $block->getRenderer()->getFilesHtml($files) ?>
+    </div>
+<?php endif; ?>

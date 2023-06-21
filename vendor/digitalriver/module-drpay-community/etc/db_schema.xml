@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order" resource="default" engine="innodb" comment="">
+        <column xsi:type="varchar" name="dr_order_id" nullable="true" length="25" comment="DR Order Id"/>
+        <column xsi:type="varchar" name="dr_order_state" nullable="true" length="25" comment="DR Order Status"/>
+        <column xsi:type="varchar" name="dr_api_type" nullable="true" length="10" comment="DR API Type"/>
+        <column xsi:type="varchar" name="dr_payment_method" nullable="true" length="25" comment="DR Payment Method"/>
+        <column xsi:type="decimal" name="base_dr_duty_fee" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Base Digital River Duty Fee Amount"/>
+        <column xsi:type="decimal" name="dr_duty_fee" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Digital River Duty Fee Amount"/>
+        <column xsi:type="decimal" name="base_dr_ior_tax" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Base Digital River IOR Tax Amount"/>
+        <column xsi:type="decimal" name="dr_ior_tax" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Digital River IOR Tax Currency Amount"/>
+        <column xsi:type="decimal" name="dr_total_refund"  scale="4" precision="20" unsigned="false"
+                nullable="true" comment="DR Total Refund Requested"/>
+        <index referenceId="SALES_ORDER_DR_ORDER_ID" indexType="btree">
+            <column name="dr_order_id"/>
+        </index>
+    </table>
+    <table name="sales_order_grid" resource="default" engine="innodb" comment="">
+        <column xsi:type="varchar" name="dr_order_id" nullable="true" length="25" comment="DR Order Id"/>
+        <column xsi:type="varchar" name="dr_order_state" nullable="true" length="25" comment="DR Order Status"/>
+        <column xsi:type="varchar" name="dr_payment_method" nullable="true" length="25" comment="DR Payment Method"/>
+        <index referenceId="SALES_ORDER_GRID_DR_ORDER_ID" indexType="btree">
+            <column name="dr_order_id"/>
+        </index>
+    </table>
+    <table name="sales_order_item" resource="default" engine="innodb" comment="">
+        <column xsi:type="varchar" name="dr_order_lineitem_id" nullable="true" length="25" comment="DR Order Line Item Id"/>
+    </table>
+    <table name="electronic_fulfillment" resource="default" engine="innodb" comment="">
+        <column xsi:type="int" name="entity_id" nullable="false" unsigned="true" identity="true" comment="Entity ID"/>
+        <column xsi:type="text" name="request_obj" nullable="false" comment="Request Object"/>
+        <column xsi:type="varchar" name="requisition_id" nullable="false" length="25" comment="Requisition ID"/>
+        <column xsi:type="text" name="line_item_ids" nullable="false" comment="Line Item Ids"/>
+        <column xsi:type="int" name="post_status" nullable="false" comment="Post Status" default="0"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <index referenceId="ELECTRONIC_FULFILLMENT_REQUISITION_ID" indexType="btree">
+            <column name="requisition_id"/>
+        </index>
+    </table>
+
+	<table name="dr_refund" resource="default" engine="innodb" comment="Digital River Charges">
+        <column xsi:type="varchar" name="dr_refund_id" nullable="false" length="38" comment="DR Refund ID"/>
+		<column xsi:type="decimal" name="amount" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Digital River Charge Amount"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="dr_refund_id"/>
+        </constraint>
+    </table>
+
+    <table name="dr_charge" resource="default" engine="innodb" comment="Digital River Charges">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="varchar" name="dr_charge_id" nullable="false" length="38" comment="DR Charge ID"/>
+        <column xsi:type="int" name="order_id" unsigned="true" comment="Order Id"/>
+        <column xsi:type="varchar" name="dr_order_id" nullable="false" length="38" comment="DR Order Id"/>
+        <column xsi:type="varchar" name="dr_source_id" nullable="false" length="38" comment="DR Source Id"/>
+        <column xsi:type="varchar" name="dr_source_type" nullable="false" length="16" comment="DR Source type"/>
+        <column xsi:type="decimal" name="amount" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Digital River Charge Amount"/>
+        <column xsi:type="timestamp" name="retrieved_at" on_update="false" nullable="false" comment="Charge retrieved at"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <index referenceId="CHARGE_ORDER_ID" indexType="btree">
+            <column name="order_id"/>
+        </index>
+        <index referenceId="DR_CHARGE_ORDER_ID" indexType="btree">
+            <column name="dr_order_id"/>
+        </index>
+    </table>
+
+    <table name="dr_catalog_sync_queue" resource="default" engine="innodb" comment="Digital River Catalog Sync Queue">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="int" name="product_id" unsigned="false" comment="Product Id"/>
+        <column xsi:type="text" name="product_sku" nullable="true" comment="Product SKU"/>
+        <column xsi:type="varchar" name="status" nullable="true" length="10" comment="Status"/>
+        <column xsi:type="text" name="request_data" nullable="true" comment="Magento Request data"/>
+        <column xsi:type="text" name="response_data" nullable="true" comment="DR API Response"/>
+        <column xsi:type="timestamp" name="added_to_queue_at" on_update="false" nullable="true" comment="Product added to queue time"/>
+        <column xsi:type="timestamp" name="synced_to_dr_at" on_update="false" nullable="true" comment="Sync to Digital river timestamp"/>
+        <column xsi:type="varchar" name="sku_hash" nullable="true" comment="sku and API key hash"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <index referenceId="DR_CATALOG_SYNC_QUEUE_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+    <table name="dr_country_of_origin" resource="default" engine="innodb" comment="Digital River Country Of Origin">
+        <column xsi:type="int" name="entity_id" identity="true" nullable="false" comment="ID"/>
+        <column xsi:type="varchar" name="country_code" nullable="false" length="2" comment="Code"/>
+        <column xsi:type="varchar" name="country_name" nullable="false" length="55" comment="Name"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNIQUE_COUNTRY">
+            <column name="country_code"/>
+        </constraint>
+    </table>
+    <table name="dr_eccn_code" resource="default" engine="innodb" comment="Digital River ECCN Code">
+        <column xsi:type="varchar" name="classification_code" nullable="false" length="10" comment="Classification Code"/>
+        <column xsi:type="text" name="description" nullable="false" comment="Description"/>
+        <column xsi:type="text" name="notes" nullable="false" comment="Notes"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="classification_code"/>
+        </constraint>
+    </table>
+    <table name="dr_tax_table" resource="default" engine="innodb">
+        <column xsi:type="int" name="entity_id" padding="10" identity="true" unsigned="true" nullable="false" comment="Entity Id"/>
+        <column xsi:type="varchar" name="dr_tax_group" nullable="false" length="50" comment="DR Tax Group"/>
+        <column xsi:type="varchar" name="dr_tax_type" nullable="false" length="120" comment="DR Tax Type"/>
+        <column xsi:type="varchar" name="dr_sabrixcode" nullable="false" length="15" comment="DR Sabrixcode"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="dr_invoice_cm_links" resource="default" engine="innodb">
+        <column xsi:type="int" name="entity_id" padding="10" identity="true" unsigned="true" nullable="false" comment="Entity Id"/>
+        <column xsi:type="int" name="sales_order_id" nullable="false" comment="Magento Order ID"/>
+        <column xsi:type="varchar" name="dr_file_type" nullable="false" length="15" comment="Determines Invoice or Refund"/>
+        <column xsi:type="varchar" name="dr_file_id" nullable="false" length="120" comment="File ID from DR"/>
+        <column xsi:type="varchar" name="dr_file_link_url" nullable="true" length="500" comment="DR File Link URL"/>
+        <column xsi:type="varchar" name="dr_file_link_created_at" nullable="true" length="20" comment="Timestamp of File Link creation"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <index referenceId="DR_FILE_ID_INDEX" indexType="btree">
+            <column name="dr_file_id"/>
+        </index>
+    </table>
+    <table name="quote" resource="checkout" comment="Sales Flat Quote">
+        <column xsi:type="decimal" name="base_dr_duty_fee" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Base Digital River Duty Fee Amount"/>
+        <column xsi:type="decimal" name="dr_duty_fee" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Digital River Duty Fee Amount"/>
+        <column xsi:type="decimal" name="base_dr_ior_tax" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Base Digital River IOR Tax Amount"/>
+        <column xsi:type="decimal" name="dr_ior_tax" scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Digital River IOR Tax Currency Amount"/>
+        <column xsi:type="boolean" name="is_dr_ior_set"
+                nullable="true" comment="Dr IOR Tax"/>
+        <column xsi:type="varchar" name="dr_tax_identifiers" nullable="true" length="512" comment="DR Tax Identifiers"/>
+        <column xsi:type="varchar" name="dr_invoice_attribute" nullable="true" length="512" comment="DR Invoice Attribute"/>
+        <column xsi:type="varchar" name="dr_customer_type" nullable="true" length="11" comment="DR Customer Type"/>
+    </table>
+    <table name="sales_creditmemo" resource="default" engine="innodb" comment="">
+        <column xsi:type="decimal" name="dr_duty_fee" nullable="true" scale="4" precision="20" comment="DR Duty Fee"/>
+        <column xsi:type="decimal" name="dr_ior_tax" nullable="true" scale="4" precision="20" comment="DR IOR Tax"/>
+        <column xsi:type="decimal" name="base_dr_duty_fee"  scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Base Digital River Duty Fee Amount"/>
+        <column xsi:type="decimal" name="dr_total_refund"  scale="4" precision="20" unsigned="false"
+                nullable="true" comment="DR Total Refund"/>
+        <column xsi:type="decimal" name="base_dr_ior_tax"  scale="4" precision="20" unsigned="false"
+                nullable="true" comment="Base Digital River IOR Tax Amount"/>
+    </table>
+    <table name="sales_invoice" resource="default" engine="innodb" comment="">
+        <column xsi:type="decimal" name="dr_duty_fee" nullable="true" scale="4" precision="20" comment="DR Duty Fee"/>
+        <column xsi:type="decimal" name="dr_ior_tax" nullable="true" scale="4" precision="20" comment="DR IOR Tax"/>
+    </table>
+    <table name="catalog_product_bundle_option" resource="default" engine="innodb" comment="">
+        <column xsi:type="text" name="dr_allocated_percent" comment="DR Allocated Percent"/>
+    </table>
+    <table name="dr_offline_refund" resource="default" engine="innodb" comment="Offline Refund">
+        <column xsi:type="varchar" name="dr_refund_id" length="50" nullable="false"
+                comment="Digital River Offline Refund Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="dr_refund_id"/>
+        </constraint>
+        <column xsi:type="int" name="credit_memo_id" padding="10" unsigned="true" nullable="true"
+                comment="Magento Credit Memo ID"/>
+        <column xsi:type="smallint" name="status" unsigned="true" nullable="false" default="0"
+                comment="Status Enum (0 - Pending; 1 - Success; 2 - Failed)"/>
+        <column xsi:type="varchar" name="refund_token" length="500" nullable="true" comment="Payment token ID"/>
+        <column xsi:type="timestamp" name="refund_token_expiration" nullable="true"
+                comment="Token expiration timestamp"/>
+        <constraint xsi:type="foreign" referenceId="DR_OFFLINE_REFUND_CREDIT_MEMO_ID_SALES_CREDITMEMO_ENTITY_ID"
+                    table="dr_offline_refund" column="credit_memo_id"
+                    referenceTable="sales_creditmemo" referenceColumn="entity_id"
+                    onDelete="CASCADE"/>
+        <index referenceId="DR_SALES_REFUND_ID_INDEX" indexType="btree">
+            <column name="credit_memo_id"/>
+        </index>
+    </table>
+</schema>

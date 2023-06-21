@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amblog_index_font" />
+    <head>
+        <css src="Amasty_Base::vendor/slick/amslick.min.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Msrp\Block\Popup" template="Magento_Msrp::popup.phtml" name="product.tooltip">
+                <block class="Magento\Catalog\Block\ShortcutButtons\InCatalog\PositionAfter" name="map.shortcut.buttons"/>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="head.additional">
+            <block name="amblog.post.og_markup"
+                   class="Magento\Framework\View\Element\Template"
+                   template="Amasty_Blog::post/meta_info/og_markup.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Amasty\Blog\ViewModel\Posts\Meta\OgMarkup</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceBlock name="amasty.blog.content.post" template="Amasty_Blog::post.phtml">
+            <arguments>
+                <argument name="previous_next_navigation" xsi:type="object">
+                    Amasty\Blog\ViewModel\Posts\PreviousNextNavigation
+                </argument>
+            </arguments>
+            <block class="Amasty\Blog\Block\Social"
+                   name="amblog_social"
+                   as="amblog_social"
+                   template="Amasty_Blog::social.phtml"/>
+            <block class="Amasty\Blog\Block\Content\Post\Helpful"
+                   name="amblog_helpful"
+                   as="amblog_helpful"/>
+            <block class="Amasty\Blog\Block\Content\Post\Related"
+                   name="amblog.post.related"
+                   template="Amasty_Blog::post/related.phtml"/>
+            <block class="Amasty\Blog\Block\Content\Post\RelatedProducts"
+                   name="amblog.post.related.products"
+                   template="Amasty_Blog::post/related_products.phtml"
+                   ifconfig="amblog/posts_products_relation/show_rp_on_post_page">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">
+                        Amasty\Blog\ViewModel\Posts\RelatedProducts
+                    </argument>
+                </arguments>
+            </block>
+
+            <block class="Amasty\Blog\Block\Comments\Form"
+                   name="amblog.comments.form"
+                   template="Amasty_Blog::comments/form.phtml" />
+
+            <block class="Amasty\Blog\Block\Comments"
+                   name="amblog.comments.list"
+                   as="amblog.comments.list"
+                   template="Amasty_Blog::comments/list.phtml">
+                <block class="Amasty\Blog\Block\Comments\Message"
+                       name="amblog_comments_message"
+                       template="Amasty_Blog::comments/list/message.phtml" />
+            </block>
+        </referenceBlock>
+    </body>
+</page>

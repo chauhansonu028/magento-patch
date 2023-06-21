@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ * @Module:  Digitalriver_DrPay
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/dr/fulfillment" method="POST">
+        <service class="Digitalriver\DrPay\Api\DrConnectorRepositoryInterface" method="saveFulFillment"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/dr/invoice-attribute/:cartId/assignInvoiceAttribute" method="POST">
+        <service class="Digitalriver\DrPay\Model\GuestInvoiceAttributeManagement" method="assignInvoiceAttribute"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/dr/invoice-attribute/mine/assignInvoiceAttribute" method="POST">
+        <service class="Digitalriver\DrPay\Model\InvoiceAttributeManagement" method="assignInvoiceAttribute"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/dr/invoice-attribute/:cartId/clearInvoiceAttribute" method="DELETE">
+        <service class="Digitalriver\DrPay\Model\GuestInvoiceAttributeManagement" method="clearInvoiceAttribute"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/dr/invoice-attribute/mine/clearInvoiceAttribute" method="DELETE">
+        <service class="Digitalriver\DrPay\Model\InvoiceAttributeManagement" method="clearInvoiceAttribute"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/dr/tax-id/:cartId/assignTaxId/:customerType" method="POST">
+        <service class="Digitalriver\DrPay\Model\GuestTaxIdManagement" method="assignTaxIds"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/dr/tax-id/mine/assignTaxId/:customerType" method="POST">
+        <service class="Digitalriver\DrPay\Model\TaxIdManagement" method="assignTaxIds"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/dr/tax-id/:cartId/clearTaxIds" method="DELETE">
+        <service class="Digitalriver\DrPay\Model\GuestTaxIdManagement" method="clearTaxIds"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/dr/tax-id/mine/clearTaxIds" method="DELETE">
+        <service class="Digitalriver\DrPay\Model\TaxIdManagement" method="clearTaxIds"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/dr/sources/:cartId/locked-checkout-id" method="POST">
+        <service class="Digitalriver\DrPay\Model\GuestSourceManagement" method="lockCheckoutId"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/dr/sources/mine/locked-checkout-id" method="POST">
+        <service class="Digitalriver\DrPay\Model\SourceManagement" method="lockCheckoutId"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/offline-refunds/:drRefundId/complete" method="PUT">
+        <service class="Digitalriver\DrPay\Api\OfflineRefundManagementInterface" method="makeStatusSuccess"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/offline-refunds/:drRefundId/failure" method="PUT">
+        <service class="Digitalriver\DrPay\Api\OfflineRefundManagementInterface" method="makeStatusFailure"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/dr/quotes/mine/placeOrder" method="PUT">
+        <service class="Digitalriver\DrPay\Api\QuoteManagementInterface" method="placeOrder"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/dr/guest-quotes/:cartId/placeOrder" method="PUT">
+        <service class="Digitalriver\DrPay\Api\GuestQuoteManagementInterface" method="placeOrder"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

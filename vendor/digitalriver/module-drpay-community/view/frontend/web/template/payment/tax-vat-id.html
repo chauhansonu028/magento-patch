@@ -1,0 +1,39 @@
+<!-- ko if: shouldShowTaxVatIdField() -->
+<div id="dr-vat-id-form-container" data-bind='attr: {"id": "dr-vat-id-form-container" + $parent.getCode()}'>
+    <div data-bind='attr: {"id": "dr-vat-id-form-inputs-container" + $parent.getCode()}'></div>
+    <div data-bind='attr: {"id": "dr-vat-id-button-container" + $parent.getCode()}' style="display: none">
+        <div>
+            <button id="DR-validate-Tax-Ids" class="action primary " style=""
+                    type="submit"
+                    data-bind='
+                        click: validateTaxId,
+                        attr: {title: $t("Apply"), id: "DR-validate-Tax-Ids" + $parent.getCode()},
+                        enable: false
+                        '
+            >
+                <span data-bind="i18n: 'Apply'"></span>
+            </button>
+            <div class="dr-tax-id-validation-message-container">
+                <span class="dr-tax-id-validation-message-success" data-bind="i18n: 'Validation successful!'"></span>
+                <span class="dr-tax-id-validation-message-error" data-bind="i18n: 'Validation failed!'"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
+<!-- ko if: window.checkoutConfig.taxManagementEnabled && (isBusinessPurchase() || businessEntity()) -->
+    <!-- ko ifnot: shouldShowTaxVatIdField() -->
+    <div class="field field-number tax-vat-id-manage-tax-link">
+        <a data-bind='attr: {href: window.checkoutConfig.taxCertificatesListUrl}'><!-- ko i18n: 'Manage your Tax Certificates' --><!-- /ko --></a>
+    </div>
+    <!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: isVirtualQuote() -->
+    <div data-bind='attr: {"id": "dr-vat-id-form-purchase-container" + $parent.getCode()}' class="billing-address-same-as-shipping-block field choice">
+        <input type="checkbox" data-bind='checked: isBusinessPurchase, click: setTaxVatIdPurchase, attr: {"id": "dr-vat-id-input-purchase-container" + $parent.getCode()}'>
+        <label data-bind='attr: {for: "dr-vat-id-input-purchase-container" + $parent.getCode()}'><span
+            data-bind="i18n: 'This is a Business Purchase'"></span></label>
+    </div>
+<!-- /ko -->
+

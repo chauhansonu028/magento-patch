@@ -1,0 +1,27 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Amasty\Blog\ViewModel\ReportBuilder\Advertise $viewModel
+ */
+
+$viewModel = $block->getViewModel();
+?>
+
+<?php if ($viewModel->isReportBuilderDisabled()): ?>
+    <section class="amblog-suggestion-block">
+        <span class="amblog-text">
+            <?= /* @noEscape */ __('Try') ?> <b><?= /* @noEscape */ __('Custom Reports Builder') ?></b>
+        </span>
+        <a class="amblog-link abs-action-primary abs-action-l"
+           title="<?= /* @noEscape */ __('Explore') ?>"
+           href="<?= $escaper->escapeUrl($viewModel->getAdvUrl()) ?>">
+            <?= /* @noEscape */ __('Explore') ?>
+        </a>
+    </section>
+<?php endif; ?>

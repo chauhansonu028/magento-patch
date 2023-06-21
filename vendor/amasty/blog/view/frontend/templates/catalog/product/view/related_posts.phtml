@@ -1,0 +1,65 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Content\Post\RelatedProducts
+ * @var $escaper Magento\Framework\Escaper
+ * @var $viewModel Amasty\Blog\ViewModel\Product\View\RelatedPosts
+ */
+
+$viewModel = $block->getViewModel();
+?>
+
+<?php if ($viewModel->isCanRender()): ?>
+<div class="amblog-relatedposts-wrap">
+    <?php foreach ($viewModel->getPostsForCurrentProduct() as $post): ?>
+        <div class="amblog-related-post">
+            <a href="<?= $escaper->escapeUrl($post->getUrl()) ?>"
+               class="amblog-image-wrapper <?= $escaper->escapeHtmlAttr($post->getListThumbnailSrc() ? '' : '-placeholder') ?>">
+                <?php if ($post->getListThumbnailSrc()): ?>
+                <figure class="amblog-image"
+                        title="<?= $escaper->escapeHtmlAttr($post->getThumbnailAlt()); ?>"
+                        style="background-image: url(<?= $escaper->escapeUrl($post->getListThumbnailSrc()); ?>)"></figure>
+                <?php endif; ?>
+            </a>
+            <div class="amblog-content">
+                <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                   class="amblog-headline"
+                   title="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>">
+                    <?= $escaper->escapeHtml($post->getTitle()); ?>
+                </a>
+                <div class="amblog-text">
+                    <?= /* @noEscape */ $post->getShortContent() ?>
+                </div>
+                <div class="amblog-dates">
+                    <span class="amblog-date"
+                        <?php if ($block->isHumanized()): ?>
+                            data-mage-init='{"amBlogDates":
+                                "<?= $escaper->escapeJs($viewModel->getPublishDate($post)) ?>"
+                            }'
+                        <?php endif; ?>>
+                        <?= $escaper->escapeHtml($block->isHumanized()
+                            ? __('Loading...')
+                            : $viewModel->getPublishDate($post)) ?>
+                    </span>
+                    <?php if ($post->getEditedAt() && $block->isShowEditedAt()): ?>
+                        <span class="amblog-date">
+                        <?= $escaper->escapeHtml(__('Edited')) ?>
+                        <span <?php if ($block->isHumanizedEditedAt()): ?>
+                              data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($post->getEditedAt()) ?>"}'
+                              <?php endif; ?>>
+                            <?= $escaper->escapeHtml($block->isHumanizedEditedAt()
+                                ? __('Loading...')
+                                : $block->renderDate($post->getEditedAt(), true)) ?>
+                        </span>
+                    </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>

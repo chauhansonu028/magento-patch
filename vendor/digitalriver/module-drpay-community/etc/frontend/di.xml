@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ *
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="drpath_checkout_config_provider" xsi:type="object">Digitalriver\DrPay\Model\Checkout\ConfigProvider</item>
+                <item name="drpay_dropin_config_provider" xsi:type="object">Digitalriver\DrPay\Model\DropIn\ConfigProvider</item>
+                <item name="drpay_quote_error_config_provider" xsi:type="object">Digitalriver\DrPay\Model\DrQuoteError\ConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="apply_dr_fees" type="Digitalriver\DrPay\Plugin\Checkout\CustomerData\CartPlugin" sortOrder="10"/>
+    </type>
+
+    <type name="Magento\Checkout\Block\Onepage">
+        <arguments>
+            <argument name="layoutProcessors" xsi:type="array">
+                <item name="DrCheckoutLayoutProcessor" xsi:type="object">Digitalriver\DrPay\Block\Checkout\LayoutProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

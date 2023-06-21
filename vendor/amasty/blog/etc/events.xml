@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="amasty_comment_save_after">
+        <observer name="amasty_notify_customers" instance="Amasty\Blog\Model\Observer\NotifyCustomers" />
+    </event>
+    <event name="layout_load_before">
+        <observer name="amasty_blog_apply_layout" instance="Amasty\Blog\Observer\ApplyBlogLayout" />
+    </event>
+</config>

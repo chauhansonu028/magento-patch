@@ -1,0 +1,8 @@
+<!-- ko if: isDisplayedTotal()  -->
+<tr class="totals duty_fee_and_tariffs excl">
+    <th class="mark" colspan="1" scope="row" data-bind="text: getTitle()"></th>
+    <td class="amount">
+        <span class="price" data-bind="text: getTotalValue(), attr: {'data-th': 'duty_fee_and_tariffs'}"></span>
+    </td>
+</tr>
+<!-- /ko -->

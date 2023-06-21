@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@todo think of this settings before release-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="saas_data_exporter">
+        <job name="submit_product_feed" instance="Magento\SaaSCatalog\Cron\ProductSubmitFeed" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+        <job name="submit_product_metadata_feed" instance="Magento\SaaSCatalog\Cron\ProductMetadataSubmitFeed" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+    </group>
+</config>

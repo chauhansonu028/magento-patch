@@ -1,0 +1,24 @@
+<!-- ko if: items().length  -->
+    <tr class="totals product_fees_title excl">
+        <th class="mark" colspan="2" scope="row">
+            <!-- ko text: getTitle() --><!-- /ko -->
+        </th>
+    </tr>
+    <!-- ko foreach: {data: items(), as: '$item'} -->
+        <tr class="totals product_fees excl">
+            <th class="mark" colspan="2" scope="row">
+                <strong><!-- ko text: $item.productName --><!-- /ko --></strong>
+            </th>
+        </tr>
+        <!-- ko foreach: {data: $item.fees, as: '$fee'} -->
+        <tr class="totals product_fee_row excl">
+            <th class="mark" colspan="1" scope="row">
+                <span data-bind="text: $fee.title"></span>
+            </th>
+            <td class="amount">
+                <span class="price" data-bind="text: $fee.amount_formatted"></span>
+            </td>
+        </tr>
+        <!-- /ko -->
+    <!-- /ko -->
+<!-- /ko -->

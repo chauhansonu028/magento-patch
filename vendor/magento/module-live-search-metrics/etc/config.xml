@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <live_search_metrics>
+            <metrics_url>https://livesearch-metrics.magento-ds.com/v0/liveSearchMetrics.js</metrics_url>
+        </live_search_metrics>
+    </default>
+</config>

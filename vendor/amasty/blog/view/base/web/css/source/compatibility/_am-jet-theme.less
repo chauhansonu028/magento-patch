@@ -1,0 +1,66 @@
+//
+//  Compatibility with Amasty Jet Theme
+//  ____________________________________
+
+@amblog-default__background: @amtheme__background-primary__color;
+@amblog-element__background: @amtheme__product__items__background;
+
+//
+//  Common
+//  ------------------------------------
+
+& when (@media-common = true) {
+    .amblog-index-index .page-title,
+    .amblog-index-post .page-title {
+        margin: @amblog__indent__l 0;
+    }
+
+    .amasty-jet-theme {
+        &.amblog-index-index .amblog-ref,
+        &.amblog-index-tag .amblog-ref,
+        &.amblog-index-category .amblog-ref,
+        &.amblog-index-post .amblog-ref,
+        &.amblog-index-author .amblog-ref {
+            &:extend(.alink all);
+        }
+
+        .header.links li {
+            margin-left: 15px;
+        }
+
+        .header.links > .nav.item {
+            order: -1;
+        }
+
+        .product-item .action.tocart {
+            font-size: @amblog-font-size__base;
+        }
+
+        .amblog-related-wrapper .amblog-item-product {
+            background: transparent;
+        }
+
+        .amblog-search-title:not(.open) > a {
+            font-weight: @font-weight__regular;
+        }
+
+        .amblog-wrap > *,
+        .ampost-link {
+            font-size: @amblog-font-size__s;
+        }
+    }
+
+    .amblog-comments-wrapper a.amblog-button {
+        color: @amblog-blue__color;
+    }
+
+    .amblog-comments-wrapper a.amblog-button:hover,
+    .amblog-comments-wrapper a.amblog-button:focus,
+    .amblog-comments-wrapper a.amblog-button:active {
+        color: @amblog-button_hover__color;
+    }
+
+    .amblog-slick-slider.slick-slider .slick-dots {
+        width: 100%;
+    }
+}

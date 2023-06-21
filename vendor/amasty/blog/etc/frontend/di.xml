@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Page\Config\Renderer">
+        <plugin name="Amasty_Blog::make-css" type="Amasty\Blog\Plugin\View\Page\Config\Renderer" />
+    </type>
+
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="amasty_blog_root" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Blog\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">60</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Theme\Block\Html\Topmenu">
+        <plugin name="blog-topmenu" type="Amasty\Blog\Plugin\Block\Topmenu" />
+    </type>
+
+    <type name="Magento\Framework\App\PageCache\Identifier">
+        <plugin name="Amasty_Blog::mobileSettingsFPC"
+                type="Amasty\Blog\Plugin\Framework\App\PageCache\Identifier" sortOrder="20"/>
+    </type>
+
+    <type name="Infortis\UltraMegamenu\Block\Navigation">
+        <plugin name="Amasty_Blog::TopMenuUltimo"
+                type="Amasty\Blog\Plugin\Block\TopmenuThemes" sortOrder="900" />
+    </type>
+
+    <type name="Smartwave\Megamenu\Block\Topmenu">
+        <plugin name="Amasty_Blog::TopMenuPorto"
+                type="Amasty\Blog\Plugin\Block\TopmenuThemes" sortOrder="900" />
+    </type>
+
+    <type name="Amasty\MegaMenuLite\Observer\Layout\Handle">
+        <plugin name="Amasty_Blog::compatibility_with_mega_menu"
+                type="Amasty\Blog\Plugin\MegaMenu\Observer\Layout\HandlePlugin" sortOrder="900" />
+    </type>
+
+    <type name="Amasty\ShopbyBrand\Block\BrandsPopup">
+        <plugin name="Amasty_Blog::compatibility_with_brands_popup"
+                type="Amasty\Blog\Plugin\ShopbyBrand\Block\BrandsPopupPlugin" sortOrder="900" />
+    </type>
+
+    <type name="Amasty\MegaMenuLite\Model\Menu\TreeResolver">
+        <plugin name="Amasty_Blog::Amasty_MegaMenu"
+                type="Amasty\Blog\Plugin\MegaMenu\Model\Menu\TreeResolverPlugin" sortOrder="20" />
+    </type>
+
+    <type name="Magento\Theme\Controller\Result\JsFooterPlugin">
+        <plugin name="Amasty_Blog::skip_moving_js" type="Amasty\Blog\Plugin\Theme\Controller\Result\JsFooterPlugin\SkipMovingJsPlugin"/>
+    </type>
+
+    <type name="Amasty\Amp\Block\Page\Html\Header\Topmenu">
+        <plugin name="Amasty_Blog::add_blog_item_in_amp_header"
+                type="Amasty\Blog\Plugin\Amp\Block\Page\Html\Header\AddBlogInAmpHeaderPlugin" sortOrder="900" />
+    </type>
+
+    <type name="Amasty\Blog\Api\Data\GetPostRelatedProductsInterface">
+        <arguments>
+            <argument name="collectionModifiers" xsi:type="array">
+                <item name="basicAttrs" xsi:type="object">
+                    Amasty\Blog\Model\Posts\RelatedProducts\Products\AddBasicAttributesModifier
+                </item>
+                <item name="frontendData" xsi:type="object">
+                    Amasty\Blog\Model\Posts\RelatedProducts\Products\AddFrontendDataModifier
+                </item>
+                <item name="reviewsData" xsi:type="object">
+                    Amasty\Blog\Model\Posts\RelatedProducts\Products\AddReviewsDataModifier
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Amasty\Blog\ViewModel\Posts\Preview\RelatedProducts" type="Amasty\Blog\ViewModel\Posts\RelatedProducts">
+        <arguments>
+            <argument name="getPostRelatedProducts" xsi:type="object">
+                Amasty\Blog\Model\ResourceModel\Posts\RelatedProducts\GetPostRelatedProductsForPreview
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\EmailUnsubscribe\Model\Unsubscribe">
+        <arguments>
+            <argument name="types" xsi:type="array">
+                <item name="amblog/comments/notify_about_replies" xsi:type="array">
+                    <item name="redirectPath" xsi:type="string">/</item>
+                    <item name="successMessage" xsi:type="string">You will no longer receive similar notifications.</item>
+                    <item name="exceptionMessage" xsi:type="string">Something went wrong and your unsubscribe request wasn't sent. Please, try again later.</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Amasty\Blog\ViewModel\ContentPreparation\WysiwygContent" type="Amasty\Blog\ViewModel\ContentPreparation\CompositePreparator">
+        <arguments>
+            <argument name="contentPreparers" xsi:type="array">
+                <item name="scripts" xsi:type="object">Amasty\Blog\ViewModel\ContentPreparation\Preparers\RemoveScriptsFromContent</item>
+                <item name="wysiwyg" xsi:type="object">Amasty\Blog\ViewModel\ContentPreparation\Preparers\ProcessWysiwygContent</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Blog\ViewModel\ContentPreparation\WysiwygContent\Amp" type="Amasty\Blog\ViewModel\ContentPreparation\WysiwygContent">
+        <arguments>
+            <argument name="contentPreparers" xsi:type="array">
+                <item name="images" xsi:type="object">Amasty\Blog\ViewModel\ContentPreparation\Preparers\ReplaceImagesToAmpNotation</item>
+                <item name="videos" xsi:type="object">Amasty\Blog\ViewModel\ContentPreparation\Preparers\ReplaceVideoToAmpNotation</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Blog\Observer\ApplyBlogLayout">
+        <arguments>
+            <argument name="mobileDetection" xsi:type="object">Amasty\Blog\Model\Detection\MobileDetection\Proxy</argument>
+            <argument name="configProvider" xsi:type="object">Amasty\Blog\Model\ConfigProvider\Proxy</argument>
+            <argument name="layoutConfigFactory" xsi:type="object">Amasty\Blog\Model\Layout\ConfigFactory\Proxy</argument>
+            <argument name="xmlGenerator" xsi:type="object">Amasty\Blog\Model\Layout\CacheableGenerator\Proxy</argument>
+            <argument name="blogRoutes" xsi:type="array">
+                <item name="0" xsi:type="string">amblog_index_author</item>
+                <item name="1" xsi:type="string">amblog_index_category</item>
+                <item name="2" xsi:type="string">amblog_index_index</item>
+                <item name="3" xsi:type="string">amblog_index_post</item>
+                <item name="4" xsi:type="string">amblog_index_search</item>
+                <item name="5" xsi:type="string">amblog_index_tag</item>
+                <item name="6" xsi:type="string">amblog_post_preview</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Blog\Block\Comments">
+        <arguments>
+            <argument name="session" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Blog\Block\Comments\Form">
+        <arguments>
+            <argument name="session" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Blog\Block\Comments\Message">
+        <arguments>
+            <argument name="session" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Blog\Model\LiveSearch\LiveSearchPool">
+        <arguments>
+            <argument name="liveSearchEntities" xsi:type="array">
+                <item name="post" xsi:type="object" sortOrder="10">Amasty\Blog\Model\LiveSearch\Post</item>
+                <item name="author" xsi:type="object" sortOrder="20">Amasty\Blog\Model\LiveSearch\Author</item>
+                <item name="category" xsi:type="object" sortOrder="30">Amasty\Blog\Model\LiveSearch\Category</item>
+                <item name="tag" xsi:type="object" sortOrder="40">Amasty\Blog\Model\LiveSearch\Tag</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

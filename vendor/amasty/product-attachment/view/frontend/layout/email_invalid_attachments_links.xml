@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Product Attachments Base for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+      label="Invalid Product Attachments Links List"
+      design_abstraction="custom">
+    <body>
+        <block class="Magento\Framework\View\Element\Template"
+               name="invalid.product.attachments.links"
+               template="Amasty_ProductAttachment::email/invalidAttachmentsList.phtml" />
+    </body>
+</page>

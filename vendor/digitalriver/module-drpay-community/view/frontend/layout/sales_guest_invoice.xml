@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Display Duty fees and IOR tax for the guest order invoice in frontend.
+ *
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="invoice_totals">
+            <block class="Digitalriver\DrPay\Block\Sales\Order\DutyFee" name="duty_tax" template="Digitalriver_DrPay::order/duty_fee_ior_tax.phtml" cacheable="false"/>
+        </referenceBlock>
+    </body>
+
+    <!-- DIRI-130 displaying invoice details through Digital River -->
+    <referenceContainer name="content">
+        <block class="Digitalriver\DrPay\Block\Sales\Order\Invoice" name="sales.invoice.container" template="Digitalriver_DrPay::order/dr_invoice.phtml" after="sales.order.info.links"/>
+    </referenceContainer>
+    <move element="sales.order.invoice" destination="sales.invoice.container" before="-"/>
+</page>

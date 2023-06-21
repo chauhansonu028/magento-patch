@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amblog_index_font" />
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Msrp\Block\Popup" template="Magento_Msrp::popup.phtml" name="product.tooltip">
+                <block class="Magento\Catalog\Block\ShortcutButtons\InCatalog\PositionAfter"
+                       name="map.shortcut.buttons"/>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="amasty.blog.content.post" template="Amasty_Blog::post.phtml">
+            <arguments>
+                <argument name="previous_next_navigation" xsi:type="object">
+                    Amasty\Blog\ViewModel\Posts\PreviousNextNavigation
+                </argument>
+            </arguments>
+            <block class="Amasty\Blog\Block\Social"
+                   name="amblog_social"
+                   as="amblog_social"
+                   template="Amasty_Blog::social.phtml" />
+            <block class="Amasty\Blog\Block\Content\Post\Helpful"
+                   name="amblog_helpful"
+                   as="amblog_helpful" />
+            <block class="Amasty\Blog\Block\Content\Post\RelatedProducts"
+                   name="amblog.post.related.products"
+                   template="Amasty_Blog::post/related_products.phtml"
+                   ifconfig="amblog/posts_products_relation/show_rp_on_post_page">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">
+                        Amasty\Blog\ViewModel\Posts\Preview\RelatedProducts
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="store_language" remove="true" />
+        <referenceBlock name="store_switcher" remove="true" />
+    </body>
+</page>

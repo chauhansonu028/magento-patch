@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_product_save_after">
+        <observer name="media_content_catalog_product_save_after" instance="Digitalriver\DrPay\Observer\AttributeCatalogSyncObserver" />
+    </event>
+    <!-- Event trigger after import product using CSV from system -> Import Tools -->
+    <event name="catalog_product_import_bunch_save_after">
+        <observer name="catalog_product_import_dr_catalog_sync_queue" instance="Digitalriver\DrPay\Observer\AfterImportProductObserver"/>
+    </event>
+    <!-- DRMCE-144 Backend validation DR Allocated % field -->
+    <event name="catalog_product_save_before">
+        <observer name="validate_dr_allocated_percent_field_save_before" instance="Digitalriver\DrPay\Observer\ValidateAllocatedPercentFieldObserver" />
+    </event>
+</config>

@@ -1,0 +1,14 @@
+{
+    "layout": "two-columns-right",
+    "left_side": [],
+    "right_side": [
+        "categories",
+        "search",
+        "tags",
+        "recent-comments",
+        "recent-posts"
+    ],
+    "content": [
+        "list"
+    ]
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Display Duty fees and IOR tax on invoice tab section in Order Details page.
+ *
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="invoice_totals">
+            <block class="Digitalriver\DrPay\Block\Sales\Order\DutyFee" name="duty_tax" template="Digitalriver_DrPay::order/duty_fee_ior_tax.phtml" cacheable="false"/>
+        </referenceBlock>
+    </body>
+</page>

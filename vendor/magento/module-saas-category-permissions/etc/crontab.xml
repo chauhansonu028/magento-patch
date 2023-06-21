@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@todo think of this settings before release-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="category_data_exporter">
+        <job name="submit_category_permissions_feed" instance="Magento\SaaSCategoryPermissions\Cron\CategoryPermissionSubmitFeed" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+    </group>
+</config>

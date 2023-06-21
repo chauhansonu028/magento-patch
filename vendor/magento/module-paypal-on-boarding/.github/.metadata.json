@@ -1,0 +1,26 @@
+{
+  "templateVersion": "0.1",
+  "product": {
+    "name": "PaypalOnBoarding",
+    "description": "This module gives an ability to run PayPal on-boarding flow from Magento PayPal Express Checkout configuration page"
+  },
+  "contacts": {
+    "team": {
+      "name": "Magic Mountain",
+      "DL": "Grp-magento-cloud-all",
+      "slackChannel": "magic_mountain"
+    }
+  },
+  "ticketTracker": {
+    "functionalJiraQueue": {
+      "projectKey": "MCLOUD"
+    },
+    "securityJiraQueue": {
+      "projectKey": "MAGREQ",
+      "component": "Magento Cloud Engineering"
+    }
+  },
+  "staticScan": {
+    "enable": false
+  }
+}

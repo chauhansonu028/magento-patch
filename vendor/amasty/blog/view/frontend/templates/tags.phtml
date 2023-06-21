@@ -1,0 +1,40 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Tags
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$collection = $block->getCollection();
+$uniqueValue = random_int(0, 10000);
+?>
+
+<?php if ($collection && $collection->getSize()): ?>
+    <div class="amblog-tags amblog-widget-container -tags" data-amblog-js="accordion">
+        <h3 class="amblog-title" data-amblog-js="heading">
+            <?= $escaper->escapeHtml(__('Tags')) ?>
+        </h3>
+        <div class="amblog-list -tags" data-amblog-js="content">
+            <div id="amblog_tags<?= (int)$uniqueValue ?>" class="tag-list">
+                <div class="amblog-item">
+                    <?php foreach ($collection as $tag): ?>
+                        <?php $activeClass = $block->isActive($tag) ? 'active' : ''; ?>
+                        <a href="<?= $escaper->escapeUrl($tag->getUrl()); ?>"
+                           class="tag amblog-tag <?= /* @noEscape */ $activeClass; ?>"
+                           data-weight="<?= /* @noEscape */ $block->getTagWeight($tag->getPostCount()) ?>"
+                           aria-label="<?= $escaper->escapeHtmlAttr(__("%1 Topics", $tag->getPostCount())); ?>"
+                           title="<?= $escaper->escapeHtmlAttr(__("%1 Topics", $tag->getPostCount())); ?>">
+                            <?= $escaper->escapeHtml($tag->getName()); ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="amblog-empty"><?= $escaper->escapeHtml(__('Tags were not found')); ?></div>
+<?php endif; ?>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Framework\View\Layout\Reader\Container">
+        <plugin name="product_listing_container_reader"
+                type="Magento\LiveSearchProductListing\Plugin\ContainerReader"/>
+    </type>
+    <type name="Magento\LiveSearchProductListing\Plugin\ContainerReader">
+        <arguments>
+            <argument name="containersToRemove" xsi:type="array">
+                <item name="storefront_features/website_configuration/product_listing_widgets_active" xsi:type="array">
+                    <item name="0" xsi:type="string">title</item>
+                    <item name="1" xsi:type="string">page.main.title</item>
+                    <item name="2" xsi:type="string">sidebar.main</item>
+                    <item name="3" xsi:type="string">sidebar.additional</item>
+                    <item name="4" xsi:type="string">category.products</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Layout\Reader\Block">
+        <plugin name="product_listing_block_reader"
+                type="Magento\LiveSearchProductListing\Plugin\BlockReader"/>
+    </type>
+    <type name="Magento\LiveSearchProductListing\Plugin\BlockReader">
+        <arguments>
+            <argument name="blocksToRemove" xsi:type="array">
+                <item name="storefront_features/website_configuration/product_listing_widgets_active" xsi:type="array">
+                    <item name="0" xsi:type="string">product.price.render.default</item>
+                    <item name="1" xsi:type="string">search.result</item>
+                    <item name="2" xsi:type="string">search.search_terms_log</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\CatalogSearch\Block\Advanced\Result">
+        <plugin name="SearchResultsPlugin"
+                type="Magento\LiveSearchProductListing\Plugin\SearchResultsPlugin"/>
+    </type>
+    <type name="Magento\LiveSearchProductListing\Plugin\SearchResultsPlugin">
+        <arguments>
+            <argument name="liveSearchConfigurations" xsi:type="array">
+                <item name="0" xsi:type="string">storefront_features/website_configuration/product_listing_widgets_active</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

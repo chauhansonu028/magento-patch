@@ -1,0 +1,34 @@
+{
+    "amasty_banners_lite_banner_data": {
+        "column": {
+            "entity_id": true,
+            "salesrule_id": true,
+            "banner_type": true,
+            "banner_image": true,
+            "banner_alt": true,
+            "banner_hover_text": true,
+            "banner_link": true
+        },
+        "index": {
+            "AMASTY_BANNERS_LITE_BANNER_DATA_SALESRULE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_banners_lite_rule": {
+        "column": {
+            "entity_id": true,
+            "salesrule_id": true,
+            "banner_product_sku": true,
+            "banner_product_categories": true,
+            "show_banner_for": true
+        },
+        "index": {
+            "AMASTY_BANNERS_LITE_RULE_SALESRULE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

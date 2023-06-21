@@ -1,0 +1,22 @@
+<?php
+
+/** @var \Magento\ProductRecommendationsAdmin\Block\Adminhtml\Index $block */ ?>
+
+<div
+    data-api-key="<?= $block->escapeHtmlAttr($block->getApiKey()); ?>"
+    data-is-api-key-set="<?= $block->escapeHtmlAttr(json_encode($block->isApiKeySet())); ?>"
+    data-environment-id="<?= $block->escapeHtmlAttr($block->getEnvironmentId()); ?>"
+    data-environment-name="<?= $block->escapeHtmlAttr($block->getEnvironmentName()); ?>"
+    data-environment-type="<?= $block->escapeHtmlAttr($block->getEnvironmentType()); ?>"
+    data-alternate-environment="<?= $block->escapeHtmlAttr($block->getAlternateEnvironmentId()); ?>"
+    data-is-alternate-environment-enabled="<?= $block->escapeHtmlAttr(json_encode($block->isAlternateEnvironmentEnabled())); ?>"
+    data-store-view-code="<?= $block->escapeHtmlAttr($block->getStoreViewCode()); ?>"
+    data-website-code="<?= $block->escapeHtmlAttr($block->getWebsiteCode()); ?>"
+    data-magento-middleware-url="<?= $block->escapeUrl($block->getUrl('product_recommendations/index/middleware')); ?>"
+    data-config-page-url="<?= $block->escapeUrl($block->getUrl('services_id/index/index')); ?>"
+    data-store-currency-code="<?= $block->getCurrentCurrencyCode(); ?>"
+    data-prex-version="<?= $block->escapeHtmlAttr($block->getModuleVersion()); ?>"
+    id="root"
+></div>
+
+<script src="<?= $block->escapeUrl($block->getFrontendUrl()) ?>"></script>

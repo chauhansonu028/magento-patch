@@ -1,0 +1,112 @@
+/*Styles for product edit & new product page*/
+.eccn-product-page-block(){
+    .eccn-details-container{
+        margin-left: 25%;
+        padding:0 5px 5px 5px;
+        margin-bottom: 2em;
+    }
+    .dr-classification-code-container, .dr-description-container, .dr-notes-container{
+        border-bottom: 1px solid #d1d1d1;
+        padding: 5px;
+    }
+    .dr-classification-item, .dr-description-item, .dr-notes-item{
+        font-weight: 600;
+        margin-top: 1em;
+    }
+    .title-item{
+        font-weight: 500;
+        margin-top: 1em;
+    }
+    .dr-classification-item{
+        .title-item{
+            font-weight: 500;
+            margin-top: 0;
+        }
+    }
+}
+
+.catalog-product-edit, .catalog-product-new{
+    .eccn-product-page-block();
+}
+
+/*Styles for attribute bulk update page*/
+.catalog-product_action_attribute-edit{
+
+    /*Styles for attribute details container*/
+    .dr-classification-code-container, .dr-description-container, .dr-notes-container{
+        border-bottom: 1px solid #d1d1d1;
+        padding: 5px;
+    }
+    .dr-classification-item, .dr-description-item, .dr-notes-item{
+        font-weight: 600;
+        margin-top: 1em;
+    }
+    .title-item{
+        font-weight: 500;
+        margin-top: 1em;
+    }
+    .dr-classification-item{
+        .title-item{
+            font-weight: 500;
+            margin-top: 0;
+        }
+    }
+
+    .eccn-details-container{
+        p{
+            word-break: break-all;
+            white-space: normal;
+            font-size:12px;
+        }
+    }
+
+    /*Styles for custom select*/
+    .select2-container--default{
+        .select2-results__option--highlighted[aria-selected]{
+            background-color:#e3e3e3;
+        }
+    }
+    .select2-container--default{
+        .select2-results__option[aria-selected=true]{
+            background-color:#e0f6fe;
+        }
+    }
+    .select2-container--default{
+        .select2-results__option--highlighted[aria-selected]{
+            color:#000;
+        }
+    }
+    #container{
+        .select2-selection{
+            width:50rem;
+            border-radius:0;
+            height:32px;
+            appearance: none;
+            display: inline-block;
+            line-height: normal;
+            min-width: 80px;
+            background-repeat: no-repeat;
+            background-image: url(../../images/arrows-bg.svg), linear-gradient(#e3e3e3, #e3e3e3), linear-gradient(#adadad, #adadad);
+            background-position+: ~'calc(100% - 12px)' -34px,100%,  ~'calc(100% - 33px)' 0;
+            background-size: auto, 33px 100%, 1px 100%;
+            padding-right: 44px;
+        }
+    }
+    .select2-selection__arrow{
+        display:none;
+    }
+    .select2-container--default.select2-container--disabled{
+        .select2-selection--single{
+            opacity:0.5;
+            cursor:not-allowed;
+        }
+    }
+}
+
+.dr_payment_title_dashboards {
+    margin: 0 0 0 5px;
+}
+
+#refunds-order-message {
+    clear: both;
+}

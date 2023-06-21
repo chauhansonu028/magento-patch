@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <referenceBlock name="form">
+                <block class="Digitalriver\DrPay\Block\Adminhtml\Order\StaticMessage" name="dr_static_message"
+                       template="Digitalriver_DrPay::order/static_message.phtml"></block>
+                <action method="setTemplate">
+                    <argument name="template" xsi:type="string">Digitalriver_DrPay::order/creditmemo/view/form.phtml</argument>
+                </action>
+            </referenceBlock>
+            <referenceBlock name="creditmemo_totals">
+                <block class="Magento\Sales\Block\Adminhtml\Order\Totals\Item" name="duty_fee_ior_tax"
+                       template="Digitalriver_DrPay::order/totals/duty_fee_ior_tax.phtml">
+                    <action method="setAfterCondition">
+                        <argument name="param" xsi:type="string">tax</argument>
+                    </action>
+                </block>
+            </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>

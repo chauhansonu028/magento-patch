@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!--  Category Feed  -->
+    <virtualType name="Magento\SaaSCategoryPermissions\Model\CategoryPermissionFeedRegistry" type="Magento\SaaSCommon\Model\FeedRegistry">
+        <arguments>
+            <argument name="excludeFields" xsi:type="array">
+                <item name="modifiedAt" xsi:type="string">modifiedAt</item>
+            </argument>
+            <argument name="uniqueFields" xsi:type="array">
+                <!--  Field from et_schema  -->
+                <item name="id" xsi:type="string">id</item>
+            </argument>
+            <argument name="registryTable" xsi:type="string">catalog_category_permissions_data_submitted_hash</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\SaaSCategoryPermissions\Cron\CategoryPermissionSubmitFeed" type="Magento\SaaSCommon\Cron\SubmitFeed">
+        <arguments>
+            <argument name="feedName" xsi:type="string">categoryPermissions</argument>
+            <argument name="feedSyncFlag" xsi:type="string">category-permissions-feed-version</argument>
+            <argument name="feedRegistry" xsi:type="object">Magento\SaaSCategoryPermissions\Model\CategoryPermissionFeedRegistry</argument>
+            <argument name="itemsPerRequest" xsi:type="number">500</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\SaaSCategoryPermissions\Model\CategoryPermissionResyncManager" type="Magento\SaaSCommon\Model\ResyncManager">
+        <arguments>
+            <argument name="feedIndexer" xsi:type="object">Magento\CategoryPermissionDataExporter\Model\Indexer\CategoryPermissionFeedIndexer</argument>
+            <argument name="submitFeed" xsi:type="object">Magento\SaaSCategoryPermissions\Cron\CategoryPermissionSubmitFeed</argument>
+            <argument name="feedInterface" xsi:type="object">Magento\CategoryPermissionDataExporter\Model\CategoryPermissionFeed</argument>
+            <argument name="flagName" xsi:type="string">category-permissions-feed-version</argument>
+            <argument name="indexerName" xsi:type="string">catalog_data_exporter_category_permissions</argument>
+            <argument name="registryTableName" xsi:type="string">catalog_category_permissions_data_submitted_hash</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\SaaSCommon\Model\DataFilter">
+        <arguments>
+            <argument name="reservedFields" xsi:type="array">
+                <item name="categoryPermissions" xsi:type="array">
+                    <item name="permission_id" xsi:type="string">_permission_id</item>
+                    <item name="category_id" xsi:type="string">_category_id</item>
+                    <item name="website_id" xsi:type="string">_website_id</item>
+                    <item name="customer_group_id" xsi:type="string">_customer_group_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!--  Resync registration  -->
+    <type name="Magento\SaaSCommon\Model\ResyncManagerPool">
+        <arguments>
+            <argument name="classMap" xsi:type="array">
+                <item name="categoryPermissions" xsi:type="string">Magento\SaaSCategoryPermissions\Model\CategoryPermissionResyncManager</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\SaaSCommon\Console\Command\Resync">
+        <arguments>
+            <argument name="feedNames" xsi:type="array">
+                <item name="categoryPermissions" xsi:type="string">Category Permissions</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

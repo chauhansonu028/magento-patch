@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="acdl_scripts" type="host">unpkg.com</value>
+                <value id="data_services_script" type="host">commerce.adobedtm.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="data_services_connect" type="host">commerce.adobedtm.com</value>
+                <value id="snowplow_js" type="host">commerce.adobedc.net</value>
+                <value id="snowplow_collector" type="host">*.snplow.net</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

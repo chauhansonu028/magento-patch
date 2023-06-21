@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <block name="amblog_posts" template="Amasty_Blog::post/account.phtml" cacheable="false">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Amasty\Blog\ViewModel\Posts\Account</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceBlock name="amblog-customer-account-tab-blog-posts">
+            <arguments>
+                <argument name="is_highlighted" xsi:type="boolean">true</argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

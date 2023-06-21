@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout=""
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amblog_amp_default"/>
+    <body>
+        <referenceBlock name="blog.page">
+            <referenceContainer name="content">
+                <block
+                    class="Magento\Framework\View\Element\Template"
+                    name="amblog.category.description"
+                    template="Amasty_Blog::category/description.phtml"
+                    after="page.main.title"
+                >
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Amasty\Blog\ViewModel\Category\Description
+                        </argument>
+                        <argument name="content_preparation" xsi:type="object">
+                            Amasty\Blog\ViewModel\ContentPreparation\WysiwygContent\Amp
+                        </argument>
+                    </arguments>
+                </block>
+
+                <block class="Amasty\Blog\Block\Content\Lists\Wrapper" name="amblog.content.list.wrapper"
+                       as="amblog_content_list_wrapper"/>
+                <referenceContainer name="layout.content">
+                    <block class="Amasty\Blog\Block\Content\Category"
+                           name="amblog.content.list"
+                           as="list"
+                           template="Amasty_Blog::amp/list.phtml"/>
+
+                    <block class="Amasty\Blog\Block\Content\Category"
+                           name="amblog.content.grid"
+                           as="grid"
+                           template="Amasty_Blog::amp/grid.phtml"/>
+                </referenceContainer>
+            </referenceContainer>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,140 @@
+<?php
+/**
+ * Display IOR Tax Checkbox and Duty Fee Text field in `Refund Totals`
+ *
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+?>
+<?php $_source  = $block->getSource() ?>
+
+<?php $collection = $_source->getOrder()->getCreditmemosCollection();
+$dutyFee = 0;
+$iorTax = 0;
+foreach ($collection as $item) {
+    $itemDutyFee = (float)($item->getData('base_dr_duty_fee') ?? 0.0);
+    $itemIorTax = (float)($item->getData('base_dr_ior_tax') ?? 0.0);
+    $dutyFee += $itemDutyFee;
+    $iorTax += $itemIorTax;
+}
+?>
+<?php if ($_source): ?>
+    <tr>
+        <td class="label"><?= $block->escapeHtml($block->getShippingLabel()) ?><div id="shipping_amount_adv"></div></td>
+        <td>
+            <input type="text"
+                   name="creditmemo[shipping_amount]"
+                   value="<?= /* @noEscape */ abs($block->round($block->getShippingAmount())) ?>"
+                   class="input-text admin__control-text not-negative-amount"
+                   id="shipping_amount" />
+        </td>
+    </tr>
+    <?php if ($_source->getOrder()->getData('base_dr_duty_fee')):?>
+        <tr>
+            <td class="label">
+                <?= $block->escapeHtml('Refund Duty Fee') ?>
+                <div id="duty_fee_div"></div>
+            </td>
+
+            <td>
+                <span><?= /** @noEscape */
+                    $block->formatValue($_source->getOrder()->getData('base_dr_duty_fee') - $dutyFee)?></span>
+                <input type="text"
+                       name="creditmemo[dr_duty_fee]"
+                       value="<?= /* @noEscape */ $block->round($_source->getBaseDrDutyFee()) ?>"
+                       class="input-text admin__control-text not-negative-amount"
+                       id="duty_fee_amount" />
+            </td>
+        </tr>
+    <?php endif; ?>
+    <tr>
+        <td class="label"><?= $block->escapeHtml(__('Adjustment Refund')) ?>
+            <div id="adjustment_positive_adv"></div>
+        </td>
+        <td>
+            <input type="text"
+                   name="creditmemo[adjustment_positive]"
+                   value="<?= /* @noEscape */ $block->round($block->escapeHtmlAttr(
+                       $_source->getBaseAdjustmentPositive()
+                   )) ?>"
+                   class="input-text admin__control-text not-negative-amount"
+                   id="adjustment_positive" />
+            <script>
+                require(['prototype'], function(){
+
+                    //<![CDATA[
+                    Validation.addAllThese([
+                        ['not-negative-amount', '<?= $block->escapeJs(__(
+                            'Please enter a positive number in this field.'
+                        )) ?>', function(v) {
+                            if(v.length)
+                                return /^\s*\d+([,.]\d+)*\s*%?\s*$/.test(v);
+                            else
+                                return true;
+                        }]
+                    ]);
+
+                    if ($('shipping_amount')) {
+                        $('shipping_amount').advaiceContainer = $('shipping_amount_adv');
+                        unblockSubmit('shipping_amount');
+                    }
+                    if ($('adjustment_positive')) {
+                        $('adjustment_positive').advaiceContainer = $('adjustment_positive_adv');
+                        unblockSubmit('adjustment_positive');
+                    }
+                    if ($('dr_ior_tax_amount')) {
+                        if($('dr_ior_tax_amount').value > 0){
+                            $('dr_ior_tax_amount').checked = true;
+                            enableElements('update-totals-button');
+                        }
+                        unblockSubmit('dr_ior_tax_amount', function () {
+                            enableElements('update-totals-button');
+                        });
+                    }
+
+                    function unblockSubmit(id, callback) {
+                        $(id).observe('focus', function(event) {
+                            if ($$('button[class="scalable update-button disabled"]').size() > 0) {
+                                enableElements('submit-button');
+                            }
+                        });
+                        $(id).observe('change', function (event) {
+                            if($('dr_ior_tax_amount').checked){
+                                $('dr_ior_tax_amount').value = $('dr_ior_tax_amount_hidden').value;
+                            } else {
+                                $('dr_ior_tax_amount').value = Number(0).toFixed(2);
+                            }
+                            callback && callback();
+                        });
+                    }
+                    //]]>
+
+                });
+            </script>
+        </td>
+    </tr>
+
+    <?php if ($_source->getOrder()->getData('base_dr_ior_tax')):?>
+        <tr>
+            <td class="label">
+                <?= $block->escapeHtml('IOR Tax') ?>
+                <div id="dr_ior_tax"></div>
+            </td>
+
+            <td>
+                <span><?= /** @noEscape */
+                    $block->formatValue($_source->getOrder()->getData('base_dr_ior_tax') - $iorTax)?></span>
+                <input type="hidden"
+                       id="dr_ior_tax_amount_hidden"
+                       value="<?= /** @noEscape */
+                        $block->round($_source->getOrder()->getData('base_dr_ior_tax') - $iorTax)?>"/>
+                <input type="checkbox"
+                       name="creditmemo[dr_ior_tax]"
+                       value="<?= /* @noEscape */ $block->round($_source->getBaseDrIorTax()) ?>"
+                       style="margin-left: 1.25em; margin-right:1.25em;"
+                       id="dr_ior_tax_amount"/>
+            </td>
+        </tr>
+    <?php endif; ?>
+
+<?php endif; ?>

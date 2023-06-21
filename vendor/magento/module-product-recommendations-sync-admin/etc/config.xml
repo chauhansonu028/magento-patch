@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <product_recommendations_sync_admin>
+            <show_menu_item>1</show_menu_item>
+            <admin_api_path>recs-admin</admin_api_path>
+            <content_security_policy>*.adobe.io</content_security_policy>
+        </product_recommendations_sync_admin>
+    </default>
+</config>

@@ -1,0 +1,51 @@
+<?php
+/**
+ * Display IOR Tax and Duty Fee in Sales Order View page
+ * admin panel Order Total Section.
+ *
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+
+?>
+<?php
+$source = $block->getSource();
+$order = $block->getOrder();
+?>
+
+<?php if ($order->getDrDutyFee() !== null || $order->getDrIorTax() !== null): ?>
+    <tr>
+        <td class="label"><?= $block->escapeHtml(__('Duty Fees')) ?></td>
+        <?php if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()): ?>
+            <td>
+                <strong>
+                    <?= /* @noEscape */ $order->formatBasePrice($source->getBaseDrDutyFee()) ?>
+                </strong>
+                <p>
+                    <?= /* @noEscape */ $order->formatPrice($source->getDrDutyFee(), true) ?>
+                </p>
+            </td>
+        <?php else: ?>
+            <td>
+                <?= /* @noEscape */ $order->formatPrice($source->getDrDutyFee()) ?>
+            </td>
+        <?php endif; ?>
+    </tr>
+    <tr>
+        <td class="label"><?= $block->escapeHtml(__('IOR Tax')) ?></td>
+        <?php if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()): ?>
+            <td>
+                <strong>
+                    <?= /* @noEscape */ $order->formatBasePrice($source->getBaseDrIorTax()) ?>
+                </strong>
+                <p>
+                    <?= /* @noEscape */ $order->formatPrice($source->getDrIorTax(), true) ?>
+                </p>
+            </td>
+        <?php else: ?>
+            <td>
+                <?= /* @noEscape */ $order->formatPrice($source->getDrIorTax()) ?>
+            </td>
+        <?php endif; ?>
+    </tr>
+<?php endif; ?>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Display Duty fees and IOR Tax on invoice email template
+ *
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Email Invoice Items List" design_abstraction="custom">
+    <body>
+        <referenceBlock name="invoice_totals">
+            <arguments>
+                <argument name="label_properties" xsi:type="string">colspan="2"</argument>
+            </arguments>
+            <block class="Digitalriver\DrPay\Block\Sales\Order\DutyFee" name="duty_tax" template="Digitalriver_DrPay::order/duty_fee_ior_tax_email.phtml" cacheable="false"/>
+        </referenceBlock>
+    </body>
+</page>

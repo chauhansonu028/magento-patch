@@ -1,0 +1,101 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var \Amasty\Blog\Block\Comments\Form $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$titleText = $block->isReply()
+    ? $escaper->escapeHtml(__('Leave a reply to %1', $block->getReplyToCustomerName()))
+    : $escaper->escapeHtml(__('Leave a comment'));
+$url = $block->getAmpFormUrl();
+?>
+
+<?php if ($block->canPost()): ?>
+    <?php if ($block->canUserPost()): ?>
+        <div class="amblog-amp-title -comment"><?= $escaper->escapeHtml($titleText); ?></div>
+
+        <?php if ($block->isCommentAdded()): ?>
+            <p class="amblog-comment-inreview">
+                <i class="far fa-check-circle icon"></i> <?= $escaper->escapeHtml(__('Your message on review')); ?>
+            </p>
+        <?php endif; ?>
+        <form class="amblog-write-comment"
+              action="<?= $escaper->escapeUrl($url) ?>"
+              id="amblog-form-<?= $escaper->escapeHtml($block->getPostId()); ?>"
+              method="get"
+              target="_top">
+
+            <input type="hidden" name="secure_code" value="<?= $escaper->escapeHtml($block->getSecureCode()); ?>"/>
+            <input type="hidden" name="is_amp" value="1"/>
+            <input type="hidden" name="reply_to" value="<?= $escaper->escapeHtml($block->getReplyTo()); ?>"/>
+
+            <?php if ($block->isAskName()): ?>
+                <input type="text"
+                       name="name"
+                       placeholder="<?= $escaper->escapeHtml(__('John Doe')); ?>"
+                       id="name_field"
+                       title="<?= $escaper->escapeHtml(__('Name')); ?>"
+                       class="text amblog-amp-input"
+                       required
+                />
+            <?php endif; ?>
+
+            <?php if ($block->isAskEmail()): ?>
+                <input type="email"
+                       name="email"
+                       id="email_field"
+                       placeholder="<?= $escaper->escapeHtml(__("john.doe@example.com")); ?>"
+                       class="text amblog-amp-input"
+                       title="<?= $escaper->escapeHtml(__('Email')) ?>"
+                       required
+                />
+            <?php endif; ?>
+
+            <?php $placeholder = $block->isReply() ? __('Leave your reply here...') : __('Leave your comment here...'); ?>
+            <textarea name="message"
+                      class="amblog-amp-input -textarea"
+                      id="message_field"
+                      placeholder="<?= $escaper->escapeHtml($placeholder); ?>"
+                      required></textarea>
+
+            <?php if ($block->isGdprEnabled()): ?>
+            <?php $randId = random_int(0, 10000); ?>
+                <div class="gdprText">
+                    <input type="checkbox" class="gdpr_agree" id="gdpr_agree<?= (int)$randId ?>" required>
+                    <label for="gdpr_agree<?= (int)$randId; ?>"><?= /* @noEscape */ $block->getGdprText(); ?></label>
+                </div>
+            <?php endif; ?>
+
+            <?php $gdprCheckboxesHtml = $block->getGdprCheckboxHtml(); ?>
+            <?php if (!empty($gdprCheckboxesHtml)): ?>
+                <?= /** @noEscape */ $gdprCheckboxesHtml ?>
+            <?php endif; ?>
+
+            <button class="amblog-amp-action" id="amblog_submit_comment" type="submit">
+                <?= $escaper->escapeHtml(__("Submit")); ?>
+            </button>
+        </form>
+
+    <?php else: ?>
+        <p>
+            <?= $escaper->escapeHtml(__("Please ")); ?>
+            <a href="<?= $escaper->escapeUrl($block->getLoginUrl()); ?>">
+                <?= $escaper->escapeHtml(__("login")); ?>
+            </a>
+            <?= $escaper->escapeHtml(($block->isReply() ? __(" to reply.") : __(" to comment."))); ?>
+        </p>
+        <p><?= $escaper->escapeHtml(__("Don't have an account?")); ?></p>
+        <p>
+            <a href="<?= $escaper->escapeUrl($block->getRegisterUrl()); ?>">
+                <?= $escaper->escapeHtml(__("Sign Up for free")); ?>
+            </a>.
+        </p>
+    <?php endif; ?>
+<?php else: ?>
+    <p><?= $escaper->escapeHtml(__('New comments for this post are not allowed')); ?></p>
+<?php endif; ?>

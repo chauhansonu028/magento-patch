@@ -1,0 +1,37 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+
+<?php
+/** @var \Magento\DataServices\Block\Context $block */
+$viewModel = $block->getViewModel();
+?>
+
+<script>
+    require(['magentoStorefrontEvents'], function (magentoStorefrontEvents) {
+        if(!magentoStorefrontEvents) return;
+        
+        magentoStorefrontEvents.context.setPage({
+            pageType: "<?= /* @noEscape */ $block->getData('page_type'); ?>"
+        });
+        magentoStorefrontEvents.context.setContext("pageExtended", {
+            action: "<?= /* @noEscape */ $block->getData('step_name'); ?>"
+        });
+        magentoStorefrontEvents.context.setShoppingCart({
+            id: <?= /* @noEscape */ $block->getCartId(); ?>
+        });
+
+        let accountContext = magentoStorefrontEvents.context.getAccount() || {};
+        accountContext.emailAddress = "<?= /* @noEscape */ $viewModel->getCustomerEmail(); ?>";
+        magentoStorefrontEvents.context.setAccount(accountContext);
+
+        let orderContext = magentoStorefrontEvents.context.getOrder() || {};
+        orderContext.orderId = <?= /* @noEscape */ $viewModel->getOrderId(); ?>;
+        orderContext.payments = <?= /* @noEscape */ $viewModel->getPayment(); ?>;
+        orderContext.shipping = <?= /* @noEscape */ $viewModel->getShipping(); ?>;
+        magentoStorefrontEvents.context.setOrder(orderContext);
+    });
+</script>

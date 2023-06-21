@@ -1,0 +1,23 @@
+<?php
+/**
+ * Display Duty fee and IOR Tax value to the invoice tab frontend
+ *
+ * @category Digitalriver
+ * @package  Digitalriver_DrPay
+ */
+?>
+<?php
+$_order = $block->getOrder();
+?>
+<?php if ($_order->getDrDutyFee() !== null || $_order->getDrIorTax() !== null): ?>
+    <tr class="duty-fee">
+        <td <?= /* @noEscape */ $block->getLabelProperties() ?> class="col name">
+            <?= $block->escapeHtml(__('Duties and Tariffs')) ?>
+        </td>
+        <td class="col price">
+            <span class="tax">
+                <?= /* @noEscape */ $_order->formatPrice($_order->getDrDutyFee() + $_order->getDrIorTax()) ?>
+            </span>
+        </td>
+    </tr>
+<?php endif; ?>

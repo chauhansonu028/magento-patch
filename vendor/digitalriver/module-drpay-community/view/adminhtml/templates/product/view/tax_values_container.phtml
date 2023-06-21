@@ -1,0 +1,31 @@
+<?php
+/**
+ * Add JS file to implement selects' options' values
+ * and dependent behavior of DR tax group/DR tax type select inputs
+ *
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+
+/** @var \Digitalriver\DrPay\ViewModel\DrHelper $viewModel */
+$viewModel = $block->getData('view_model');
+$drIsEnabled = $viewModel->getIsDrEnabled();
+$jsonSerializer = $viewModel->getJsonSerializer();
+?>
+<?php if ($drIsEnabled): ?>
+    <script>
+        window.drPayEccnUrl = '<?= /** @noEscape */ $block->getUrl('drpay/eccncode/eccn')?>';
+    </script>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Digitalriver_DrPay/js/dr_tax_dropdowns":{
+                    "tax_values": <?= /** @noEscape */ $block->getTaxValues(); ?>
+                },
+                "Digitalriver_DrPay/js/countryselect_product_page": {
+                    "countryData": <?= /** @noEscape */ $jsonSerializer->serialize($block->getCountryDetails()); ?>
+                }
+            }
+        }
+    </script>
+<?php endif; ?>

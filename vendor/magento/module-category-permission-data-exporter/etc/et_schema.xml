@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_DataExporter:etc/et_schema.xsd">
+    <record name="Export">
+        <field name="categoryPermissions" type="CategoryPermission" repeated="true"
+               provider="Magento\CategoryPermissionDataExporter\Model\Provider\CategoryPermissions">
+        </field>
+    </record>
+    <record name="CategoryPermission">
+
+        <!--
+         System field used to transfer "feed identity" from feed item to storage.
+         Should be ignored when transfer data to SaaS
+         -->
+        <field name="_permission_id" type="Int"/>
+        <field name="_website_id" type="String"/>
+        <field name="_customer_group_id" type="String"/>
+        <field name="id" type="CategoryPermissionFeedId"/>
+        <field name="type" type="String"/>
+        <field name="permission" type="CategoryPermissionValue"/>
+        <field name="modifiedAt" type="String"/>
+        <field name="deleted" type="Boolean"/>
+    </record>
+    <record name="CategoryPermissionFeedId">
+        <field name="websiteCode" type="String"/>
+        <field name="customerGroupCode" type="String"/>
+        <field name="categoryId" type="String"/>
+    </record>
+    <record name="CategoryPermissionValue" skipNull="true">
+        <field name="GLOBAL_ENABLED" type="String"/>
+        <field name="DISPLAYED" type="String"/>
+        <field name="DISPLAY_PRODUCT_PRICE" type="String"/>
+        <field name="ADD_TO_CART" type="String"/>
+    </record>
+</config>

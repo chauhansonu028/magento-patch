@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Product Attachments Base for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Amasty\ProductAttachment\Api\IconRepositoryInterface" type="Amasty\ProductAttachment\Model\Icon\Repository"/>
+    <preference for="Amasty\ProductAttachment\Api\FileRepositoryInterface" type="Amasty\ProductAttachment\Model\File\Repository"/>
+    <preference for="Amasty\ProductAttachment\Model\File\FileScope\SaveFileScopeInterface" type="Amasty\ProductAttachment\Model\File\FileScope\SaveFileScope"/>
+    <preference for="Amasty\ProductAttachment\Model\File\FileScope\FileScopeDataProviderInterface" type="Amasty\ProductAttachment\Model\File\FileScope\FileScopeDataProvider"/>
+    <preference for="Amasty\ProductAttachment\Api\Data\FileInterface" type="Amasty\ProductAttachment\Model\File\File"/>
+
+    <virtualType name="Amasty\ProductAttachment\Model\Import\ResourceModel\Grid"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="const">Amasty\ProductAttachment\Model\Import\ResourceModel\Import::TABLE_NAME</argument>
+            <argument name="resourceModel" xsi:type="string">Amasty\ProductAttachment\Model\Import\ResourceModel\Import</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\ProductAttachment\Model\File\ResourceModel\Grid"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="const">Amasty\ProductAttachment\Model\File\ResourceModel\File::TABLE_NAME</argument>
+            <argument name="resourceModel" xsi:type="string">Amasty\ProductAttachment\Model\File\ResourceModel\File</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="amfile_icon_listing_data_source" xsi:type="string">Amasty\ProductAttachment\Model\Icon\ResourceModel\Grid</item>
+                <item name="amfile_import_listing_data_source" xsi:type="string">Amasty\ProductAttachment\Model\Import\ResourceModel\Grid</item>
+                <item name="amfile_file_listing_data_source" xsi:type="string">Amasty\ProductAttachment\Model\File\ResourceModel\Grid</item>
+                <item name="amfile_downloads_listing_data_source" xsi:type="string">Amasty\ProductAttachment\Model\Report\ResourceModel\Grid</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\File\FileScope\SaveFileScope">
+        <arguments>
+            <argument name="saveProcessors" xsi:type="array">
+                <item name="file" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\SaveProcessors\File</item>
+                <item name="category" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\SaveProcessors\Category</item>
+                <item name="product" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\SaveProcessors\Product</item>
+                <item name="productCategories" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\SaveProcessors\ProductCategories</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\File\FileType\TypeProcessorProvider">
+        <arguments>
+            <argument name="fileTypes" xsi:type="array">
+                <item name="file" xsi:type="array">
+                    <item name="code" xsi:type="string">file</item>
+                    <item name="typeCode" xsi:type="string">0</item>
+                    <item name="optionLabel" xsi:type="string">File</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\File\FileType\Processor\File</item>
+                </item>
+                <item name="link" xsi:type="array">
+                    <item name="code" xsi:type="string">link</item>
+                    <item name="typeCode" xsi:type="string">1</item>
+                    <item name="optionLabel" xsi:type="string">Link</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\File\FileType\Processor\Link</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\File\FileScope\FileScopeDataProvider">
+        <arguments>
+            <argument name="dataProviders" xsi:type="array">
+                <item name="file" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\File\Proxy</item>
+                <item name="category" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Category\Proxy</item>
+                <item name="product" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Product\Proxy</item>
+                <item name="productCategories" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\ProductCategories\Proxy</item>
+                <item name="frontendFile" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\File\Proxy</item>
+                <item name="fileIds" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\FileIds\Proxy</item>
+                <item name="frontendCategory" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\Category\Proxy</item>
+                <item name="frontendProduct" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\Product\Proxy</item>
+                <item name="downloadFile" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\DownloadFile\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\Product">
+        <arguments>
+            <argument name="productCategoriesDataProvider" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\ProductCategories\Proxy</argument>
+            <argument name="fileRepository" xsi:type="object">Amasty\ProductAttachment\Model\File\Repository\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\DownloadFile">
+        <arguments>
+            <argument name="categoryDataProvider" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\Category\Proxy</argument>
+            <argument name="productDataProvider" xsi:type="object">Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\Product\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\File\FileScope\DataProviders\Frontend\Category">
+        <arguments>
+            <argument name="fileRepository" xsi:type="object">Amasty\ProductAttachment\Model\File\Repository\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\File\FileScope\SaveProcessors\Product">
+        <arguments>
+            <argument name="fileRepository" xsi:type="object">Amasty\ProductAttachment\Model\File\Repository\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\File\FileScope\SaveProcessors\Category">
+        <arguments>
+            <argument name="fileRepository" xsi:type="object">Amasty\ProductAttachment\Model\File\Repository\Proxy</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Amasty\ProductAttachment\Model\FileSystem\ImageUploader" type="Magento\Catalog\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="const">Amasty\ProductAttachment\Model\Filesystem\Directory::AMFILE_DIRECTORY</argument>
+            <argument name="basePath" xsi:type="const">Amasty\ProductAttachment\Model\Filesystem\Directory::AMFILE_DIRECTORY</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="png" xsi:type="string">png</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="bmp" xsi:type="string">bmp</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Amasty\ProductAttachment\Model\Filesystem\FileUploader">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Amasty\ProductAttachment\Model\FileSystem\ImageUploader</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Catalog\Block\Product\View\Description">
+        <plugin name="Amasty_ProductAttachment::ProductViewTabPosition" type="Amasty\ProductAttachment\Plugin\TabPosition" />
+    </type>
+
+    <type name="Amasty\ProductAttachment\Block\Product\AttachmentsTab">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <!-- Proxies -->
+    <type name="Amasty\ProductAttachment\Model\File\Repository">
+        <arguments>
+            <argument name="iconResource" xsi:type="object">Amasty\ProductAttachment\Model\Icon\ResourceModel\Icon\Proxy</argument>
+        </arguments>
+    </type>
+    <!-- /Proxies -->
+
+    <!-- Deploy path exceptions configuration -->
+    <type name="Amasty\Base\Model\FilesystemProvider">
+        <arguments>
+            <argument name="exceptionPaths" xsi:type="array">
+                <item name="Amasty_ProductAttachment" xsi:type="array">
+                    <item name="0" xsi:type="string">pub/media/amasty/amfile/import/csv/.htaccess</item>
+                    <item name="1" xsi:type="string">pub/media/amasty/amfile/import/ftp/.htaccess</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- /Deploy path exceptions configuration -->
+
+    <!--plugin blocks email sending-->
+    <type name="Magento\Framework\Mail\TransportInterface">
+        <plugin name="customer-sample-data-disable-registration-email-send" disabled="true"/>
+    </type>
+    <!--/plugin blocks email sending-->
+
+    <type name="Amasty\ProductAttachment\Model\Import\Relation\FileType\TypeProcessorProvider">
+        <arguments>
+            <argument name="fileTypes" xsi:type="array">
+                <item name="file" xsi:type="array">
+                    <item name="code" xsi:type="string">file</item>
+                    <item name="typeCode" xsi:type="string">0</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\Import\Relation\FileType\Processor\File</item>
+                </item>
+                <item name="link" xsi:type="array">
+                    <item name="code" xsi:type="string">link</item>
+                    <item name="typeCode" xsi:type="string">1</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\Import\Relation\FileType\Processor\FileLink</item>
+                </item>
+                <item name="filepath" xsi:type="array">
+                    <item name="code" xsi:type="string">filepath</item>
+                    <item name="typeCode" xsi:type="string">0</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\Import\Relation\FileType\Processor\FilePath</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\Import\Behaviors\FileType\TypeProcessorProvider">
+        <arguments>
+            <argument name="fileTypes" xsi:type="array">
+                <item name="file" xsi:type="array">
+                    <item name="typeCode" xsi:type="string">0</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\Import\Behaviors\FileType\Processor\File</item>
+                </item>
+                <item name="link" xsi:type="array">
+                    <item name="typeCode" xsi:type="string">1</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\Import\Behaviors\FileType\Processor\Link</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Base\Plugin\Setup\Model\DeclarationInstaller\ApplyPatchesBeforeDeclarativeSchema">
+        <arguments>
+            <argument name="moduleNames" xsi:type="array">
+                <item name="amasty_product_attachment" xsi:type="string">Amasty_ProductAttachment</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\ProductAttachment\Model\Icon\FileType\TypeProcessorProvider">
+        <arguments>
+            <argument name="fileTypes" xsi:type="array">
+                <item name="file" xsi:type="array">
+                    <item name="typeCode" xsi:type="string">0</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\Icon\FileType\Processor\FileLinkTypeProcessor</item>
+                </item>
+                <item name="link" xsi:type="array">
+                    <item name="typeCode" xsi:type="string">1</item>
+                    <item name="processor" xsi:type="object">Amasty\ProductAttachment\Model\Icon\FileType\Processor\FileLinkTypeProcessor</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

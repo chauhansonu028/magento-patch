@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Mass Update Product Attribute from the Products -> Update Attribute Dropdown -->
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save">
+        <plugin name="catalogSyncUpdate" type="Digitalriver\DrPay\Plugin\Catalog\Controller\Adminhtml\Product\Action\Attribute\MassUpdateSavePlugin"/>
+    </type>
+
+    <!-- GCDEFECTS-7237 remove invalid refund amount in order comments -->
+    <type name="Magento\Sales\Model\Order">
+        <plugin name="remove_invalid_refund_amount_in_order_comment" type="Digitalriver\DrPay\Plugin\OrderCommentPlugin"/>
+    </type>
+
+    <!-- DRMCE-143 add allocated percent field -->
+    <type name="Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\BundlePanel">
+        <plugin name="bundle_addtional_options" type="Digitalriver\DrPay\Plugin\Catalog\Ui\DataProvider\Product\Form\Modifier\BundlePanel"/>
+    </type>
+
+    <!-- Setting credit memo ID to offline record-->
+    <type name="Magento\Sales\Api\CreditmemoManagementInterface">
+        <plugin name="Digitalriver_DrPay::update_offline_refund"
+                type="Digitalriver\DrPay\Plugin\Sales\Model\Service\CreditmemoService\UpdateOfflineRefund"/>
+    </type>
+
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="drAllocatedPercent" xsi:type="array">
+                    <item name="class" xsi:type="string">Digitalriver\DrPay\Ui\DataProvider\Product\Form\Modifier\DrAllocatedPercent</item>
+                    <item name="sortOrder" xsi:type="number">950</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+</config>

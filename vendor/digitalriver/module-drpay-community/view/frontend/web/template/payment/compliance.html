@@ -1,0 +1,10 @@
+<div class="checkout-digital-river-compliance-block" afterRender="afterRender">
+    <!-- ko if: showComplianceBox() -->
+    <label for="dr_compliance_checkbox">
+         <span class="river-compliance-block-checkbox">
+             <input type="checkbox" id="dr_compliance_checkbox" name="dr_compliance_checkbox" class="required-entry" data-bind="checked: isComplianceChecked, attr: {'value': 'dr_compliance_agree'}">
+         </span>
+        <span data-bind="html: complianceText()"></span>
+    </label>
+    <!-- /ko -->
+</div>

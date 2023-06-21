@@ -1,0 +1,120 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Content\AbstractBlock
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$collection = $block->getCollection();
+?>
+
+<?= $block->getChildHtml('additional') ?>
+<?php if ($collection && $collection->getSize()): ?>
+    <ul class="amblog-grid-list">
+        <?php foreach ($collection as $post): ?>
+            <li class="list-item amblog-item amblog-post-container">
+                <?php if ($post->getListThumbnailSrc()): ?>
+                    <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                       aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>"
+                       title="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>"
+                       class="post-image">
+                        <img src="<?= $escaper->escapeUrl($post->getListThumbnailSrc()); ?>"
+                             alt="<?= $escaper->escapeHtmlAttr($post->getThumbnailAlt()); ?>"/>
+                    </a>
+                <?php endif; ?>
+                <div class="amblog-content">
+                    <div class="amblog-dates">
+                        <div class="amblog-date"
+                            <?php if ($block->isHumanized()): ?>
+                                data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($post->getPublishedAt()) ?>"}'
+                            <?php endif; ?>>
+                            <?= $escaper->escapeHtml($block->isHumanized()
+                                ? __('Loading...')
+                                : $block->renderDate($post->getPublishedAt())) ?>
+                        </div>
+                        <?php if ($post->getEditedAt() && $block->isShowEditedAt()): ?>
+                            <span class="amblog-date">
+                                <?= $escaper->escapeHtml(__('Edited')) ?>
+                                <span <?php if ($block->isHumanizedEditedAt()): ?>
+                                    data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($post->getEditedAt()) ?>"}'
+                                <?php endif; ?>>
+                                    <?= $escaper->escapeHtml($block->isHumanizedEditedAt()
+                                        ? __('Loading...')
+                                        : $block->renderDate($post->getEditedAt(), true)) ?>
+                                </span>
+                            </span>
+                        <?php endif; ?>
+                        <?php if ($block->getSettingHelper()->getDisplayViews()): ?>
+                            <span
+                                class="views amblog-views"
+                                data-amblog-js="views-counter"
+                                data-post-id="<?= (int) $post->getPostId() ?>">
+                                    <?= $escaper->escapeHtml(__('%1 view(s)', $post->getViews())); ?>
+                            </span>
+                        <?php endif; ?>
+                        <?php if ($block->isDisplayReadTime()): ?>
+                            <span class="amblog-minread">
+                                <?= $escaper->escapeHtml($block->getReadTime((string)$post->getFullContent())); ?>
+                                <?= $escaper->escapeHtml(__(' min read')); ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    <h2 class="amblog-post-title">
+                        <a class="post-title"
+                           href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                           title="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>"
+                           aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>">
+                            <?= $escaper->escapeHtml($post->getTitle()); ?>
+                        </a>
+                    </h2>
+                    <div class="tags">
+                        <?= $block->getTagsHtml($post); ?>
+                    </div>
+                    <div class="amblog-shot">
+                        <?= /* @noEscape */ $post->getShortContent(); ?>
+                    </div>
+                </div>
+                <div class="amblog-footer">
+                    <div class="amblog-features">
+                        <?= $block->getAuthorHtml($post); ?>
+                        <?= $block->getCategoriesHtml($post); ?>
+                        <?= $block->getShortCommentsHtml($post); ?>
+                    </div>
+                    <a class="amblog-read"
+                       href="<?= $escaper->escapeUrl($block->getReadMoreUrl($post)); ?>"
+                       title="<?= $escaper->escapeHtmlAttr(__('Read More')); ?>"
+                       aria-label="<?= $escaper->escapeHtmlAttr(__('Read More')); ?>">
+                        <?= $escaper->escapeHtml(__('Read More')); ?>
+                    </a>
+                </div>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+    <?= $block->getToolbarHtml(); ?>
+<?php else: ?>
+    <div class="message notice">
+        <span><?= $escaper->escapeHtml(__('There are no posts yet.')); ?></span>
+    </div>
+<?php endif; ?>
+
+<?php if ($collection && $collection->getSize() && $block->getSettingHelper()->getDisplayViews()): ?>
+    <script type="text/x-magento-init">
+    {
+        ".amblog-grid-list": {
+             "amBlogViewsList": {}
+        }
+    }
+    </script>
+<?php endif; ?>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+         "amBlogAccord": {}
+    }
+}
+</script>

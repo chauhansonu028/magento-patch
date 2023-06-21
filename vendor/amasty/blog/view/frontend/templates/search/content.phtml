@@ -1,0 +1,61 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Content\Search
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$collections = $block->getCollections();
+?>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "amBlogScrollTabs": {},
+            "amBlogAccord": {}
+        }
+    }
+</script>
+
+<div class="amblog-search-container">
+    <div class="amblog-search-items" data-mage-init='{"tabs":{
+            "openedState":"open"
+        }}'>
+        <div class="amblog-search-titles">
+            <?php foreach ($block->getCollections() as $name => $collection): ?>
+                <div class="amblog-search-title"
+                     data-role="collapsible"
+                     id="tab-label-<?= $escaper->escapeHtmlAttr('test') ?>">
+                    <a class="amblog-search-switch"
+                       tabindex="-1"
+                       data-toggle="trigger"
+                       data-amblog-js="hash"
+                       href="#<?= $escaper->escapeUrl($name) ?>"
+                       id="tab-label-<?= $escaper->escapeHtmlAttr($name) ?>-title">
+                        <?= $escaper->escapeHtml(
+                            __(ucfirst($name)) . sprintf(' (%s)', $collection->getSize())
+                        ); ?>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php foreach ($block->getCollections() as $name => $collection): ?>
+            <div class="amblog-search-content"
+                 aria-labelledby="tab-label-<?= $escaper->escapeHtmlAttr('test') ?>-title"
+                 id="<?= $escaper->escapeHtmlAttr('test') ?>"
+                 data-role="content">
+                <?php if ($collection->getSize() > 0): ?>
+                    <?=$block->getSearchSectionBlock($collection, $name)->toHtml() ?>
+                <?php else: ?>
+                    <p class="notice">
+                        <?= $escaper->escapeHtml(__('Your search returned no results')); ?>
+                    </p>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>

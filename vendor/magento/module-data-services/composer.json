@@ -1,0 +1,34 @@
+{
+    "name": "magento/module-data-services",
+    "description": "Data Services base module",
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "version": "7.1.1",
+    "require": {
+        "php": "~7.2.0||~7.3.0||~7.4.0||~8.1.0||~8.2.0",
+        "magento/framework": ">=102.0.0 <104.0.0",
+        "magento/module-catalog": ">=103.0.0 <105.0.0",
+        "magento/module-checkout": ">=100.3.0 <100.5.0",
+        "magento/module-config": ">=101.1.0 <101.3.0",
+        "magento/module-customer": ">=102.0.0 <104.0.0",
+        "magento/module-quote": ">=101.1.0 <101.3.0",
+        "magento/module-store": ">=101.0.0 <101.2.0",
+        "magento/services-id": "^3.1.2",
+        "magento/module-saas-common": ">=101.1.0 <103.0.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\DataServices\\": ""
+        }
+    }
+}
+

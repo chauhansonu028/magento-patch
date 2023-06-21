@@ -1,0 +1,76 @@
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())},attr: {'id': getCode()+'-content'}">
+	<div class="payment-method-title field choice">
+		<label class="control control--radio">
+			<input type="radio"
+				   name="payment[method]"
+				   class="radio"
+				   data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" afterRender="radioInit()">
+			<label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
+			<div class="control__indicator"></div>
+		</label>
+	</div>
+	<div class="payment-method-content">
+		<div id="payment-data"></div>
+		<div class="payment-method-billing-address">
+			<!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+			    <!-- ko template: getTemplate() --><!-- /ko -->
+			<!--/ko-->
+		</div>
+
+		<div class="saved_cards_outer is-auth">
+			<h3 data-bind="i18n: 'Stored Payment Methods'"></h3>
+			<fieldset class="fieldset">
+				<div class="saved_cards_inner" afterRender="savedCardLoader()"></div>
+			</fieldset>
+			<div class="saved_cards_action">
+				<button id="DR-loadSavedPayment" class="action primary" type="button">
+					<span data-bind="i18n: 'Use Stored Payment'"></span>
+				</button>
+			</div>
+		</div>
+
+		<!-- ko foreach: getRegion('messages') -->
+		    <!-- ko template: getTemplate() --><!-- /ko -->
+		<!--/ko-->
+		<div class="checkout-agreements-block">
+			<!-- ko foreach: $parent.getRegion('before-place-order') -->
+			    <!-- ko template: getTemplate() --><!-- /ko -->
+			<!--/ko-->
+
+            <!-- ko foreach: $parent.getRegion('additional-payment-form-fieldset') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+		</div>
+
+        <div id="dropin-message" class="mage-error" generated="false"></div>
+        <div id="drop-in" afterRender="loadDropIn()"></div>
+
+		<div class="actions-toolbar">
+			<div class="primary">
+				<button id="DR-placeOrder" class="action primary checkout placeorder" style="display:none"
+						type="submit"
+						data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Your Order')},
+                        enable: (getCode() == isChecked()),
+                        css: {disabled: !isPlaceOrderActionAllowed()}
+                        "
+						disabled>
+					<span data-bind="i18n: 'Place Your Order'"></span>
+				</button>
+
+				<div id="DR-dropInAccept" style="display: none;">
+					<input type="checkbox" name="accept-dr-terms" data-bind="" id="DR-termsAccept">
+					<label id="confirmDisclosure" data-bind="" for="DR-termsAccept"></label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="DR-dropInTerms" style="display:none">
+	<div class="DR-Legal-Footer">
+		<div id="compliance"></div>
+	</div>
+</div>

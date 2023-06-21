@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <live_search_product_listing>
+            <frontend_url>https://plp-widgets-ui.magento-ds.com/v0/search.js</frontend_url>
+        </live_search_product_listing>
+    </default>
+</config>

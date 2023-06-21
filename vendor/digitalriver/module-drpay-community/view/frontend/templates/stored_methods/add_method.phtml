@@ -1,0 +1,56 @@
+<?php
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Digitalriver\DrPay\ViewModel\StoredMethods $viewModel */
+$viewModel = $block->getViewModel();
+/** @var \Magento\Customer\ViewModel\Address $viewModel */
+$addressViewModel = $block->getAddressViewModel();
+$drIsEnabled = $viewModel->getIsDrEnabled();
+?>
+
+    <div id="add-method-container" class="stored-methods__add-method-container">
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button id="add-method-btn" class="action save primary add-method-btn">
+                    <span><?= $escaper->escapeHtml(__('Add New Payment Method')) ?></span>
+                </button>
+            </div>
+        </div>
+        <div id="billing-address-container" style="display:none">
+            <div class="modal-body-content">
+                <h2 class="stored-methods__heading"><?= $escaper->escapeHtml(__('Step 1: Add New Billing Address')) ?></h2>
+                <div>
+                    <?= $block->getChildHtml('customer_address_edit') ?>
+                </div>
+            </div>
+        </div>
+
+        <div id="drop-in-container" class="stored-methods__dropin-container">
+            <h2 class="stored-methods__heading stored-methods__heading--hidden" >
+                <?= $escaper->escapeHtml(__('Step 2: Add Credit Card')) ?>
+            </h2>
+            <div id="dropin-message"></div>
+            <div id="drop-in" class="stored-methods__drop-in"></div>
+        </div>
+    </div>
+
+    <div id="compliance" class="stored-methods__compliance"></div>
+
+<?php if ($drIsEnabled): ?>
+    <script type="text/x-magento-init">
+    {
+        "#add-method-container": {
+            "Digitalriver_DrPay/js/view/storedmethods/add-method": {
+                "customerEmail": "<?= /** @noEscape */ $viewModel->getCustomerEmail() ?>",
+                "drPublicKey": "<?= /** @noEscape */ $viewModel->getDrKey() ?>",
+                "locale": "<?= /** @noEscape */ $viewModel->getLocale() ?>",
+                "defaultSellingEntity": "<?= /** @noEscape */ $viewModel->getDefaultSellingEntity() ?>",
+                "regionJson": <?= /** @noEscape */ $addressViewModel->dataGetRegionJson() ?>,
+                "billingAddressContainer": "#billing-address-container",
+                "billingAddressForm": "#add-method-billing-address-form",
+                "addMethodBtn": "#add-method-btn",
+                "saveAddressBtn": "#save-address-btn"
+            }
+        }
+    }
+    </script>
+<?php endif; ?>

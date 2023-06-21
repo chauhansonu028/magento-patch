@@ -1,0 +1,291 @@
+//
+//  Common
+//  _____________________________________________
+& when (@media-common = true) {
+    .checkout-index-index {
+        .totals {
+            &.product_fees {
+                th {
+                    padding-left: 10px;
+                }
+            }
+            &.product_fee_row {
+                th {
+                    padding-left: 20px;
+                }
+            }
+        }
+    }
+
+    /*  Stored Payment Methods  */
+    .stored-methods__wrapper {
+
+        .actions-toolbar {
+            > .primary {
+                .action {
+                    &:extend(.abs-button-l all);
+                    margin-top: 30px;
+
+                    &:focus {
+                        outline: 2px solid @link__color;
+                        outline-offset: 2px;
+                    }
+                }
+            }
+        }
+
+        .DR-collapse button {
+            &:extend(.action.primary all);
+            font-size: @font-size__l;
+            text-transform: capitalize;
+        }
+
+        .DR-mandate + button {
+            &:focus {
+                outline: 2px solid @link__color;
+                outline-offset: 2px;
+            }
+        }
+
+        // override luma table styles
+        .table-wrapper {
+            .table:not(.totals):not(.cart):not(.table-comparison) {
+                > tbody {
+                    > tr {
+                        td:last-child {
+                            &[data-th] {
+                                &::before {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .DR-Legal-Footer {
+            padding: 0;
+        }
+    }
+
+    .stored-methods__heading--hidden {
+        display: none;
+    }
+
+    .stored-methods__table {
+        td {
+            text-transform: capitalize;
+        }
+
+        .action-menu-item {
+            &:focus {
+                outline: 1px solid @link__color;
+            }
+        }
+    }
+
+    // prevent layout shift when dropin is loaded
+    .stored-methods__drop-in {
+
+        &.loaded {
+            min-height: 360px;
+        }
+    }
+
+    .stored-methods__compliance {
+        margin-top: 24px;
+
+        .DR-Legal-Footer-Links {
+            margin-top: 16px;
+        }
+
+        a {
+            &:focus {
+                outline: 1px solid @link__color;
+            }
+        }
+    }
+
+	/*  Checkout Payment  */
+
+	#drpay-creditcard-form {
+		.field {
+			background-color: #fff;
+			padding: 5px 20px;
+			font-size: 16px;
+			border:1px solid #d1d3d4;
+			outline: medium none;
+			vertical-align: baseline;
+			width: 95%;
+			-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+			-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+			transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+			line-height: normal;
+		}
+		label{
+			color: #333;
+			font-weight: normal;
+		}
+		.form-field{
+			margin-bottom: 15px;
+		 }
+		 .payment-form-inner{
+			margin-bottom: 20px;
+			padding: 15px 0px 5px;
+		 }
+		 .invalid {
+			border: 1px solid red;
+		 }
+		 .empty {
+			border: 1px solid #d1d3d4;
+		 }
+		 .focus {
+			 border: 1px solid #66afe9;
+			 box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+		 }
+		 .complete {
+			border: 1px solid #ccc;
+		 }
+		 .DRGooglePayElement {
+			 width: 100%;
+			 margin-bottom: 10px;
+		 }
+		 .DRApplePayElement {
+			 width: 100%;
+			 margin-bottom: 10px;
+		 }
+		 .payment-button {
+			 margin: 15px 0px;
+			 height: 45px;
+			 overflow: hidden;
+		 }
+		.actions-toolbar > .primary .action.primary{
+			padding: @indent__s 17px;
+		}
+	 }
+	 .checkout-payment-method{
+	 	.payment-method-content{
+		 	.payment-active{
+		 		margin: 15px 15px 15px 0;
+		 		border-bottom: 1px solid #ccc;
+				padding: 20px 20px 15px 0px;
+		 	}
+		 	.actions-toolbar{
+		 		.primary{
+		 			margin-right: 10px;
+		 		}
+		 	}
+		 	.payment-method-billing-address{
+	 			padding-top: @indent__s;
+	 		}
+	 	}
+	 	.checkout-billing-address {
+	 		margin: 0px 20px 20px 0px;
+	 	}
+	 }
+    .dr_payment_type_title {
+        font-weight: 600;
+    }
+    .dr_payment_type {
+        margin: 5px 0 0 5px;
+    }
+    .dr_payment_title_dashboards,
+    .dr_payment_title_secondary_dashboards {
+        margin: 0 0 0 5px;
+    }
+    #dr-vat-id-container,
+    #dr-invoice-attribute-container {
+        margin: 20px 0;
+    }
+    #dr-vat-id-toggle-container,
+    #dr-invoice-attribute-toggle-container {
+        display: none;
+    }
+    #dr-vat-id-form-container,
+    #dr-invoice-attribute-form-container {
+        display: none;
+        margin: 20px 0 0 20px;
+    }
+    #dr-vat-id-form-container,
+    #dr-invoice-attribute-form-container {
+        display: none;
+    }
+    #dr-vat-id-form-container [id$="radioContainer"], 
+    #dr-invoice-attribute-form-container [id$="radioContainer"]{
+        margin-bottom: 10px;
+    }
+    #dr-vat-id-form-container .DR-shopper-type,
+    #dr-invoice-attribute-form-container .DR-shopper-type {
+        margin-bottom: 10px;
+    }
+    #DR-validate-Tax-Ids {
+        float: left;
+    }
+    .dr-tax-id-validation-message-container {
+        margin-top: 7px;
+    }
+    .dr-tax-id-validation-message-success,
+    .dr-tax-id-validation-message-error,
+    .dr-invoice-attribute-validation-message-success,
+    .dr-invoice-attribute-validation-message-error {
+        display: none;
+    }
+    #dr-tax-id-checkbox .fieldset > .field > .label {
+        display: none;
+    }
+
+    .DR-dropInAccept {
+        clear: both;
+        margin-top: 23px;
+        width: 100%;
+        padding-left: 23px;
+        float: right
+    }
+
+    @media (max-width: 767px) {
+        .dr_payment_type_title {
+            margin-left: 20px;
+        }
+        .dr_payment_type {
+            margin-left: 25px;
+        }
+        .stored-methods__heading {
+            font-size: 20px;
+        }
+        .stored-methods__add-method-container {
+            margin-bottom: 40px;
+        }
+        .stored-methods__wrapper {
+
+            .DR-Legal-Footer {
+                margin-bottom: 40px;
+            }
+
+            .DR-Legal-Footer-Links {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                column-gap: 24px;
+                row-gap: 10px;
+
+                a {
+                    display: inline;
+                    margin-right: 20px;
+                    padding-right: 0;
+                }
+            }
+        }
+    }
+
+    .DR-offline-refund-parent {
+        &.DRElement {
+            border: 1px solid @color-gray-light3;
+            margin: 5px 0;
+            padding: 0 5px;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+    }
+}

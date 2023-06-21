@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amblog_index_font" />
+    <body>
+        <referenceContainer name="columns.top">
+            <container name="amblog.category.view.container" htmlTag="div" htmlClass="amblog-category-view" after="-">
+                <block
+                    class="Magento\Framework\View\Element\Template"
+                    name="amblog.category.description"
+                    template="Amasty_Blog::category/description.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Amasty\Blog\ViewModel\Category\Description
+                        </argument>
+                        <argument name="content_preparation" xsi:type="object">
+                            Amasty\Blog\ViewModel\ContentPreparation\WysiwygContent
+                        </argument>
+                    </arguments>
+                </block>
+            </container>
+        </referenceContainer>
+        <referenceContainer name="amasty_blog.content.container.list">
+            <block class="Amasty\Blog\Block\Content\Category"
+                   name="amblog.content.list"
+                   as="list"
+                   template="Amasty_Blog::list.phtml" />
+        </referenceContainer>
+        <referenceContainer name="amasty_blog.content.container.grid">
+            <block class="Amasty\Blog\Block\Content\Category"
+                   name="amblog.content.grid"
+                   as="grid"
+                   template="Amasty_Blog::grid.phtml" />
+        </referenceContainer>
+    </body>
+</page>

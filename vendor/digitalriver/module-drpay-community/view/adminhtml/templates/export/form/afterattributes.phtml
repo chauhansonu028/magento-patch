@@ -1,0 +1,22 @@
+<?php
+/**
+ * Add JS file to implement selects' options' values
+ * and dependent behavior of DR tax group/DR tax type select inputs
+ *
+ * @category   Digitalriver
+ * @package    Digitalriver_DrPay
+ */
+$drIsEnabled = $block->getIsDrEnabled();
+?>
+
+<?php if ($drIsEnabled): ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Digitalriver_DrPay/js/tax_type_export_page":{
+                    "tax_values": <?= /** @noEscape */ $block->getTaxValues(); ?>
+                }
+            }
+        }
+    </script>
+<?php endif; ?>

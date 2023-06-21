@@ -1,0 +1,172 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Customer\Block\Address\Edit $block */
+/** @var \Magento\Customer\ViewModel\Address $viewModel */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+$viewModel = $block->getViewModel();
+?>
+
+<?php $telephone = $block->getLayout()->createBlock(\Magento\Customer\Block\Widget\Telephone::class) ?>
+<?php $country_id = $block->getAttributeData()->getFrontendLabel('country_id'); ?>
+<?php $street = $block->getAttributeData()->getFrontendLabel('street'); ?>
+<?php $city = $block->getAttributeData()->getFrontendLabel('city'); ?>
+<?php $region = $block->getAttributeData()->getFrontendLabel('region'); ?>
+<?php $selectRegion = 'Please select a region, state or province.'; ?>
+<?php $displayAll = $block->getConfig('general/region/display_all'); ?>
+
+<?php $cityValidationClass = $viewModel->addressGetAttributeValidationClass('city'); ?>
+<?php $postcodeValidationClass_value = $viewModel->addressGetAttributeValidationClass('postcode'); ?>
+<?php $postcodeValidationClass = $postcodeValidationClass_value; ?>
+<?php $streetValidationClass = $viewModel->addressGetAttributeValidationClass('street'); ?>
+<?php $streetValidationClassNotRequired = trim(str_replace('required-entry', '', $streetValidationClass)); ?>
+<?php $regionValidationClass = $viewModel->addressGetAttributeValidationClass('region'); ?>
+<form class="form-address-edit" method="post" id="add-method-billing-address-form"
+      data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>">
+    <fieldset class="fieldset">
+        <legend class="legend"><span><?= $escaper->escapeHtml(__('Contact Information')) ?></span></legend><br>
+        <?= $block->getNameBlockHtml() ?>
+
+        <?php if ($telephone->isEnabled()): ?>
+            <?= $telephone->setTelephone($block->getAddress()->getTelephone())->toHtml() ?>
+        <?php endif ?>
+    </fieldset>
+    <fieldset class="fieldset">
+        <legend class="legend"><span><?= $escaper->escapeHtml(__('Address')) ?></span></legend><br>
+        <div class="field street required">
+            <label for="street_1" class="label"><span><?=$street ?></span></label>
+            <div class="control">
+                <div class="field primary">
+                    <label for="street_1" class="label">
+                        <span>
+                            <?= $escaper->escapeHtml(__('Street Address: Line %1', 1)) ?>
+                        </span>
+                    </label>
+                </div>
+                <input type="text"
+                       name="street[]"
+                       value="<?= $escaper->escapeHtmlAttr($block->getStreetLine(1)) ?>"
+                       title="<?=$street ?>"
+                       id="street_1"
+                       class="input-text <?= $escaper->escapeHtmlAttr($streetValidationClass) ?>"/>
+                <div class="nested">
+                    <?php for ($i = 1, $n = $viewModel->addressGetStreetLines(); $i < $n; $i++): ?>
+                        <div class="field additional">
+                            <label class="label" for="street_<?=$i + 1 ?>">
+                                <span><?= $escaper->escapeHtml(__('Street Address: Line %1', $i + 1)) ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="text" name="street[]"
+                                       value="<?= $escaper->escapeHtmlAttr($block->getStreetLine($i + 1)) ?>"
+                                       title="<?= $escaper->escapeHtmlAttr(__('Street Address %1', $i + 1)) ?>"
+                                       id="street_<?=$i + 1 ?>"
+                                       class="input-text
+                                        <?= $escaper->escapeHtmlAttr($streetValidationClassNotRequired) ?>">
+                            </div>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="field country required">
+            <label class="label" for="country">
+                <span><?=$block->getAttributeData()->getFrontendLabel('country_id') ?></span>
+            </label>
+            <div class="control">
+                <?= $block->getCountryHtmlSelect() ?>
+            </div>
+        </div>
+        <div class="field region required">
+            <label class="label" for="region_id">
+                <span><?=$region ?></span>
+            </label>
+            <div class="control">
+                <select id="region_id" name="region_id"
+                        title="<?=$region ?>"
+                        class="validate-select region_id"
+                        <?=!$displayAll ? ' disabled="disabled"' : '' ?>>
+                    <option value=""><?= $escaper->escapeHtml(__($selectRegion)) ?></option>
+                </select>
+                <input type="text"
+                       id="region"
+                       name="region"
+                       value="<?= $escaper->escapeHtmlAttr($block->getRegion()) ?>"
+                       title="<?=$region ?>"
+                       class="input-text validate-not-number-first
+                        <?= $escaper->escapeHtmlAttr($regionValidationClass) ?>"
+                        <?= !$displayAll ? ' disabled="disabled"' : '' ?>/>
+            </div>
+        </div>
+        <div class="field city required">
+            <label class="label" for="city">
+                <span><?=$block->getAttributeData()->getFrontendLabel('city') ?></span>
+            </label>
+            <div class="control">
+                <input type="text"
+                       name="city"
+                       value="<?= $escaper->escapeHtmlAttr($block->getAddress()->getCity()) ?>"
+                       title="<?= $escaper->escapeHtmlAttr(__('City')) ?>"
+                       class="input-text <?= $escaper->escapeHtmlAttr($cityValidationClass) ?>"
+                       id="city">
+            </div>
+        </div>
+        <div class="field zip required">
+            <label class="label" for="zip">
+                <span><?=$block->getAttributeData()->getFrontendLabel('postcode') ?></span>
+            </label>
+            <div class="control">
+                <input type="text"
+                       name="postcode"
+                       value="<?= $escaper->escapeHtmlAttr($block->getAddress()->getPostcode()) ?>"
+                       title="<?=$block->getAttributeData()->getFrontendLabel('postcode') ?>"
+                       id="zip"
+                       class="input-text validate-zip-international
+                        <?= $escaper->escapeHtmlAttr($postcodeValidationClass) ?>">
+                <div role="alert" class="message warning">
+                    <span></span>
+                </div>
+                <?=$secureRenderer->renderStyleAsTag("display: none;", 'div.message.warning') ?>
+            </div>
+        </div>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="button"
+                    id="save-address-btn"
+                    class="action save primary"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Continue to credit card form')) ?>">
+                <span><?= $escaper->escapeHtml(__('Continue')) ?></span>
+            </button>
+        </div>
+    </div>
+</form>
+<script type="text/x-magento-init">
+    {
+        "#add-method-billing-address-form": {
+            "addressValidation": {
+                "selectors": {
+                    "button": "button.action.save.primary",
+                    "country": "select[name=\"country_id\"]"
+                },
+                "postCodes": <?= /* @noEscape */ $block->getPostCodeConfig()->getSerializedPostCodes() ?>
+            }
+        },
+        "#country": {
+            "regionUpdater": {
+                "optionalRegionAllowed": <?= /* @noEscape */  $displayAll ? 'true' : 'false' ?>,
+                "regionListId": "#region_id",
+                "regionInputId": "#region",
+                "postcodeId": "#zip",
+                "form": "#add-method-billing-address-form",
+                "regionJson": <?= /* @noEscape */ $viewModel->dataGetRegionJson() ?>,
+                "defaultRegion": "<?= /* @noEscape */  (int) $block->getRegionId() ?>",
+                "countriesWithOptionalZip": <?= /* @noEscape */  $viewModel->dataGetCountriesWithOptionalZip(true) ?>
+            }
+        }
+    }
+</script>

@@ -1,0 +1,30 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Product Attachments Base for Magento 2
+ */
+/**
+ * @var \Amasty\ProductAttachment\Block\Order\View\Attachments $block
+ */
+?>
+<?php if ($attachments = $block->getAttachments()): ?>
+<div class="widget am-attachments am-attachments-order-view">
+    <b><?= $block->escapeHtml($block->getBlockTitle()); ?></b>
+        <?php foreach ($attachments as $attachment): ?>
+            <div class="am-fileline">
+                <?php if ($block->isShowIcon() && $attachment->getIconUrl()): ?>
+                    <img src="<?= $block->escapeUrl($attachment->getIconUrl()) ?>" class="am-fileicon" />
+                <?php endif; ?>
+
+                <a href="<?= $block->escapeUrl($attachment->getFrontendUrl()) ?>" class="am-filelink" target="_blank">
+                    <?= $block->escapeHtml($attachment->getLabel()); ?>
+                </a>
+
+                <?php if ($block->isShowFilesize() && $attachment->getFileSize()): ?>
+                    <span class="am-filesize">(<?= $block->escapeHtml($attachment->getReadableFileSize()) ?>)</span>
+                <?php endif ?>
+            </div>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>

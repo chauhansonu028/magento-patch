@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="amblog_notify_admin_new_comment_email_template" label="Admin New Comment" file="admin_new_comment.html" type="html" module="Amasty_Blog" area="frontend"/>
+    <template id="amblog_comments_email_template" label="New Reply to Comment" file="reply_to_comment.html" type="html" module="Amasty_Blog" area="frontend"/>
+</config>

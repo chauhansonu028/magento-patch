@@ -1,0 +1,22 @@
+{
+    "amasty_emailunsubscribe_type": {
+        "column": {
+            "type_id": true,
+            "type": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_emailunsubscribe_relation": {
+        "column": {
+            "type_id": true,
+            "email": true,
+            "entity_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_B8E103CD5BCCD77286ECB193F1C88D99": true
+        }
+    }
+}

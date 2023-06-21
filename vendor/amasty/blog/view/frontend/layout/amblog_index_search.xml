@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amblog_index_font" />
+    <body>
+        <referenceContainer name="content">
+            <block class="Amasty\Blog\Block\Content\Search"
+                   name="amasty_blog.content.search.content"
+                   template="Amasty_Blog::search/content.phtml"
+                   after="-" />
+            <referenceContainer name="amasty_blog.content.container.list">
+                <block class="Amasty\Blog\Block\Content\Search"
+                       name="amblog.search.list"
+                       as="list"
+                       template="Amasty_Blog::list.phtml" />
+            </referenceContainer>
+            <referenceContainer name="amasty_blog.content.container.grid">
+                <block class="Amasty\Blog\Block\Content\Search"
+                       name="amblog.search.grid"
+                       as="grid"
+                       template="Amasty_Blog::grid.phtml" />
+            </referenceContainer>
+        </referenceContainer>
+
+        <move element="amasty_blog.content.container.list" destination="amasty_blog.content.search.content" />
+        <move element="amasty_blog.content.container.grid" destination="amasty_blog.content.search.content" />
+    </body>
+</page>

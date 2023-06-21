@@ -1,0 +1,189 @@
+{
+    "sales_order": {
+        "column": {
+            "dr_order_id": true,
+            "dr_order_state": true,
+            "dr_api_type": true,
+            "dr_payment_method": true,
+            "base_dr_duty_fee": true,
+            "dr_duty_fee": true,
+            "base_dr_ior_tax": true,
+            "dr_ior_tax": true,
+            "dr_total_refund": true
+        },
+        "index": {
+            "SALES_ORDER_DR_ORDER_ID": true
+        }
+    },
+    "sales_order_grid": {
+        "column": {
+            "dr_order_id": true,
+            "dr_order_state": true,
+            "dr_payment_method": true
+        },
+        "index": {
+            "SALES_ORDER_GRID_DR_ORDER_ID": true
+        }
+    },
+    "sales_order_item": {
+        "column": {
+            "dr_order_lineitem_id": true
+        }
+    },
+    "electronic_fulfillment": {
+        "column": {
+            "entity_id": true,
+            "request_obj": true,
+            "requisition_id": true,
+            "line_item_ids": true,
+            "post_status": true
+        },
+        "index": {
+            "ELECTRONIC_FULFILLMENT_REQUISITION_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "dr_refund": {
+        "column": {
+            "dr_refund_id": true,
+            "amount": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "dr_charge": {
+        "column": {
+            "entity_id": true,
+            "dr_charge_id": true,
+            "order_id": true,
+            "dr_order_id": true,
+            "dr_source_id": true,
+            "dr_source_type": true,
+            "amount": true,
+            "retrieved_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "CHARGE_ORDER_ID": true,
+            "DR_CHARGE_ORDER_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "dr_catalog_sync_queue": {
+        "column": {
+            "entity_id": true,
+            "product_id": true,
+            "product_sku": true,
+            "status": true,
+            "request_data": true,
+            "response_data": true,
+            "added_to_queue_at": true,
+            "synced_to_dr_at": true,
+            "sku_hash":true
+        },
+        "index": {
+            "DR_CATALOG_SYNC_QUEUE_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "dr_country_of_origin": {
+        "column": {
+            "entity_id": true,
+            "country_code": true,
+            "country_name": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "DR_COUNTRY_OF_ORIGIN_COUNTRY_CODE": true
+        }
+    },
+    "dr_eccn_code": {
+        "column": {
+            "classification_code": true,
+            "description": true,
+            "notes": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "dr_tax_table": {
+        "column": {
+            "entity_id": true,
+            "dr_tax_group": true,
+            "dr_tax_type": true,
+            "dr_sabrixcode": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "dr_invoice_cm_links": {
+        "column": {
+            "entity_id": true,
+            "sales_order_id": true,
+            "dr_file_type": true,
+            "dr_file_id": true,
+            "dr_file_link_url": true,
+            "dr_file_link_created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "quote": {
+        "column": {
+            "base_dr_duty_fee": true,
+            "dr_duty_fee": true,
+            "base_dr_ior_tax": true,
+            "dr_ior_tax": true,
+            "is_dr_ior_set": true,
+            "dr_tax_identifiers": true,
+            "dr_invoice_attribute": true,
+            "dr_customer_type": true
+        }
+    },
+    "sales_creditmemo": {
+        "column": {
+            "dr_duty_fee": true,
+            "dr_ior_tax": true,
+            "base_dr_duty_fee": true,
+            "dr_total_refund": true,
+            "base_dr_ior_tax": true
+        }
+    },
+    "sales_invoice": {
+        "column": {
+            "dr_duty_fee": true,
+            "dr_ior_tax": true
+        }
+    },
+    "catalog_product_bundle_option": {
+        "column": {
+            "dr_allocated_percent": true
+        }
+    },
+    "dr_offline_refund": {
+        "column": {
+            "dr_refund_id": true,
+            "credit_memo_id": true,
+            "status": true,
+            "refund_token": true,
+            "refund_token_expiration": true
+        },
+        "index": {
+            "DR_OFFLINE_REFUND_CREDIT_MEMO_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "DR_OFFLINE_REFUND_CREDIT_MEMO_ID_SALES_CREDITMEMO_ENTITY_ID": true
+        }
+    }
+}

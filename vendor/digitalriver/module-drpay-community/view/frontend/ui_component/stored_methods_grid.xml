@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">stored_methods_grid.stored_methods_grid_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>stored_methods_columns</spinner>
+        <deps>
+            <dep>stored_methods_grid.stored_methods_grid_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="stored_methods_grid_data_source" component="Magento_Ui/js/grid/provider">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Digitalriver\DrPay\Ui\DataProvider\StoredMethods</argument>
+            <argument name="name" xsi:type="string">stored_methods_grid_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">source_id</argument>
+            <argument name="requestFieldName" xsi:type="string">source_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">source_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+    <listingToolbar name="listing_top"/>
+    <columns name="stored_methods_columns" component="uiDigitalriverStoredMethodsListing">
+        <column name="card_number" component="uiDigitalriverStoredMethodsColumn">
+            <settings>
+                <label translate="true">Card Number</label>
+                <dataType>text</dataType>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="expiration_date" component="uiDigitalriverStoredMethodsColumn">
+            <settings>
+                <label translate="true">Expiration Date</label>
+                <dataType>text</dataType>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="card_type" component="uiDigitalriverStoredMethodsColumn">
+            <settings>
+                <label translate="true">Type</label>
+                <dataType>text</dataType>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <actionsColumn class="Digitalriver\DrPay\Ui\Component\Listing\StoredMethods\Column\Actions" name="actions" component="uiDigitalriverStoredMethodsActions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">100</item>
+                    <item name="indexField" xsi:type="string">source_id</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+</listing>

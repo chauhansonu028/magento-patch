@@ -1,0 +1,56 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Sidebar\Recentpost
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$collection = $block->getCollection();
+?>
+
+<?php if (count($collection)): ?>
+    <div class="amblog-recentposts sidebar-item">
+        <div class="amblog-amp-title">
+            <?= $escaper->escapeHtml($block->getBlockHeader()); ?>
+        </div>
+        <?php foreach ($collection as $post): ?>
+            <?php $activeClass = $post->getIsActive() ? '-active' : ''; ?>
+            <div class="item amblog-recent-post <?= /* @noEscape */ $activeClass ?>">
+                <?php if ($block->hasThumbnail($post) && $block->showImages()): ?>
+                    <a class="amblog-img"
+                       href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                       aria-label="<?= $escaper->escapeHtml($post->getTitle()); ?>"
+                       title="<?= $escaper->escapeHtml($post->getTitle()); ?>">
+                        <amp-img src="<?= $escaper->escapeUrl($block->getThumbnailSrc($post)); ?>"
+                                 alt="<?= $escaper->escapeHtml($post->getThumbnailAlt()); ?>"
+                                 layout="fill">
+                        </amp-img>
+                    </a>
+                <?php endif; ?>
+                <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>">
+                    <?= $escaper->escapeHtml($post->getTitle()); ?>
+                </a>
+                <?php if ($block->needShowDate()): ?>
+                    <div class="amblog-sidebar-date">
+                        <?= /* @noEscape */ $block->renderDate($post->getCreatedAt()); ?>
+                    </div>
+                    <?php if ($post->getEditedAt() && $block->isShowEditedAt()): ?>
+                        <span class="amblog-date">
+                            ,<?= $escaper->escapeHtml(__(' Edited ')) ?>
+                            <?= /* @noEscape */ $block->renderDate($post->getEditedAt(), true) ?>
+                        </span>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($block->needShowThesis()): ?>
+                    <div class="amblog-post-thesis">
+                        <?= /* @noEscape */ $block->getStrippedContent($post->getShortContent()); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

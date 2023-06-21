@@ -1,0 +1,43 @@
+<?php
+/**
+ * Overrides DOM element on customer's admin order page to show DR payment type used on purchase
+ *
+ * @summary
+ * Defines specific template part to render DR payment type
+ * @author Ninoslav Stojcic <ninoslav.stojcic@rs.ey.com>
+ *
+ * @category Digitalriver
+ * @package Digitalriver_DrPay
+ */
+
+/**
+ * @var \Digitalriver\DrPay\Block\Info\Instructions $block
+ * @see \Digitalriver\DrPay\Block\Info\Instructions
+ */
+
+
+$sourceNames = $block->getSourceNames();
+?>
+<div class="payment-method">
+<?php if ($block->isDrCC()): ?>
+    <div class="dr_payment_title_dashboards">
+        <?= /* @noEscape */ nl2br($block->escapeHtml(__($block->getDrCCType()))) ?>
+        <?= $block->escapeHtml(__('ending in')) ?>
+        <?= /* @noEscape */ nl2br($block->escapeHtml($block->getDrCCLast4())) ?>
+    </div>
+<?php else: ?>
+    <div class="dr_payment_title_dashboards"><?= $block->escapeHtml(__($block->getDrPaymentMethod())) ?></div>
+    <?php if ($block->getInstructions()): ?>
+    <div class="content"><?= /* @noEscape */ nl2br($block->escapeHtml($block->getInstructions())) ?></div>
+    <?php endif; ?>
+<?php endif; ?>
+<?php if ($sourceNames): ?>
+    <?php foreach ($sourceNames as $sourceName): ?>
+    <div class="dr_payment_title_secondary_dashboards">
+        <span>
+            <?= $block->escapeHtml(__($sourceName)) ?>
+        </span>
+    </div>
+    <?php endforeach; ?>
+<?php endif; ?>
+</div>

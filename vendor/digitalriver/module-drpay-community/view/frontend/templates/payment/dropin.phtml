@@ -1,0 +1,1245 @@
+<style>
+    #drop-in .DR-Legal-Footer {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+
+    var paymentMethodSubscription;
+    var viewPlaceOrder = false;
+    var dropInReloadRetryAttempts = 0;
+    var dropInReloadRetryDelayInterval = 2000;
+    var dropInReloadRetryDelay = 0;
+    var dropInReloadRetryLimit = 3;
+
+    let isVatIdRequired = false;
+    let isInvoiceAttributeRequired = false;
+    let isDrVatIdElementLoading = false;
+    let isDrInvoiceAttributeLoading = false;
+    let isDropInLoading = false;
+
+    /* events */
+    require(['jquery', 'jquery/ui', 'loader', 'domReady!'], function ($) {
+        drComplianceFooter = {};
+        drComplianceFooterContent = '';
+        isGuest = true;
+        if (window.checkoutConfig.quoteData.customer_id == null) {
+            isGuest = false
+        }
+        jQuery(document).on('ready', function () {
+            if (isGuest == true) {
+                jQuery('.is_auth').hide()
+            }
+
+            jQuery('.checkout.placeorder').attr('disabled', 'disabled');
+            if (jQuery('input#DR-termsAccept').is(':checked')) {
+                jQuery('.checkout.placeorder').removeAttr('disabled');
+            }
+            jQuery('body').find('#drop-in #DR-Legal-Footer').hide();
+            jQuery('body').find('#DR-dropInTerms').show();
+        });
+        jQuery(document).on('click', '#DR-loadSavedPayment', function (e) {
+            e.preventDefault();
+            loadSavedPayment();
+        });
+        // accept terms checkbox control
+        jQuery('body').on('click', 'input#DR-termsAccept', function () {
+            if (jQuery('input#DR-termsAccept').is(':checked')) {
+                jQuery('#DR-placeOrder').removeAttr('disabled').removeClass('disabled');
+            } else if (!jQuery('input#DR-termsAccept').is(':checked')) {
+                jQuery('#DR-placeOrder').attr('disabled', 'disabled');
+            }
+        });
+        jQuery(document).on('click', '.shipping-information button.action-edit,.opc-progress-bar-item:first()',
+            function () {
+                displayDrForm();
+            });
+        jQuery(document).on('click', '.shipping-information button.action-edit', function () {
+            displayDrForm();
+        });
+        jQuery(document).on('click', '.checkout.placeorder', function () {
+            jQuery('body').trigger('processStart');
+            jQuery('.checkout.placeorder').attr('disabled', 'disabled');
+        });
+        jQuery(document).ready(function () {
+            window.history.pushState(null, '', window.location.href);
+            window.onpopstate = function () {
+                window.history.pushState(null, '', window.location.href);
+            };
+        });
+    });
+
+    function validateCompanyName(addressType, company) {
+        jQuery('.messages').click();
+        let entity = window.checkoutConfig.payment.drpay_dropin.default_selling_entity;
+        let purchaseType = window.checkoutConfig.payment.drpay_dropin.taxIdType.type;
+
+        if (entity !== 'DR_TAIWAN-ENTITY' || purchaseType !== 'business') {
+            return true;
+        }
+
+        if (!company) {
+            require([
+                'Magento_Ui/js/model/messageList',
+            ], function (messageList) {
+                messageList.addErrorMessage({ message: `Company name is required for business purchase.  Please edit or add a new ${addressType} address to continue.` });
+            });
+
+            jQuery('html,body').scrollTop(0);
+            return false;
+        }
+        return true;
+    }
+
+    function savedCardLoader() {
+        jQuery('.saved_cards_outer').hide();
+        jQuery('.saved_cards_inner').empty();
+        //Fetch the saved cards in DR
+        jQuery.ajax({
+            type: 'GET',
+            url: BASE_URL + 'drpay/payment/getsavedsources',
+            success: function (response) {
+                if (response.success) {
+                    if (response.content) {
+                        payOptions = response.content;
+                        for (var key in payOptions) {
+                            if (payOptions.hasOwnProperty(key)) {
+                                var tmpHtml = "";
+                                var val = payOptions[key];
+                                var skey = payOptions[key]['sourceClientSecret'];
+                                tmpHtml = '<div><input ' +
+                                    'class="drpay-saved-payments" ' +
+                                    'type="radio" ' +
+                                    'data-skey="' + skey + '" ' +
+                                    'name="selected_card" ' +
+                                    'value="' + key + '" ' +
+                                    'onclick="hideForm()">' + val.content + '</div>';
+                                jQuery(".saved_cards_inner").append(tmpHtml);
+                            }
+                        }
+                        if (jQuery('input[name="selected_card"]').length > 0) {
+                            hideForm();
+                            jQuery('input[name="selected_card"]:first').prop('checked', true);
+
+                            jQuery('.saved_cards_outer').show();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    //Updates source info on frontend
+    function updateSourceInfo(payOptions) {
+        var tmpHtml = '<div class="dr_payment_type_title">' + payOptions.title + '</div>';
+        tmpHtml += '<div class="dr_payment_type">' + payOptions.payment_info + '</div>';
+        jQuery("#payment-data").append(tmpHtml);
+    }
+
+    function loadSavedPayment() {
+        var selectedPayID = '';
+        var sKeyID = '';
+        var getTotals = getTotals;
+        jQuery('.drpay-saved-payments').each(function () {
+            if (jQuery(this).is(':checked')) {
+                selectedPayID = jQuery(this).val();
+                sKeyID = jQuery(this).attr('data-skey');
+            }
+        });
+        window.checkoutConfig.payment.drpay_dropin.redirect_url = BASE_URL + 'drpay/payment/success';
+        let digitalriverpayments = new DigitalRiver(window.checkoutConfig.payment.drpay_dropin.public_key, {
+            "locale": window.checkoutConfig.payment.drpay_dropin.mage_locale
+        });
+        digitalriverpayments.authenticateSource({
+            "sessionId": window.checkoutConfig.payment.drpay_dropin.payment_session_id,
+            "sourceId": selectedPayID,
+            "sourceClientSecret": sKeyID,
+            "returnUrl": window.checkoutConfig.payment.drpay_dropin.redirect_url
+        }).then(function (data) {
+            jQuery.ajax({
+                type: 'POST',
+                url: BASE_URL + 'drpay/payment/savedrsource',
+                data: {
+                    'sourceId': selectedPayID,
+                    'readyForStorage': false
+                },
+                success: function (response) {
+                    if (response.success) {
+                        window.checkoutConfig.payment.drpay_dropin.sourceId = selectedPayID;
+
+                        jQuery('#dropin-message').html('');
+                        hideDrForm();
+                        if (response.content) {
+                            payOptions = response.content;
+                            updateSourceInfo(payOptions);
+                        }
+
+                        // update billing address on confirmation page to match saved payment method's address
+                        if (response.sourceInfo.message && response.sourceInfo.message.owner) {
+                            updateBillingAddress(response.sourceInfo.message.owner);
+                            reloadOrderSummary();
+                        }
+                    } else {
+                        jQuery('#dropin-message').html(response.content);
+                        window.checkoutConfig.payment.drpay_dropin.payment_session_id = null;
+                        savedCardLoader();
+                        displayDrForm();
+                        loadDropIn();
+                    }
+                },
+                error: function (e) {
+                    jQuery('#dropin-message').html('Unable to process, please try again.');
+                    window.checkoutConfig.payment.drpay_dropin.payment_session_id = null;
+                    savedCardLoader();
+                    displayDrForm();
+                    loadDropIn();
+                },
+                complete: function () {
+                    showCheckbox();
+                }
+            });
+        });
+    }
+
+    function hideForm() {
+        jQuery("#drpay_dropin-content .payment-method-instruction").hide();
+        jQuery("#drpay_dropin-content #drpay-dropin-form .payment-form-inner").hide();
+    }
+
+    function showForm() {
+        jQuery("#drpay_dropin-content .payment-method-instruction").show();
+        jQuery("#drpay_dropin-content #drpay-dropin-form .payment-form-inner").show();
+    }
+
+    function showCheckbox() {
+        require(['jquery', 'Magento_Checkout/js/model/quote'], function ($, quote) {
+            $('#DR-termsAccept').prop('checked', false);
+            $('.checkout.placeorder').attr('disabled', 'disabled');
+            $('#dr-vat-id-button-container' + quote.paymentMethod().method).show();
+            $('#DR-dropInAccept').show().css({
+                'clear': 'both',
+                'margin-top': '23px',
+                'width': '100%',
+                'padding-left': '23px',
+                'float': 'right'
+            });
+            $('html,body').scrollTop(0);
+        })
+    }
+    let taxIdentifier;
+    let drTaxInputs= [];
+    //let drTaxInputsReadyForValidation = false;
+    let numberOfInputsTaxIdPersonal;
+    let numberOfInputsTaxIdBusiness;
+
+    function unLoadDrVatIdElement(deferred) {
+        require(['jquery', 'Magento_Checkout/js/model/quote'], function ($, quote) {
+
+            deferred = deferred || $.Deferred()
+
+            // remove previously mounted tax id form
+            if(quote.paymentMethod()) {
+
+                var containerSelector = '#dr-vat-id-button-container' + quote.paymentMethod().method;
+                $(containerSelector).hide();
+
+                var $identifierBlock = $('#dr-vat-id-form-inputs-container' + quote.paymentMethod().method).find(' .DR-tax-identifier-container');
+                if ($identifierBlock.length !== 0) {
+                    taxIdentifier.destroy();
+                    $identifierBlock[0].remove();
+                }
+            }
+            deferred.resolve();
+        });
+    }
+
+    /*initialize tax element*/
+    function loadDrVatIdElement(deferred) {
+
+        deferred = deferred || jQuery.Deferred();
+
+        require(['jquery', 'Magento_Checkout/js/model/quote'], function ($, quote) {
+
+            if (!quote.getQuoteId()) {
+                deferred.resolve();
+                return;
+            }
+            var paymentData = quote.paymentMethod();
+
+            if (!paymentData || !paymentData.method) {
+                deferred.resolve();
+                return;
+            }
+
+            // if a vat id already exists, leave it
+            if(vatIdExists()) {
+                deferred.resolve();
+                return;
+            }
+
+            var containerSelector = '#dr-vat-id-button-container' + paymentData.method;
+
+            $('.dr-tax-id-validation-message-success').hide();
+            $('.dr-tax-id-validation-message-error').hide();
+
+            $(containerSelector).hide();
+
+            let unLoadDrVatIdElementDeferred = jQuery.Deferred();
+            unLoadDrVatIdElement(unLoadDrVatIdElementDeferred);
+            jQuery.when(unLoadDrVatIdElementDeferred).done(function () {
+                let createElementSuccess = createDrVatIdElement(quote, deferred);
+                if(createElementSuccess) {
+                    setDrVatIdElementBehavior(quote);
+                    mountDrVatIdElement(quote);
+                }
+            });
+
+        });
+    }
+
+    function vatIdExists() {
+        if(typeof window.checkoutConfig.payment.drpay_dropin.taxid != "undefined" &&
+            window.checkoutConfig.payment.drpay_dropin.taxid.length) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function createDrVatIdElement(quote, deferred) {
+        let selectedCountry = false;
+        if(quote.isVirtual() && quote.billingAddress()) {
+            selectedCountry = quote.billingAddress().countryId;
+        } else if(!quote.isVirtual() && quote.shippingAddress()) {
+            selectedCountry = quote.shippingAddress().countryId;
+        }
+
+        if(!selectedCountry) {
+            return false;
+        }
+
+        let digitalriverVat = new DigitalRiver(window.checkoutConfig.payment.drpay_dropin.public_key, {
+            "locale": window.checkoutConfig.payment.drpay_dropin.mage_locale
+        });
+
+        let options = {
+            "classes": {
+                "base": "DRElement",
+                "complete": "taxId-complete",
+                "empty": "taxId-empty",
+                "focus": "taxId-focus"
+            },
+            "style": {
+                "base": {
+                    "color": "#495057",
+                    "height": "35px",
+                    "fontSize": "1rem",
+                    "fontFamily": "apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif"
+                },
+                "complete": {
+                    "color": "green",
+                    ":-webkit-autofill": {
+                        "color": "green"
+                    }
+                }
+            },
+            "taxIdentifier": {
+                "country": selectedCountry,
+                "type": window.checkoutConfig.payment.drpay_dropin.taxIdType.type
+            }
+        }
+
+        if(window.checkoutConfig.payment.drpay_dropin.payment_session_id) {
+            options.taxIdentifier.sessionId = window.checkoutConfig.payment.drpay_dropin.payment_session_id;
+        }
+
+        taxIdentifier = digitalriverVat.createElement('taxidentifier', options);
+        taxIdentifier.on("ready", function(event) {
+            var containerSelector = '#dr-vat-id-button-container' + quote.paymentMethod().method;
+            jQuery(containerSelector).hide();
+            if (event.hasTaxIdentifier) {
+                jQuery(containerSelector).show();
+            }
+
+            var formContainerSelector = '#dr-vat-id-form-container' + quote.paymentMethod().method;
+
+            numberOfInputsTaxIdPersonal = jQuery(formContainerSelector)
+                .find('.DR-tax-identifier-container')
+                .find('[id$="personalPurchaseContainer"]')
+                .find('.DR-tax-identifier-field').length;
+
+            numberOfInputsTaxIdBusiness = jQuery(formContainerSelector)
+                .find('.DR-tax-identifier-container')
+                .find('[id$="businessPurchaseContainer"]')
+                .find('.DR-tax-identifier-field').length;
+
+            if (quote.paymentMethod().method === 'drpay_dropin' &&
+                numberOfInputsTaxIdBusiness > 0 &&
+                event.businessTaxIdentifierRequired) {
+                isVatIdRequired = true;
+                if (jQuery('input[name="selected_card"]').length > 0) {
+                    jQuery('.saved_cards_outer').hide();
+                }
+                jQuery("#dr-vat-id-form-containerdrpay_dropin").show();
+            } else {
+                if (jQuery('input[name="selected_card"]').length > 0) {
+                    jQuery('.saved_cards_outer').show();
+                }
+                isVatIdRequired = false;
+            }
+
+            isDrVatIdElementLoading = false;
+            deferred.resolve();
+        });
+
+        return true;
+    }
+
+    function setDrVatIdElementBehavior(quote) {
+
+        /*tax inputs behavior*/
+        taxIdentifier.on("change", function (event) {
+            var $applyButton = jQuery('#DR-validate-Tax-Ids' + quote.paymentMethod().method);
+
+            if (event.complete) {
+                if (event.identifier.customerType === "business") {
+                    if (numberOfInputsTaxIdBusiness === 1) {
+                        drTaxInputsReadyForValidation = true;
+                        drTaxInputs[0] = event.identifier;
+
+                        if (window.checkoutConfig.payment.drpay_dropin.taxid !== undefined) {
+                            delete window.checkoutConfig.payment.drpay_dropin.taxid;
+                            delete window.checkoutConfig.payment.drpay_dropin.taxidInputs;
+                        }
+                        window.checkoutConfig.payment.drpay_dropin.taxid = drTaxInputs;
+                        window.checkoutConfig.payment.drpay_dropin.taxidInputs = numberOfInputsTaxIdBusiness;
+                        $applyButton.removeAttr('disabled').removeClass('disabled');
+                    } else {
+                        /*check if its the second input*/
+                        if (drTaxInputs.length >= 1) { // first id was already entered
+                            drTaxInputs[1] = event.identifier;
+
+                            if (window.checkoutConfig.payment.drpay_dropin.taxid !== undefined) {
+                                delete window.checkoutConfig.payment.drpay_dropin.taxid;
+                                delete window.checkoutConfig.payment.drpay_dropin.taxidInputs;
+                            }
+
+                            window.checkoutConfig.payment.drpay_dropin.taxid = drTaxInputs;
+                            window.checkoutConfig.payment.drpay_dropin.taxidInputs = numberOfInputsTaxIdBusiness;
+                            $applyButton.removeAttr('disabled').removeClass('disabled');
+                        } else if (drTaxInputs.length === 0) { // this will be first id out of 2
+                            drTaxInputs[0] = event.identifier;
+                        }
+                    }
+                } else if (event.identifier.customerType === "individual") {
+                    if (numberOfInputsTaxIdPersonal === 1) {
+                        drTaxInputsReadyForValidation = true;
+                        drTaxInputs[0] = event.identifier;
+
+                        if (window.checkoutConfig.payment.drpay_dropin.taxid !== undefined) {
+                            delete window.checkoutConfig.payment.drpay_dropin.taxid;
+                            delete window.checkoutConfig.payment.drpay_dropin.taxidInputs;
+                        }
+                        window.checkoutConfig.payment.drpay_dropin.taxid = drTaxInputs;
+                        window.checkoutConfig.payment.drpay_dropin.taxidInputs = numberOfInputsTaxIdPersonal;
+                        $applyButton.removeAttr('disabled').removeClass('disabled');
+                    } else {
+                        /*check if its the second input*/
+                        if (event.identifier.type === 'it_natural') {
+                            drTaxInputs[0] = event.identifier;
+                            if (window.checkoutConfig.payment.drpay_dropin.taxid !== undefined) {
+                                delete window.checkoutConfig.payment.drpay_dropin.taxid;
+                                delete window.checkoutConfig.payment.drpay_dropin.taxidInputs;
+                            }
+                            window.checkoutConfig.payment.drpay_dropin.taxid = drTaxInputs;
+                            window.checkoutConfig.payment.drpay_dropin.taxidInputs = numberOfInputsTaxIdPersonal;
+                            $applyButton.removeAttr('disabled').removeClass('disabled');
+                        } else {
+                            if (drTaxInputs.length >= 1 ) { // first id was already entered
+                                drTaxInputs[1] = event.identifier;
+                                if (window.checkoutConfig.payment.drpay_dropin.taxid !== undefined) {
+                                    delete window.checkoutConfig.payment.drpay_dropin.taxid;
+                                    delete window.checkoutConfig.payment.drpay_dropin.taxidInputs;
+                                }
+                                window.checkoutConfig.payment.drpay_dropin.taxid = drTaxInputs;
+                                window.checkoutConfig.payment.drpay_dropin.taxidInputs = numberOfInputsTaxIdPersonal;
+                                $applyButton.removeAttr('disabled').removeClass('disabled');
+                            } else if (drTaxInputs.length === 0) { // this will be first id out of 2
+                                drTaxInputs[0] = event.identifier;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (event.identifier.customerType === "business") {
+                    $applyButton.attr('disabled', 'disabled');
+                } else if (event.identifier.customerType === "individual" && numberOfInputsTaxIdPersonal === 2) {
+                    if (event.empty === true) {
+                        if (drTaxInputs.length === 1) {
+                            drTaxInputs= [];
+                        } else {
+                            drTaxInputs.pop();
+                        }
+                    }
+                    if (event.identifier.type !== 'it_natural') {
+                        $applyButton.removeAttr('disabled').removeClass('disabled');;
+                    } else {
+                        $applyButton.attr('disabled', 'disabled');
+                    }
+                }
+            }
+        });
+    }
+
+    function mountDrVatIdElement(quote) {
+        drTaxInputs= [];
+        isDrVatIdElementLoading = true;
+        taxIdentifier.mount("dr-vat-id-form-inputs-container" + quote.paymentMethod().method);
+    }
+
+
+    let invoiceAttribute;
+    function unLoadDrInvoiceAttribute(deferred){
+        require(['jquery', 'Magento_Checkout/js/model/quote'], function ($, quote) {
+
+            deferred = deferred || $.Deferred()
+
+            var $invoiceAttributeBlock = $('#dr-invoice-attribute-form-inputs-container' +
+                quote.paymentMethod().method).find('.DR-invoice-attribute-container');
+
+            if ($invoiceAttributeBlock.length !== 0) {
+                $invoiceAttributeBlock[0].remove();
+            }
+
+            if(typeof invoiceAttribute !== 'undefined' && typeof invoiceAttribute.id !== 'undefined') {
+                invoiceAttribute.destroy();
+            }
+
+            deferred.resolve();
+        });
+    }
+
+    function invoiceAttributeExists() {
+        if(typeof window.checkoutConfig.payment.drpay_dropin.invoiceAttributeId != "undefined" &&
+            window.checkoutConfig.payment.drpay_dropin.invoiceAttributeId) {
+            return true;
+        }
+        return false;
+    }
+
+    /*initialize invoice attribute element*/
+    function loadDrInvoiceAttributeElement(deferred) {
+        require(['jquery', 'Magento_Checkout/js/model/quote'], function ($, quote) {
+
+            let paymentData = quote.paymentMethod();
+            if (paymentData.method !=='drpay_dropin') {
+                isInvoiceAttributeRequired = false;
+                deferred.resolve();
+                return;
+            }
+
+            // if a attribute already exists, leave it
+            if(invoiceAttributeExists()) {
+                deferred.resolve();
+                return;
+            }
+
+            $('.dr-invoice-attribute-validation-message-success').hide();
+            $('.dr-invoice-attribute-validation-message-error').hide();
+
+            let unLoadDrInvoiceAttributeDeferred = jQuery.Deferred();
+            unLoadDrInvoiceAttribute(unLoadDrInvoiceAttributeDeferred);
+            jQuery.when(unLoadDrInvoiceAttributeDeferred).done(function () {
+
+                if(window.checkoutConfig.payment.drpay_dropin.default_selling_entity !== 'DR_TAIWAN-ENTITY') {
+                    isInvoiceAttributeRequired = false;
+                    deferred.resolve();
+                    return;
+                }
+
+                let createElementSuccess = createDrInvoiceAttributeElement(quote, deferred);
+                if (createElementSuccess) {
+                    mountDrInvoiceAttributeElement(quote);
+                }
+            });
+
+        });
+    }
+
+    function createDrInvoiceAttributeElement(quote, deferred){
+        let selectedCountry = false;
+        if(quote.isVirtual() && quote.billingAddress()) {
+            selectedCountry = quote.billingAddress().countryId;
+        } else if(!quote.isVirtual() && quote.shippingAddress()) {
+            selectedCountry = quote.shippingAddress().countryId;
+        }
+
+        if(!selectedCountry) {
+            return false;
+        }
+
+        let drInvoiceAttributeKey = window.checkoutConfig.payment.drpay_dropin.public_key;
+        let digitalriverInvoiceAttribute = new DigitalRiver(drInvoiceAttributeKey, {
+            "locale": window.checkoutConfig.payment.drpay_dropin.mage_locale
+        });
+
+        const styles = {
+            base: {
+                padding: '0',
+                color: '#495057',
+                height: '35px',
+                fontSize: '1rem',
+                fontFamily: 'apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif',
+                ':hover': {
+                    color: '#137bee',
+                },
+                '::placeholder': {
+                    color: '#999'
+                },
+                ':-webkit-autofill': {
+                    color: 'purple'
+                },
+                ':focus': {
+                    color: 'blue'
+                }
+            },
+            invalid: {
+                color: '#dc3545',
+                ':-webkit-autofill': {
+                    color: '#dc3545'
+                }
+            },
+            complete: {
+                color: 'green',
+                ':hover': {
+                    color:'green',
+                },
+                ':-webkit-autofill': {
+                    color: 'green'
+                }
+            },
+            empty: {
+                color: '#000000'
+            }
+
+        };
+
+        let drInvoiceAttributeEntity = window.checkoutConfig.payment.drpay_dropin.default_selling_entity;
+        let options = {
+            "invoiceAttribute": {
+                "country": selectedCountry,
+                "sellingEntity": drInvoiceAttributeEntity,
+                "type": window.checkoutConfig.payment.drpay_dropin.taxIdType.type
+            },
+            "style": styles,
+            "classes": {
+                empty: 'custom--empty',
+                base: 'DRElement',
+                invalid: 'custom--invalid',
+                complete: 'custom--complete'
+            }
+        }
+        if (window.checkoutConfig.quoteData.customer_email !== undefined
+            && window.checkoutConfig.quoteData.customer_email !== null) {
+                options.invoiceAttribute.email = window.checkoutConfig.quoteData.customer_email;
+            }
+        invoiceAttribute = digitalriverInvoiceAttribute.createElement('invoiceAttribute', options);
+        invoiceAttribute.on("ready", function(event) {
+            jQuery('.dr-invoice-attribute-validation-message-success').hide();
+            jQuery('.dr-invoice-attribute-validation-message-error').hide();
+            jQuery('#dr-invoice-attribute-form-containerdrpay_dropin').hide();
+
+            jQuery('.DR-invoice-attribute-button').on("click", function(event){
+                event.preventDefault();
+            });
+
+            if (event.hasInvoices) {
+                jQuery('#dr-invoice-attribute-form-containerdrpay_dropin').show();
+                if (jQuery('input[name="selected_card"]').length > 0) {
+                    jQuery('.saved_cards_outer').hide();
+                }
+                isInvoiceAttributeRequired = true;
+            } else {
+                if (jQuery('input[name="selected_card"]').length > 0) {
+                    jQuery('.saved_cards_outer').show();
+                }
+                isInvoiceAttributeRequired = false;
+            }
+
+            jQuery('#DR-validate-Invoice-Attributesdrpay_dropin').on("click", function(event){
+                event.preventDefault();
+            });
+
+            // hide or display drop in and saved payments when T&C's are checked/unchecked
+            jQuery('#dr-invoice-attribute-form-containerdrpay_dropin :checkbox').on("change", function(event){
+                let isChecked = jQuery(this).prop('checked');
+                if(isChecked && invoiceAttributeExists()) {
+                    if (jQuery('input[name="selected_card"]').length > 0) {
+                        jQuery('.saved_cards_outer').show();
+                    }
+                    jQuery('#drop-in').show();
+                }else if(!isChecked && invoiceAttributeExists()) {
+                    if (jQuery('input[name="selected_card"]').length > 0) {
+                        jQuery('.saved_cards_outer').hide();
+                    }
+                    jQuery('#drop-in').hide();
+                }
+            });
+
+            isDrInvoiceAttributeLoading = false;
+            deferred.resolve();
+        });
+
+        invoiceAttribute.on("complete", function(event) {
+            require(['jquery', 'Digitalriver_DrPay/js/view/checkout/action/manage-invoice-attribute'],
+                function ($,manageInvoiceAttribute) {
+                    manageInvoiceAttribute.assignInvoiceAttribute(event.id);
+                });
+        });
+
+        return true;
+    }
+
+    function mountDrInvoiceAttributeElement(quote){
+        if(jQuery('#dr-invoice-attribute-form-inputs-container' + quote.paymentMethod().method).length) {
+            isDrInvoiceAttributeLoading = true;
+            invoiceAttribute.mount("dr-invoice-attribute-form-inputs-container" + quote.paymentMethod().method);
+        }
+    }
+
+    //Fix for Magento-68 Drop in frame not displayed for virtual cart
+    function loadDropIn(isCartSynced = false) {
+        require([
+            'Magento_Checkout/js/model/quote',
+            'Digitalriver_DrPay/js/action/set-billing-address',
+            'Magento_Ui/js/model/messageList'
+        ], function (quote, setBillingAddressAction, globalMessageList) {
+            if (!quote.isVirtual() && quote.shippingAddress() != null) {
+                //Flow is unchanged for regular carts
+                loadDropInFrame();
+            }
+            else {
+                //Executes only after billing address is filled in virtual carts
+                if (quote.billingAddress() != null) {
+                    //Sync Quote billing address manually with DR if not done before
+                    if (!isCartSynced) {
+                        var deferred = jQuery.Deferred();
+                        setBillingAddressAction(globalMessageList, deferred);
+                    }
+                }
+            }
+        });
+    }
+
+    let dropInTimeout;
+
+    function loadDropInFrame() {
+        require([
+            'Magento_Checkout/js/model/full-screen-loader',
+        ], function (fullScreenLoader) {
+
+            // only start loader for first requests within timeout duration
+            if(dropInTimeout == undefined) {
+                fullScreenLoader.startLoader();
+            }
+
+            // clear existing timeout if present and add new to introduce a delay in loading to prevent duplicates
+            clearTimeout(dropInTimeout);
+            dropInTimeout = setTimeout(function() {
+                // if an element is still loading, retry the load
+                if(isDropInLoading || isDrInvoiceAttributeLoading || isDrVatIdElementLoading) {
+                    console.log('something is loading...retry...');
+                    fullScreenLoader.stopLoader();
+                    dropInTimeout = undefined;
+                    loadDropInFrame();
+                } else {
+                    let initialTimeout = dropInTimeout;
+                    let loadDropInDeferred = jQuery.Deferred();
+                    actuallyLoadDropInFrame(loadDropInDeferred);
+                    jQuery.when(loadDropInDeferred).done(function () {
+                        if (dropInTimeout == initialTimeout) {
+                            fullScreenLoader.stopLoader();
+                            dropInTimeout = undefined;
+                        }
+                    });
+                }
+            }, 3000);
+        });
+    }
+
+    function actuallyLoadDropInFrame(deferred) {
+        require([
+            'jquery',
+            'mage/url',
+            'Magento_Checkout/js/model/quote',
+            'Magento_Checkout/js/model/error-processor',
+            'Magento_Customer/js/customer-data',
+            'Digitalriver_DrPay/js/action/get-dr-checkout-data',
+        ], function ($, mageUrl, quote, errorProcessor, customerData, getDrCheckoutData) {
+            if (quote.getQuoteId()) {
+
+                console.log('loading...');
+
+                jQuery('#DR-dropInAccept').hide();
+                jQuery('#DR-placeOrder').hide();
+                jQuery('.shipping-step').remove();
+
+                let billingAddress = quote.billingAddress();
+                if(!billingAddress) {
+                    console.log('billingAddress not present');
+                    deferred.resolve();
+                    return;
+                }
+
+                deferred = deferred || jQuery.Deferred();
+                getDrCheckoutData()
+                    .done(function (response) {
+                        if (response.success) {
+
+                            window.checkoutConfig.payment.drpay_dropin.payment_session_id = response.content.paymentSessionId;
+                            window.checkoutConfig.payment.drpay_dropin.checkoutId = response.content.checkoutId;
+                            window.checkoutConfig.payment.drpay_dropin.default_selling_entity = response.content.sellingEntity;
+
+                            let displaySavePayment = response.content.savePayment;
+
+                            if (window.checkoutConfig.payment.drpay_dropin.store_credit_action === undefined ) {
+                                window.checkoutConfig.payment.drpay_dropin.store_credit_action = 'none';
+                            }
+
+                            customerData.reload(['cart'], true);
+                            window.checkoutConfig.payment.drpay_dropin.store_credit_action = 'none';
+
+                            let shippingAddress = quote.shippingAddress();
+                            if (!quote.isVirtual() && shippingAddress) {
+                                let companyCheck = validateCompanyName(
+                                    'shipping',
+                                    shippingAddress.company
+                                ); // addressType, company
+
+                                if (!companyCheck) {
+                                    unloadDropIn();
+                                    unLoadDrInvoiceAttribute();
+                                    unLoadDrVatIdElement();
+
+                                    if ($('input[name="selected_card"]').length > 0) {
+                                        $('.saved_cards_outer').hide();
+                                    }
+
+                                    deferred.resolve();
+                                    return;
+                                }else{
+                                    jQuery('.messages').hide();
+                                }
+                            }
+
+                            let companyCheck = validateCompanyName(
+                                'billing',
+                                billingAddress.company
+                            ); // addressType, company
+
+                            if (!companyCheck) {
+                                unloadDropIn();
+                                unLoadDrInvoiceAttribute();
+                                unLoadDrVatIdElement();
+                                if ($('input[name="selected_card"]').length > 0) {
+                                    $('.saved_cards_outer').hide();
+                                }
+                                deferred.resolve();
+                                return;
+                            }else{
+                                jQuery('.messages').hide();
+                            }
+
+                            var customerEmail = '';
+                            if(window.checkoutConfig.isCustomerLoggedIn){
+                                customerEmail = window.checkoutConfig.quoteData.customer_email;
+                            }else{
+                                var emailInput = jQuery("#customer-email").not('.mage-error');
+                                if(emailInput.length){
+                                    customerEmail = emailInput.val();
+                                }
+                            }
+
+                            // customer email is required
+                            if(customerEmail.length === 0) {
+                                window.checkoutConfig.payment.drpay_dropin.payment_session_id = '';
+                                unloadDropIn();
+                                unLoadDrInvoiceAttribute();
+                                unLoadDrVatIdElement();
+                                deferred.resolve();
+                                return;
+                            }
+
+                            let loadDrVatIdElementDeferred = jQuery.Deferred();
+                            loadDrVatIdElement(loadDrVatIdElementDeferred);
+                            jQuery.when(loadDrVatIdElementDeferred).done(function () {
+
+                                // only allow vat id element for all payment methods
+                                let methodCode = quote.paymentMethod();
+                                if(methodCode.method !== 'drpay_dropin') {
+                                    console.log('not drpay_dropin ');
+                                    unloadDropIn();
+                                    unLoadDrInvoiceAttribute();
+                                    deferred.resolve();
+                                    return;
+                                }
+
+                                let loadDrInvoiceAttributeElementDeferred = jQuery.Deferred();
+                                loadDrInvoiceAttributeElement(loadDrInvoiceAttributeElementDeferred);
+                                jQuery.when(loadDrInvoiceAttributeElementDeferred).done(function () {
+                                    let deferredSetConfigurations = jQuery.Deferred();
+                                    setConfigurations(displaySavePayment, deferredSetConfigurations);
+                                    jQuery.when(deferredSetConfigurations).done(function () {
+
+                                        // if tax or invoices are required, hide drop in
+                                        if((isInvoiceAttributeRequired && !invoiceAttributeExists()) ||
+                                            (isVatIdRequired && !vatIdExists())) {
+                                            if ($('input[name="selected_card"]').length > 0) {
+                                                $('.saved_cards_outer').hide();
+                                            }
+                                            jQuery('#drop-in').hide();
+                                        } else {
+                                            jQuery('#drop-in').show();
+                                        }
+                                        deferred.resolve();
+                                    });
+                                });
+                            });
+                        } else {
+                            // unload drop in and ensure it loads on next attempt
+                            if ($('#drop-in').children().length > 0) {
+                                $('#drop-in').children()[0].remove();
+                            }
+
+                            window.checkoutConfig.payment.drpay_dropin.payment_session_id = '';
+
+                            // retry due to Magento session potentially not being ready
+                            if(dropInReloadRetryAttempts++ < dropInReloadRetryLimit) {
+                                dropInReloadRetryDelay = dropInReloadRetryDelay + dropInReloadRetryDelayInterval
+                                setTimeout(function() {
+                                    loadDropInFrame(deferred);
+                                }, dropInReloadRetryDelay);
+                            } else {
+                                deferred.reject();
+                                $.mage.redirect(mageUrl.build('checkout/cart'));
+                            }
+                        }
+                    }).fail(function () {
+                        deferred.reject();
+                        errorProcessor.process(response);
+                    });
+            }
+        });
+    }
+
+    //Magento-164 Function to update Billing address in frontend (includes region name field)
+    function updateBillingAddress(owner) {
+        require(['Magento_Checkout/js/model/quote'], function (quote) {
+            if (owner.address && quote.billingAddress()) {
+                
+                let newAddress = owner.address, currentAddress = quote.billingAddress();
+                currentAddress.firstname = owner.firstName ? owner.firstName : currentAddress.firstname;
+                currentAddress.lastname = owner.lastName ? owner.lastName : currentAddress.lastname;
+                currentAddress.city = newAddress.city ? newAddress.city : currentAddress.city;
+                currentAddress.regionCode = newAddress.state;
+                currentAddress.region = newAddress.stateName;
+                currentAddress.postcode = newAddress.postalCode ? newAddress.postalCode : currentAddress.postcode;
+                currentAddress.countryId = newAddress.country ? newAddress.country : currentAddress.countryId;
+                currentAddress.street[0] = newAddress.line1 ? newAddress.line1 : currentAddress.street[0];
+                currentAddress.street[1] = newAddress.line2 ? newAddress.line2 : currentAddress.street[1];
+                currentAddress.telephone = owner.phoneNumber ? owner.phoneNumber : currentAddress.telephone;
+                quote.billingAddress(currentAddress);
+
+                //Informs value of address is changed to all templates
+                quote.billingAddress.valueHasMutated();
+            }
+        });
+    }
+
+    function reloadOrderSummary() {
+        require(['Magento_Checkout/js/action/get-totals'], function (getTotals) {
+            getTotals([]);
+        });
+    }
+
+    function setConfigurations(displaySavePayment, deferred){
+
+        let digitalriverpayments = new DigitalRiver(window.checkoutConfig.payment.drpay_dropin.public_key, {
+            "locale": window.checkoutConfig.payment.drpay_dropin.mage_locale
+        });
+
+        const configuration = {
+            sessionId: window.checkoutConfig.payment.drpay_dropin.payment_session_id,
+            paymentMethodConfiguration: {
+                creditCard: {
+                    style: {
+                        base: {
+                            color: "#333",
+                            fontFamily: "Arial, Helvetica, sans-serif",
+                            fontSize: "16px"
+                        }
+                    }
+                }
+            },
+            onReady: function(data) {
+                jQuery('body').find('.payment-option.discount-code').show();
+                jQuery('body').find('.payment-option.giftcardaccount').show();
+                isDropInLoading = false;
+                deferred.resolve();
+            },
+            onSuccess: function(data) {
+                //send to back end for processing
+                jQuery('#dropin-message').html('');
+                jQuery('body').find('.payment-option.discount-code').hide();
+                jQuery('body').find('.payment-option.giftcardaccount').hide();
+                window.checkoutConfig.payment.drpay_dropin.redirect_url = BASE_URL + 'drpay/payment/success';
+                window.checkoutConfig.payment.drpay_dropin.sourceId = data.source.id;
+
+                var id = data.source.id;
+                jQuery.ajax({
+                    showLoader: 'true',
+                    type: 'POST',
+                    url: BASE_URL + 'drpay/payment/savedrsource',
+                    data: {
+                        "sourceId": data.source.id,
+                        "readyForStorage": data.readyForStorage
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            if (response.sourceInfo) {
+                                payOptions = response.sourceInfo;
+                                for (var key in payOptions) {
+                                    if (payOptions.hasOwnProperty(key)) {
+                                        var tmpHtml = "";
+                                        var val = payOptions[key];
+                                        tmpHtml = '<div>' + val.content + '</div>';
+                                        jQuery("#payment-data").append(tmpHtml);
+                                    }
+                                }
+                            }
+                            jQuery('#dropin-message').html('');
+
+                            //Magento-164 Updating billing address if it is modified during payment
+                            if (response.sourceInfo.message && response.sourceInfo.message.owner) {
+                                updateBillingAddress(response.sourceInfo.message.owner);
+                                reloadOrderSummary();
+                            }
+                            hideDrForm();
+                            if (response.content) {
+                                payOptions = response.content;
+                                updateSourceInfo(payOptions);
+                            }
+                        }else{
+                            jQuery('#dropin-message').html(response.content);
+                            window.checkoutConfig.payment.drpay_dropin.payment_session_id = null;
+                            displayDrForm();
+                            loadDropIn();
+                        }
+                        deferred.resolve();
+                    },
+                    error: function (e) {
+                        jQuery('#dropin-message').html('Unable to process, please try again.');
+                        window.checkoutConfig.payment.drpay_dropin.payment_session_id = null;
+                        displayDrForm();
+                        loadDropIn();
+                    },
+                    complete: function() {
+                        showCheckbox();
+                        deferred.resolve();
+                    }
+                });
+            },
+            onError: function(data) {
+                jQuery('#dropin-message').html(data.errors[0].message);
+                deferred.reject();
+            },
+            onCancel: function() {
+                displayDrForm();
+                deferred.resolve();
+            }
+        }
+
+        configuration['options'] = {
+            redirect: {
+                disableAutomaticRedirects: window.checkoutConfig.payment.drpay_dropin.disable_automatic_redirects,
+                returnUrl: BASE_URL + "drpay/payment/redirectpayment/",
+                cancelUrl: BASE_URL + "drpay/payment/redirectpayment/"
+            },
+            showSavePaymentAgreement: displaySavePayment
+        };
+
+        if (jQuery('#drop-in').length > 0) {
+            let dropin = digitalriverpayments.createDropin(configuration);
+
+            unloadDropIn();
+            isDropInLoading = true;
+            dropin.mount('drop-in');
+
+            jQuery('#drpay_dropin-content .DR-Legal-Footer').hide();
+            jQuery('#checkout #DR-dropInTerms.shipping-step').remove();
+            loadDrFooter();
+        } else {
+            // store credit covers whole total, don't load dropin, show terms
+            let digitalriverpayments = new DigitalRiver(window.checkoutConfig.payment.drpay_dropin.public_key, {
+                "locale": window.checkoutConfig.payment.drpay_dropin.mage_locale
+            });
+            drCompliance = digitalriverpayments.Compliance.getDetails(
+                window.checkoutConfig.payment.drpay_dropin.default_selling_entity,
+                window.checkoutConfig.payment.drpay_dropin.mage_locale
+            );
+            drComplianceDisclosures = drCompliance['disclosure'];
+            if (jQuery(drComplianceDisclosures['confirmDisclosure']).length) {
+                jQuery('#confirmDisclosure').html(drComplianceDisclosures['confirmDisclosure']['localizedText']);
+            }
+        }
+    }
+
+    function unloadDropIn() {
+        if(jQuery('#drop-in').children().length > 0) {
+            jQuery('#drop-in').children()[0].remove();
+        }
+    }
+    function loadDrFooter() {
+        require(['Magento_Checkout/js/model/quote'], function (quote) {
+            if (quote.getQuoteId()) {
+                let digitalriverpayments = new DigitalRiver(window.checkoutConfig.payment.drpay_dropin.public_key, {
+                    "locale": window.checkoutConfig.payment.drpay_dropin.mage_locale
+                });
+                var complianceOptions = {
+                    classes: {
+                        base: 'DRElement'
+                    },
+                    compliance: {
+                        locale: window.checkoutConfig.payment.drpay_dropin.mage_locale,
+                        entity: window.checkoutConfig.payment.drpay_dropin.default_selling_entity
+                    }
+                }
+
+                if (jQuery('#checkout #DR-dropInTerms .DR-Legal-Footer #compliance').length > 0) {
+                    jQuery('#checkout #DR-dropInTerms .DR-Legal-Footer #compliance').empty();
+                }
+                var compliance = digitalriverpayments.createElement('compliance', complianceOptions);
+                compliance.mount('compliance');
+                drCompliance = digitalriverpayments.Compliance.getDetails(
+                    window.checkoutConfig.payment.drpay_dropin.default_selling_entity,
+                    window.checkoutConfig.payment.drpay_dropin.mage_locale
+                );
+                drComplianceDisclosures = drCompliance['disclosure'];
+                if (jQuery(drComplianceDisclosures['confirmDisclosure']).length) {
+                    jQuery('#confirmDisclosure').html(drComplianceDisclosures['confirmDisclosure']['localizedText']);
+                }
+                //Magento-365 loading DR footer to display confirm disclosure (drop-in terms maybe absent)
+                if (jQuery('#DR-dropInTerms').length > 0) {
+                    jQuery('#DR-dropInTerms').appendTo('#checkout');
+                    jQuery('#DR-dropInTerms').css('clear', 'both').show();
+                }
+            }
+        });
+    }
+
+    function displayDrForm() {
+        require(['Magento_Checkout/js/model/quote'], function (quote) {
+            viewPlaceOrder = false;
+
+            jQuery('#DR-placeOrder').hide();
+            jQuery('#drop-in').show();
+            jQuery('#DR-dropInAccept').hide();
+            jQuery('#drpay_dropin-content .DR-Legal-Footer').hide();
+            jQuery('.payment-methods .payment-group .step-title').css('display', 'block');
+            jQuery('.payment-methods .payment-group .payment-method .payment-method-title').css('display', 'block');
+            jQuery('.payment-methods .payment-group .payment-method .details').css('display', 'inline-block');
+            jQuery('.payment-methods .payment-group .payment-method .payment-logos').css('display', 'inline-block');
+            jQuery('.payment-methods .payment-group .payment-method .payment-icon').css('display', 'inline-block');
+            jQuery('.payment-methods .payment-group .payment-method .saved_cards_outer').css('display', 'block');
+            var paymentMethod = quote.paymentMethod() ? quote.paymentMethod().method : '';
+
+            jQuery('.payment-methods .payment-group .payment-method._active #dr-vat-id-form-container'+ paymentMethod).show();
+            jQuery('.payment-methods .payment-group .payment-method._active #dr-vat-id-button-container' + paymentMethod).show();
+
+            jQuery('.payment-methods .payment-group .payment-method._active #dr-invoice-attribute-form-container'+ paymentMethod).show();
+
+            jQuery('#drpay-dropin-form').css('display', 'block');
+            jQuery('#payment-data').css('display', 'none');
+            jQuery('#payment-data').removeClass('payment-active');
+            if (jQuery('input[name="selected_card"]:checked').val() == '' ||
+                jQuery('input[name="selected_card"]').length <= 0) {
+                jQuery('.payment-methods .payment-group .payment-method .payment-method-instruction').css('display', 'block');
+            }
+            if (jQuery('input[name="selected_card"]').length <= 0) {
+                jQuery(".payment-methods .payment-group .payment-method .saved_cards_outer").css("display", "none");
+            }
+
+            jQuery(".billing-address-details .action-edit-address").show();
+
+            if (!window.checkoutConfig.quoteData.is_virtual) {
+                jQuery(".payment-method-billing-address .billing-address-same-as-shipping-block").show();
+            }
+
+            jQuery("#dr-vat-id-form-purchase-containerdrpay_dropin").show();
+
+            jQuery('.checkout-tabs .nav-pills li').removeClass('active');
+            jQuery('.checkout-tabs .nav-pills li:nth-child(1)').addClass('active');
+            jQuery('.step-content').css('background', 'none');
+            jQuery('.payment-methods .payment-group .payment-method._active .tax-vat-id-manage-tax-link').show();
+            jQuery('.payment-method-content').css('margin-bottom', '10px');
+            jQuery(".payment-methods .payment-group .payment-method #drpay-dropin-form .checkout").css("display", "block");
+            jQuery("#customerbalance-placer").show();
+            jQuery("div.payment-option.opc-payment-additional.discount-code").show();
+            //jQuery("div.payment-option.opc-payment-additional.rewardpoints").show();
+            jQuery("#giftcardaccount-placer").show();
+            jQuery("#opc-sidebar > div.opc-block-summary > table > tbody > tr.totals.giftcard > th > a").show()
+            jQuery("#delete-customer-balance").show();
+        });
+    }
+
+    function hideDrForm() {
+
+        viewPlaceOrder = true;
+
+        jQuery("#drop-in").hide();
+        jQuery("#payment-data").html('');
+        jQuery("#payment-data").css("display", "block");
+        jQuery("#payment-data").addClass('payment-active');
+        jQuery(".payment-methods .payment-group .step-title").css("display", "none");
+        jQuery(".payment-methods .payment-group .payment-method .payment-method-title").css("display", "none");
+        jQuery(".payment-methods .payment-group .payment-method .details").css("display", "none");
+        jQuery(".payment-methods .payment-group .payment-method .payment-logos").css("display", "none");
+        jQuery(".payment-methods .payment-group .payment-method .payment-icon").css("display", "none");
+        jQuery(".payment-methods .payment-group .payment-method .payment-method-instruction").css("display", "none");
+        jQuery(".payment-methods .payment-group .payment-method .saved_cards_outer").css("display", "none");
+        if(jQuery("div.payment-method-billing-address > div > fieldset > div.actions-toolbar > div > button.action.action-cancel").is(":visible")){
+            jQuery("div.payment-method-billing-address > div > fieldset > div.actions-toolbar > div > button.action.action-cancel").click();
+        }
+        jQuery("#drpay-dropin-form").css("display", "none");
+        jQuery(".payment-methods .payment-group .payment-method .checkout").css("display", "block");
+        jQuery('.checkout-tabs .nav-pills li').removeClass('active');
+        jQuery('.checkout-tabs .nav-pills li:nth-child(2)').addClass('active');
+        jQuery('.step-content').css('background', '#e6e6e6');
+        jQuery('.payment-methods .payment-group .payment-method._active [id^="dr-vat-id-form-container"]').hide();
+        jQuery('.payment-methods .payment-group .payment-method._active .tax-vat-id-manage-tax-link').hide();
+        jQuery('.payment-methods .payment-group .payment-method._active [id^="dr-invoice-attribute-form-container"]').hide();
+        //jQuery('.payment-methods .payment-group .payment-method._active .invoice-attribute-manage-link').hide();
+
+
+        jQuery(".payment-methods .payment-group .payment-method #drpay-dropin-form .checkout").css("display", "none");
+        if (!window.checkoutConfig.quoteData.is_virtual) {
+            jQuery(".payment-method-billing-address .billing-address-same-as-shipping-block").css("display", "none");
+        }
+
+        jQuery(".billing-address-details .action-edit-address").css("display", "none");
+
+        jQuery("#dr-vat-id-form-containerdrpay_dropin").hide();
+        jQuery("#dr-vat-id-form-purchase-containerdrpay_dropin").hide();
+
+        jQuery("#dr-invoice-attribute-form-containerdrpay_dropin").hide();
+        jQuery("#dr-invoice-attribute-form-purchase-containerdrpay_dropin").hide();
+
+        jQuery("#checkout-step-payment > form.form.form-login").hide();
+        jQuery("#customerbalance-placer").hide();
+        jQuery("div.payment-option.opc-payment-additional.discount-code").hide();
+        jQuery("div.payment-option.opc-payment-additional.rewardpoints").hide();
+        jQuery("#giftcardaccount-placer").hide();
+        jQuery("#opc-sidebar > div.opc-block-summary > table > tbody > tr.totals.giftcard > th > a").hide()
+        jQuery("#delete-customer-balance").hide();
+    }
+</script>

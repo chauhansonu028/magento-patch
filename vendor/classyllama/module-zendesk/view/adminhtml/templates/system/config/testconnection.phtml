@@ -1,0 +1,24 @@
+<?php
+// @codingStandardsIgnoreFile
+
+use Zendesk\Zendesk\Block\Adminhtml\System\Config\TestConnection;
+
+/** @var $block TestConnection */
+?>
+<?php if ($block->getZendeskConfigured()): ?>
+    <button class="scalable" type="button" id="<?= $block->escapeHtmlAttr($block->getHtmlId()) ?>"
+        data-mage-init='{"zendeskTestConnection":{
+            "url": "<?= /* @escapeNotVerified */ $block->escapeHtmlAttr($block->getAjaxUrl()) ?>",
+            "elementId": "<?= $block->escapeHtmlAttr($block->getHtmlId()) ?>",
+            "successText": "<?= $block->escapeHtmlAttr(__('Successful! Test again?')) ?>",
+            "failedText": "<?= $block->escapeHtmlAttr(__('Connection failed! Test again?')) ?>"
+        }}'>
+        <span>
+            <span>
+                <span id="<?= $block->escapeHtmlAttr($block->getHtmlId()) ?>_result">
+                    <?= $block->escapeHtml($block->getButtonLabel()) ?>
+                </span>
+            </span>
+        </span>
+    </button>
+<?php endif; ?>

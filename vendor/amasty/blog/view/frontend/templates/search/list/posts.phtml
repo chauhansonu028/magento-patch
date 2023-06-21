@@ -1,0 +1,99 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/**
+ * @var $block Amasty\Blog\Block\Content\Search\Section
+ * @var $parentBlock Amasty\Blog\Block\Content\AbstractBlock
+ * @var $escaper Magento\Framework\Escaper
+ */
+
+$toolbar = $block->getToolbar();
+$parentBlock = $block->getData('parentBlock');
+?>
+
+<div class="amblog-container-list">
+    <?php foreach ($toolbar->getCollection() as $post): ?>
+        <div class="amblog-post-container">
+            <div class="amblog-wrapper">
+                <?php $imageSrc = $post->getListThumbnailSrc(); ?>
+                <?php if ($imageSrc): ?>
+                    <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                       aria-label="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>"
+                       title="<?= $escaper->escapeHtmlAttr($post->getTitle()); ?>">
+                        <img src="<?= $escaper->escapeUrl($imageSrc); ?>"
+                             class="amblog-image"
+                             alt="<?= $escaper->escapeHtmlAttr($post->getThumbnailAlt()); ?>" />
+                    </a>
+                <?php endif; ?>
+            </div>
+            <div class="amblog-content">
+                <div class="amblog-dates">
+                    <div class="amblog-date"
+                        <?php if ($parentBlock->isHumanized()): ?>
+                            data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($post->getPublishedAt()) ?>"}'
+                        <?php endif; ?>>
+                        <?= $escaper->escapeHtml($parentBlock->isHumanized()
+                            ? __('Loading...')
+                            : $parentBlock->renderDate($post->getPublishedAt())) ?>
+                    </div>
+                    <?php if ($post->getEditedAt() && $parentBlock->isShowEditedAt()): ?>
+                        <span class="amblog-date">
+                                <?= $escaper->escapeHtml(__('Edited')) ?>
+                                <span <?php if ($parentBlock->isHumanizedEditedAt()): ?>
+                                    data-mage-init='{"amBlogDates": "<?= $escaper->escapeJs($post->getEditedAt()) ?>"}'
+                                <?php endif; ?>>
+                                    <?= $escaper->escapeHtml($parentBlock->isHumanizedEditedAt()
+                                        ? __('Loading...')
+                                        : $parentBlock->renderDate($post->getEditedAt(), true)) ?>
+                                </span>
+                            </span>
+                    <?php endif; ?>
+                    <?php if ($parentBlock->getSettingHelper()->getDisplayViews()): ?>
+                        <span class="views amblog-views"
+                              data-amblog-js="views-counter"
+                              data-post-id="<?= (int) $post->getPostId() ?>">
+                            <?= $escaper->escapeHtml(__('%1 view(s)', $post->getViews())); ?>
+                        </span>
+                    <?php endif; ?>
+                    <?php if ($parentBlock->isDisplayReadTime()): ?>
+                        <span class="amblog-minread">
+                            <?= $escaper->escapeHtml($parentBlock->getReadTime((string)$post->getFullContent())); ?>
+                            <?= $escaper->escapeHtml(__(' min read')); ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+                <h2 class="amblog-post-title">
+                    <a href="<?= $escaper->escapeUrl($post->getUrl()); ?>"
+                       class="post-title"
+                       aria-label=" <?= $escaper->escapeHtmlAttr($post->getTitle()); ?>"
+                       title=" <?= $escaper->escapeHtmlAttr($post->getTitle()); ?>">
+                        <?= $escaper->escapeHtml($post->getTitle()); ?>
+                    </a>
+                </h2>
+                <div class="tags">
+                    <?= $parentBlock->getTagsHtml($post); ?>
+                </div>
+                <div class="amblog-shot">
+                    <?= /* @noEscape */ $post->getShortContent(); ?>
+                </div>
+            </div>
+            <div class="amblog-footer">
+                <div class="amblog-features">
+                    <?= $parentBlock->getAuthorHtml($post); ?>
+                    <?= $parentBlock->getCategoriesHtml($post); ?>
+                    <?= $parentBlock->getShortCommentsHtml($post); ?>
+                </div>
+                <a class="amblog-read"
+                   href="<?= $escaper->escapeUrl($parentBlock->getReadMoreUrl($post)); ?>"
+                   aria-label="<?= $escaper->escapeHtmlAttr(__('Read More')); ?>"
+                   title="<?= $escaper->escapeHtmlAttr(__('Read More')); ?>">
+                    <?= $escaper->escapeHtml(__('Read More')); ?>
+                </a>
+            </div>
+        </div>
+    <?php endforeach; ?>
+    <?= $toolbar->toHtml(); ?>
+</div>

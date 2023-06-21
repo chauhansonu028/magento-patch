@@ -1,0 +1,19 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Blog Pro for Magento 2
+ */
+/** @var \Amasty\Blog\Block\Comments $block */
+
+$collection = $block->getCollection();
+?>
+
+<div class="amblog-comments-livestream">
+    <?php if ($collection && $collection->getSize()) : ?>
+        <div class="amblog-amp-title -comment"><?= $block->escapeHtml(__('Comments')); ?></div>
+        <?php foreach ($collection as $message) : ?>
+            <?= $block->getMessageHtml($message); ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
